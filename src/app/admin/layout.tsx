@@ -1,4 +1,6 @@
-export default function AdminLayout({ children }) {
+import { LayoutProps } from "../types/layout";
+
+export default function AdminLayout({ children }: LayoutProps) {
   return (
     <div className="">
       <header className="">header</header>

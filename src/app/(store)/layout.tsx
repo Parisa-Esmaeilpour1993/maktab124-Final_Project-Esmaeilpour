@@ -1,4 +1,6 @@
-export default function StoreLayout({ children }) {
+import { LayoutProps } from "../types/layout";
+
+export default function StoreLayout({ children }: LayoutProps) {
   return (
     <div>
       <header>
