@@ -1,3 +1,5 @@
+import Navbar from "../components/store/navbar/Navbar";
+import SearchInput from "../shared/SearchInput";
 import { LayoutProps } from "../types/layout";
 
 export default function StoreLayout({ children }: LayoutProps) {
@@ -5,19 +7,8 @@ export default function StoreLayout({ children }: LayoutProps) {
     <div>
       <header>
         <h1>Pharmacy Header</h1>
-        <nav>
-          <ul className="flex justify-center gap-20">
-            <li>
-              <a href="/">Home</a>
-            </li>
-            <li>
-              <a href="/products">Products</a>
-            </li>
-            <li>
-              <a href="/cart">Cart</a>
-            </li>
-          </ul>
-        </nav>
+        <Navbar />
+        <SearchInput />
       </header>
       <main className="bg-red-300">{children}</main>
       <footer>Pharmacy Footer</footer>
