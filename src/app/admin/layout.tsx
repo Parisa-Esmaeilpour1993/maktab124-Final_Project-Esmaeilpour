@@ -4,7 +4,7 @@ export default function AdminLayout({ children }: LayoutProps) {
   return (
     <div className="">
       <header className="">header</header>
-      <div className="flex justify-between bg-red-200">
+      <div className="flex">
         <aside className="bg-green-200">
           <h2>Panel Admin</h2>
           <nav>
@@ -18,7 +18,9 @@ export default function AdminLayout({ children }: LayoutProps) {
             </ul>
           </nav>
         </aside>
-        <main>{children}</main>
+        <main className="flex-1 flex justify-center items-center">
+          {children}
+        </main>
       </div>
     </div>
   );

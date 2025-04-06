@@ -2,7 +2,8 @@ import logo from "@/app/assets/images/logo.png";
 import { faLocalization } from "@/app/constants/localization/fa/localization";
 import SearchInput from "@/app/shared/SearchInput";
 import Image from "next/image";
-import { FaShoppingCart, FaUser } from "react-icons/fa";
+import { FaRegUser } from "react-icons/fa";
+import { AiOutlineShoppingCart } from "react-icons/ai";
 
 const Header = () => {
   return (
@@ -12,28 +13,20 @@ const Header = () => {
         <SearchInput />
       </div>
       <div className="flex gap-4 justify-center items-center">
-        <div className="flex justify-center items-center px-2 py-1 hover:scale-105">
-          <FaShoppingCart
+        <div className="flex justify-center items-center border border-gray-400 rounded-2xl  hover:scale-105 hover:border-gray-600">
+          <AiOutlineShoppingCart
             size={32}
-            className="bg-gray-500 p-[6px] rounded-r-md"
-            color="white"
+            className="bg-gray-100 p-[6px] rounded-2xl"
+            color="gray"
           />
-          <button className="cursor-pointer bg-gray-300 text-white text-sm pr-2 pl-1 pb-2 pt-1">
-            {faLocalization.cart}
-          </button>
-          <span className="bg-gray-300 p-1 rounded-l-md text-[10px] pl-2">
-            <div className="size-6 bg-gray-500 rounded-full flex items-center justify-center text-white">
-              0
-            </div>
-          </span>
         </div>
-        <div className="flex justify-center items-center px-2 py-1 hover:scale-105">
-          <FaUser
+        <div className="flex justify-center items-center border border-gray-400 rounded-2xl hover:scale-105 hover:border-gray-600">
+          <FaRegUser
             size={30}
-            className="bg-gray-500 p-[6px] rounded-r-md"
-            color="white"
+            className="bg-gray-100 p-[7px] rounded-r-2xl"
+            color="gray"
           />
-          <button className="cursor-pointer bg-gray-300 text-white text-sm px-2 pt-1 pb-[6px] rounded-l-md">
+          <button className="cursor-pointer bg-gray-100 text-gray-700 text-sm pl-3 pt-1 pb-2 rounded-l-2xl">
             {faLocalization.loginOrRegister}
           </button>
         </div>
