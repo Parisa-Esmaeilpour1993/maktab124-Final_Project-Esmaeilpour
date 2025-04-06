@@ -13,11 +13,11 @@ export default function Navbar() {
   }, [dispatch]);
 
   return (
-    <nav className="flex gap-4 bg-gray-100 p-4">
+    <nav className="flex gap-4 mx-4 mb-4 px-4 pb-3 border-b border-gray-300">
       {categories.map((cat) => (
-        <span key={cat.id} className="hover:text-blue-500 cursor-pointer">
+        <button key={cat.id} className="hover:text-blue-500 cursor-pointer">
           {cat.title}
-        </span>
+        </button>
       ))}
     </nav>
   );
