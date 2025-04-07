@@ -77,3 +77,8 @@ export const adminHeaderLocalization = {
   hi: "سلام",
   dear: "عزیز!",
 };
+
+export const asideBarLocalization = {
+  storeName: "داروفارم",
+  exit: "خروج",
+};

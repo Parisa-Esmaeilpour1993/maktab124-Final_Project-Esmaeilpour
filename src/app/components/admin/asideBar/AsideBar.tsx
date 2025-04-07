@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import logo from "@/app/assets/images/logo.png";
 import { links } from "@/app/utils/adminLinks";
+import { asideBarLocalization } from "@/app/constants/localization/fa/localization";
 export default function AdminSidebar({
   isOpen,
   closeSidebar,
@@ -40,7 +41,7 @@ export default function AdminSidebar({
           className="block pt-4 lg:hidden"
         />
         <span className="hidden lg:block text-2xl pt-4 font-bold text-gray-950 dark:text-white animate-pulse">
-          داروفارم
+          {asideBarLocalization.storeName}
         </span>
       </div>
 
@@ -100,7 +101,7 @@ export default function AdminSidebar({
           className="w-9/12 p-2 mt-2 bg-red-600 text-white hover:bg-red-700"
           onClick={handleLogout}
         >
-          خروج
+          {asideBarLocalization.exit}
         </button>
       </div>
     </aside>

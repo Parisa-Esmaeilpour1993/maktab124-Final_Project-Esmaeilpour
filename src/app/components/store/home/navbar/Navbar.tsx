@@ -13,7 +13,7 @@ export default function Navbar() {
   }, [dispatch]);
 
   return (
-    <nav className="flex gap-4 mx-4 mb-4 px-4 pb-3 border-b border-gray-300">
+    <nav className="flex gap-4 mx-4 mb-4 px-4 pb-3 pt-1 border-b shadow-2xl rounded-2xl border-gray-300">
       {categories.map((cat) => (
         <button key={cat.id} className="hover:text-blue-500 cursor-pointer">
           {cat.title}

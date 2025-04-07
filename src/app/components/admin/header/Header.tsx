@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { FaUserCog } from "react-icons/fa";
 import logo from "@/app/assets/images/logo.png";
 import admin from "@/app/assets/images/admin.jpg";
 import { adminHeaderLocalization } from "@/app/constants/localization/fa/localization";
