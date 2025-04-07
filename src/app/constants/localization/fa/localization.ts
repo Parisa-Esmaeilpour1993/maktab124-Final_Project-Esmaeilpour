@@ -75,5 +75,5 @@ export const validateLocalization = {
 export const adminHeaderLocalization = {
   dearAdmin: "ادمین عزیز",
   hi: "سلام",
-  dear: "عزیز",
+  dear: "عزیز!",
 };

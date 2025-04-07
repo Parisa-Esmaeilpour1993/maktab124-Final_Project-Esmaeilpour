@@ -1,7 +1,7 @@
 import React from "react";
 
 function DeliveryMethodsPage() {
-  return <div></div>;
+  return <div>delivery Methods</div>;
 }
 
 export default DeliveryMethodsPage;

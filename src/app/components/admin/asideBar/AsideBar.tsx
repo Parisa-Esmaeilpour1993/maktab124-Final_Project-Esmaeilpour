@@ -1,14 +1,108 @@
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import logo from "@/app/assets/images/logo.png";
+import { links } from "@/app/utils/adminLinks";
 export default function AdminSidebar({
   isOpen,
+  closeSidebar,
 }: {
   isOpen: boolean;
   closeSidebar: () => void;
 }) {
+  const [activeLink, setActiveLink] = useState<string>("dashboard");
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const router = useRouter();
+
+  const handleLinkClick = (link: string) => {
+    setActiveLink(link);
+    closeSidebar();
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    router.push("/login");
+  };
+
   return (
     <aside
-      className={`bg-gradient-to-b from-slate-800 to-slate-100  text-white w-64 h-screen fixed top-0 right-0 md:static z-50 transition-transform duration-300 ${
+      className={`bg-gradient-to-b from-slate-800 to-slate-200 text-white shadow-2xl w-1/4 md:w-1/5 fixed top-0 right-0 md:static z-50 transition-transform duration-300 ${
         isOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"
       }`}
-    ></aside>
+    >
+      <div className="flex items-center justify-center mb-4">
+        <Image
+          src={logo}
+          alt="logo"
+          height={42}
+          className="block pt-4 lg:hidden"
+        />
+        <span className="hidden lg:block text-2xl pt-4 font-bold text-gray-950 dark:text-white animate-pulse">
+          داروفارم
+        </span>
+      </div>
+
+      <nav className="flex flex-col p-4 gap-4">
+        {links.map((link) => {
+          if (link.children) {
+            return (
+              <div key={link.id}>
+                <button
+                  onClick={() => setIsDropdownOpen((prev) => !prev)}
+                  className="flex items-center justify-between text-right py-1 rounded-lg hover:bg-slate-600 hover:px-3 transition w-full"
+                >
+                  <span>{link.label}</span>
+                  <span>{isDropdownOpen ? "▲" : "▼"}</span>
+                </button>
+                {isDropdownOpen && (
+                  <div className="flex flex-col gap-2 px-5 mt-2">
+                    {link.children.map((child) => (
+                      <Link
+                        key={child.id}
+                        href={child.href}
+                        className={`text-sm transition-all duration-150 hover:text-yellow-300 hover:-translate-y-1 ${
+                          activeLink === child.id
+                            ? "text-yellow-300 bg-slate-500 py-1 px-2 shadow rounded"
+                            : ""
+                        }`}
+                        onClick={() => handleLinkClick(child.id)}
+                      >
+                        {child.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          }
+
+          return (
+            <Link
+              key={link.id}
+              href={link.href}
+              className={`transition-all duration-150 hover:text-yellow-300 hover:-translate-y-1 ${
+                activeLink === link.id
+                  ? "text-yellow-300 bg-slate-800 py-1 px-2 shadow-lg rounded-lg"
+                  : ""
+              }`}
+              onClick={() => handleLinkClick(link.id)}
+            >
+              {link.label}
+            </Link>
+          );
+        })}
+      </nav>
+
+      <div className="flex items-center justify-center bottom-2">
+        <button
+          className="w-9/12 p-2 mt-2 bg-red-600 text-white hover:bg-red-700"
+          onClick={handleLogout}
+        >
+          خروج
+        </button>
+      </div>
+    </aside>
   );
 }
