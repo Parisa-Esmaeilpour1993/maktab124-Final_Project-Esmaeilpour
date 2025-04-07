@@ -1,5 +1,6 @@
 import Header from "../components/store/home/header/Header";
 import Navbar from "../components/store/home/navbar/Navbar";
+
 import { LayoutProps } from "../types/layout";
 
 export default function StoreLayout({ children }: LayoutProps) {
@@ -7,7 +8,7 @@ export default function StoreLayout({ children }: LayoutProps) {
     <div>
       <Header />
       <Navbar />
-      <main className="bg-red-300">{children}</main>
+      <main>{children}</main>
       <footer>Pharmacy Footer</footer>
     </div>
   );

@@ -33,3 +33,41 @@ export const adminCategories = {
   subTitle: "عنوان زیردسته",
   add: "افزودن",
 };
+
+export const loginLocalization = {
+  Login: " ورود",
+  DontHaveAccount: "آیا قبلا حساب کاربری نداشتید؟",
+  SignupHere: " ثبت نام کنید ",
+  Email: " ایمیل ",
+  Password: " رمز ورود ",
+  RememberMe: " مرا بخاطر بسپار ",
+  ForgotPassword: " فراموشی رمز عبور ",
+  EnterEmail: " ایمیل خود را وارد کنید ",
+  EnterPassword: " رمز خود را وارد کنید ",
+  loginError: "رمز ورود یا ایمیل اشتباه است.",
+  toastError: "ورود موفقیت‌آمیز نبود.",
+  successLogin: "ورود با موفقیت انجام شد!",
+  allFieldsRequired: "همه فیلدها باید پر باشند.",
+};
+
+export const signUpLocalization = {
+  Password: " رمز ورود ",
+  EnterPassword: " رمز خود را وارد کنید  ",
+  signUpDescription:
+    " با ثبت نام، با دریافت به روز رسانی ها و پیشنهادات ویژه موافقت می کنید. ",
+  Signup: " ثبت نام ",
+  AlreadyHaveAccount: " آیا قبلا حساب کاربری داشتید؟ ",
+  Login: "ورود",
+  Name: " نام ",
+  EnterName: " نام خود را وارد کنید ",
+  Email: " ایمیل ",
+  EnterEmail: " ایمیل خود را وارد کنید  ",
+  tryAgain: "خطا، دوباره امتحان کنید.",
+  confirm: "تایید",
+  confirming: "در حال تایید...",
+};
+export const validateLocalization = {
+  usernameRegex: "یوزرنیم شامل اعداد و حروف است. (3-20 کاراکتر)",
+  emailRegex: "فرمت ایمیل نامعتبر است.",
+  passwordRegex: "پسورد شامل اعداد، حروف بزرگ و حروف کوچک باشد. (8-11 کاراکتر)",
+};
