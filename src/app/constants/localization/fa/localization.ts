@@ -71,3 +71,9 @@ export const validateLocalization = {
   emailRegex: "فرمت ایمیل نامعتبر است.",
   passwordRegex: "پسورد شامل اعداد، حروف بزرگ و حروف کوچک باشد. (8-11 کاراکتر)",
 };
+
+export const adminHeaderLocalization = {
+  dearAdmin: "ادمین عزیز",
+  hi: "سلام",
+  dear: "عزیز",
+};

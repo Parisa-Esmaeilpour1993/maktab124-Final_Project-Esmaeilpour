@@ -61,7 +61,7 @@ const SignUp = () => {
         {
           headers: {
             api_key: API_KEY,
-            Authorization: `Bearer {eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDJlM2FiNzFiNTU0NTgwNmVkMWJlYyIsImlhdCI6MTc0MTg3NDEyNCwiZXhwIjoxNzQyMDQ2OTI0fQ.m8NyyLyGVYYni15jiCOuC86EAdIoZ03dlAvdqXC8hQk}`,
+            Authorization: `Bearer {eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YmRlYzRhZjIxYTkwMzExMzZkZmE3OSIsImlhdCI6MTc0MDUwMDA4MSwiZXhwIjoxNzQwNjcyODgxfQ.UNOv7P_MPhYnt4vqgLQ3RyQx4CuwMVALen8BebtXChM}`,
           },
         }
       );

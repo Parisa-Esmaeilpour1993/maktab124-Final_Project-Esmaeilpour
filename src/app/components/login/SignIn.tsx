@@ -10,6 +10,7 @@ import { loginLocalization } from "@/app/constants/localization/fa/localization"
 import { ToastContainer, toast } from "react-toastify";
 import { MdRemoveRedEye } from "react-icons/md";
 import { IoEyeOffSharp } from "react-icons/io5";
+import { adminEmails } from "@/app/utils/adminsEmail";
 
 const Login = () => {
   const router = useRouter();
@@ -32,17 +33,22 @@ const Login = () => {
         { email, password },
         { headers: { api_key: API_KEY } }
       );
+      console.log(response.data);
 
-      const { token, user } = response.data;
+      const { accessToken } = response.data;
 
-      localStorage.setItem("authToken", token);
-      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("authToken", accessToken);
 
-      toast.success(loginLocalization.successLogin);
+      const admin = adminEmails.find((admin) => admin.email === email);
+      if (admin) {
+        localStorage.setItem("username", admin.username);
 
-      setTimeout(() => {
+        toast.success(loginLocalization.successLogin);
+        router.push("/admin");
+      } else {
+        toast.success(loginLocalization.successLogin);
         router.push("/");
-      }, 2000);
+      }
     } catch (error) {
       setError(loginLocalization.loginError);
       toast.error(loginLocalization.toastError);
@@ -95,7 +101,7 @@ const Login = () => {
               />
             </div>
 
-            <div className=" relative">
+            <div className="relative">
               <label
                 className="block text-sm font-medium text-gray-700 mb-2"
                 htmlFor="password"
@@ -109,7 +115,7 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 onFocus={handleFocus}
                 placeholder={loginLocalization.EnterPassword}
-                className="w-full px-4 py-2 text-sm border bg-white border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 "
+                className="w-full px-4 py-2 text-sm border bg-white border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100"
               />
               <button
                 type="button"
@@ -121,7 +127,7 @@ const Login = () => {
               </button>
             </div>
 
-            {error && <div className="text-red-500 text-sm ">{error}</div>}
+            {error && <div className="text-red-500 text-sm">{error}</div>}
 
             <div className="flex items-center justify-between">
               <div className="flex gap-1 items-center">
