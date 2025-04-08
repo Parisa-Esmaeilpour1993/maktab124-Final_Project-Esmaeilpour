@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AdminSidebar from "../components/admin/asideBar/AsideBar";
 import AdminHeader from "../components/admin/header/Header";
 
@@ -14,17 +14,19 @@ export default function AdminLayout({
   const closeSidebar = () => setSidebarOpen(false);
 
   return (
-    <div className="flex relative">
+    <div className="flex relative overflow-hidden">
       <AdminSidebar isOpen={sidebarOpen} closeSidebar={closeSidebar} />
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/30 z-40 md:hidden"
+          className="fixed top-0 inset-0 bg-black/30 z-40 md:hidden"
           onClick={closeSidebar}
         />
       )}
       <div className="flex flex-col flex-1 min-h-screen">
         <AdminHeader toggleSidebar={toggleSidebar} />
-        <main className="p-4">{children}</main>
+        <main className="p-4 overflow-y-auto max-h-[calc(100vh-61px)]">
+          {children}
+        </main>
       </div>
     </div>
   );

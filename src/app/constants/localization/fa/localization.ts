@@ -82,3 +82,13 @@ export const asideBarLocalization = {
   storeName: "داروفارم",
   exit: "خروج",
 };
+
+export const dashboardLocalization = {
+  managementDashboard: "داشبورد مدیریت",
+  users: "کاربران",
+  orders: "سفارش‌ها",
+  totalIncome: "درآمد کل",
+  rial: "ریال",
+  categoriesNumber: "تعداد محصولات در هر دسته‌بندی",
+  categoriesOrder: " محصولات سفارش داده شده به تفکیک دسته‌بندی",
+};

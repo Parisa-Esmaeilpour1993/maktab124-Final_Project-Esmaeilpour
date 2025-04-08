@@ -13,6 +13,7 @@ import { editCategory } from "@/app/services/editCategory";
 import { editSubCategory } from "@/app/services/editSubCategory";
 import { fetchCategories } from "@/app/services/fetchCategory";
 import { useEffect, useState } from "react";
+import { GridLoader } from "react-spinners";
 import Swal from "sweetalert2";
 
 export default function AdminCategoriesPage() {
@@ -20,8 +21,9 @@ export default function AdminCategoriesPage() {
   const [title, setTitle] = useState("");
   const [editId, setEditId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState("");
-
   const [activeAddSubId, setActiveAddSubId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
   const [activeEditSub, setActiveEditSub] = useState<{
     categoryId: string;
     subCategoryId: string;
@@ -29,9 +31,7 @@ export default function AdminCategoriesPage() {
   const [subTitle, setSubTitle] = useState("");
 
   const dispatch = useAppDispatch();
-  const { categories, loading, error } = useAppSelector(
-    (state) => state.categories
-  );
+  const { categories, error } = useAppSelector((state) => state.categories);
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -105,6 +105,26 @@ export default function AdminCategoriesPage() {
       });
     }
   };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <GridLoader
+          color="#677284"
+          size={24}
+          className="absolute top-72 left-2/5 transform -translate-x-1/2"
+        />
+      </div>
+    );
+  }
 
   const handleAddSubCategory = (categoryId: string) => {
     if (subTitle.trim()) {
@@ -180,7 +200,6 @@ export default function AdminCategoriesPage() {
         </div>
       )}
 
-      {loading && <p>{adminCategories.loading}</p>}
       {error && <p className="text-red-500">{error}</p>}
 
       <ul className="flex flex-col justify-between mt-4 p-3 space-y-4 shadow-2xl rounded-2xl">

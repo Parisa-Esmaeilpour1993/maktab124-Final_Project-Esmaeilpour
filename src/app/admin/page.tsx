@@ -1,8 +1,227 @@
-export default function AdminHome() {
+"use client";
+
+import { Card, CardContent, CardTitle } from "@/app/components/ui/Card";
+import { orders, products, users } from "@/data";
+import { useEffect, useState } from "react";
+import { GridLoader } from "react-spinners";
+import {
+  Bar,
+  BarChart,
+  Cell,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { dashboardLocalization } from "../constants/localization/fa/localization";
+
+function generateColor(index: number) {
+  const hue = (index * 137.508) % 360;
+  return `hsl(${hue}, 80%, 60%)`;
+}
+
+const totalIncome = orders.reduce((sum, order) => {
   return (
-    <div className="text-gray-800">
-      <h2 className="text-2xl font-bold mb-4">خوش آمدید به پنل مدیریت</h2>
-      <p>از منو سمت راست برای مدیریت بخش‌های مختلف استفاده کنید.</p>
+    sum +
+    order.products.reduce((acc, item) => {
+      const product = products.find((p) => p.id === item.productId);
+      return acc + (product?.price || 0) * item.quantity;
+    }, 0)
+  );
+}, 0);
+
+type CategoryCounts = {
+  [category: string]: number;
+};
+
+const categoryCounts: CategoryCounts = products.reduce((acc, product) => {
+  acc[product.category] = (acc[product.category] || 0) + 1;
+  return acc;
+}, {} as CategoryCounts);
+
+const pieData = Object.entries(categoryCounts).map(([name, value]) => ({
+  name,
+  value,
+}));
+
+type OrderedCategoryCounts = {
+  [category: string]: number;
+};
+
+const orderedCategoryCounts: OrderedCategoryCounts = {};
+orders.forEach((order) => {
+  order.products.forEach(({ productId, quantity }) => {
+    const product = products.find((p) => p.id === productId);
+    if (product) {
+      orderedCategoryCounts[product.category] =
+        (orderedCategoryCounts[product.category] || 0) + quantity;
+    }
+  });
+});
+
+const barData = Object.entries(orderedCategoryCounts).map(([name, value]) => ({
+  name,
+  value,
+}));
+
+export default function AdminDashboard() {
+  const [isMobile, setIsMobile] = useState(false);
+  const [rotateLabels, setRotateLabels] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      const isMobileSize = width < 768;
+      setIsMobile(isMobileSize);
+
+      if (!isMobileSize && barData.length > 7) {
+        setRotateLabels(true);
+      } else if (isMobileSize) {
+        setRotateLabels(true);
+      } else {
+        setRotateLabels(false);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, [barData.length]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <GridLoader
+          color="#677284"
+          size={24}
+          className="absolute top-72 left-2/5 transform -translate-x-1/2"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-6 space-y-6 bg-gray-100">
+      <h1 className="text-2xl font-bold text-gray-800">
+        {dashboardLocalization.managementDashboard}
+      </h1>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <Card>
+          <CardContent className="flex flex-col gap-4 md:flex-row md:items-center lg:flex-col">
+            <CardTitle className="text-gray-600">
+              👤 {dashboardLocalization.users}
+            </CardTitle>
+            <p className="text-xl font-bold text-blue-600">{users.length}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="flex flex-col gap-4 md:flex-row md:items-center lg:flex-col">
+            <CardTitle className="text-gray-600">
+              📦 {dashboardLocalization.orders}
+            </CardTitle>
+            <p className="text-xl font-bold text-green-600">{orders.length}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="flex flex-col gap-4 md:flex-row md:items-center lg:flex-col">
+            <CardTitle className="text-gray-600">
+              💰 {dashboardLocalization.totalIncome}
+            </CardTitle>
+            <p className="text-xl font-bold text-red-600">
+              {totalIncome.toLocaleString()} {dashboardLocalization.rial}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+        <Card className="shadow-md">
+          <CardContent className="p-4">
+            <h2 className="text-lg font-semibold mb-4 text-gray-700">
+              {dashboardLocalization.categoriesNumber}
+            </h2>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+              <ResponsiveContainer
+                width="100%"
+                height={300}
+                className="md:w-1/2"
+              >
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={100}
+                  >
+                    {pieData.map((_, index) => (
+                      <Cell key={`cell-${index}`} fill={generateColor(index)} />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+
+              <div className="mt-4 md:mt-0 md:w-1/2 md:pr-8 space-y-2">
+                {pieData.map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-end gap-2 text-sm flex-row-reverse text-right"
+                  >
+                    <span className="text-gray-700">
+                      {item.name} ({item.value})
+                    </span>
+                    <span
+                      className="w-3 h-3 rounded-full inline-block"
+                      style={{ backgroundColor: generateColor(index) }}
+                    ></span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-md">
+          <CardContent className="p-4">
+            <h2 className="text-lg font-semibold mb-4 text-gray-700 text-center">
+              {dashboardLocalization.categoriesOrder}
+            </h2>
+            <div className="flex justify-center items-center">
+              <ResponsiveContainer width={500} height={300}>
+                <BarChart data={barData} className="mr-2">
+                  <XAxis
+                    dataKey="name"
+                    interval={0}
+                    angle={rotateLabels ? -40 : 0}
+                    textAnchor={rotateLabels ? "end" : "middle"}
+                    tick={{ fontSize: 12, dy: rotateLabels ? 25 : 0 }}
+                    height={rotateLabels ? 50 : 30}
+                  />
+                  <YAxis allowDecimals={false} tickMargin={16} />
+                  <Tooltip />
+                  <Bar dataKey="value" fill="#60a5fa" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

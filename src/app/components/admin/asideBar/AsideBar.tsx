@@ -6,6 +6,8 @@ import Image from "next/image";
 import logo from "@/app/assets/images/logo.png";
 import { links } from "@/app/utils/adminLinks";
 import { asideBarLocalization } from "@/app/constants/localization/fa/localization";
+import { usePathname } from "next/navigation";
+
 export default function AdminSidebar({
   isOpen,
   closeSidebar,
@@ -13,14 +15,9 @@ export default function AdminSidebar({
   isOpen: boolean;
   closeSidebar: () => void;
 }) {
-  const [activeLink, setActiveLink] = useState<string>("dashboard");
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const router = useRouter();
-
-  const handleLinkClick = (link: string) => {
-    setActiveLink(link);
-    closeSidebar();
-  };
+  const pathname = usePathname();
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
@@ -29,7 +26,7 @@ export default function AdminSidebar({
 
   return (
     <aside
-      className={`bg-gradient-to-b from-slate-800 to-slate-200 text-white shadow-2xl w-1/4 md:w-1/5 fixed top-0 right-0 md:static z-50 transition-transform duration-300 ${
+      className={`bg-gradient-to-b from-slate-800 to-slate-200 text-white shadow-2xl w-3/5 md:w-1/4 lg:w-1/5 fixed top-0 right-0 md:static h-screen overflow-y-auto z-50 transition-transform duration-300 ${
         isOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"
       }`}
     >
@@ -64,11 +61,11 @@ export default function AdminSidebar({
                         key={child.id}
                         href={child.href}
                         className={`text-sm transition-all duration-150 hover:text-yellow-300 hover:-translate-y-1 ${
-                          activeLink === child.id
+                          pathname === link.href
                             ? "text-yellow-300 bg-slate-500 py-1 px-2 shadow rounded"
                             : ""
                         }`}
-                        onClick={() => handleLinkClick(child.id)}
+                        onClick={closeSidebar}
                       >
                         {child.label}
                       </Link>
@@ -84,11 +81,11 @@ export default function AdminSidebar({
               key={link.id}
               href={link.href}
               className={`transition-all duration-150 hover:text-yellow-300 hover:-translate-y-1 ${
-                activeLink === link.id
+                pathname === link.href
                   ? "text-yellow-300 bg-slate-800 py-1 px-2 shadow-lg rounded-lg"
                   : ""
               }`}
-              onClick={() => handleLinkClick(link.id)}
+              onClick={closeSidebar}
             >
               {link.label}
             </Link>
@@ -98,7 +95,7 @@ export default function AdminSidebar({
 
       <div className="flex items-center justify-center bottom-2">
         <button
-          className="w-9/12 p-2 mt-2 bg-red-600 text-white hover:bg-red-700"
+          className="w-9/12 p-2 mt-2 rounded-md bg-red-600 text-white active:scale-95 hover:bg-red-700"
           onClick={handleLogout}
         >
           {asideBarLocalization.exit}
