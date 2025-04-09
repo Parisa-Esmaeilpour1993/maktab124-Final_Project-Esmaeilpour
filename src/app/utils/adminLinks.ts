@@ -29,7 +29,11 @@ export const links = [
         id: "contactUs",
       },
       { href: "/admin/pages/aboutUs", label: "📬 درباره ما", id: "aboutUs" },
-      { href: "/admin/pages/terms", label: "✅ مجوزها", id: "terms" },
+      {
+        href: "/admin/pages/privacy",
+        label: "✅ قوانین و مقررات",
+        id: "privacy",
+      },
       {
         href: "/admin/pages/shoppingGuide",
         label: "📄  راهنمای خرید ",

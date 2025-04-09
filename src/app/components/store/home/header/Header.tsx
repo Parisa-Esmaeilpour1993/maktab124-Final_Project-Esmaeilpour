@@ -8,8 +8,8 @@ import Link from "next/link";
 
 const Header = () => {
   return (
-    <header className="flex flex-col gap-2 lg:flex-row justify-between items-center px-12 py-4">
-      <div className="flex flex-col gap-2 items-center  justify-between md:gap-6 md:flex-row">
+    <header className="flex flex-col gap-6 md:flex-row justify-between items-center px-12 py-4">
+      <div className="flex flex-col gap-2 items-center  justify-between lg:gap-6 md:flex-row">
         <Link href="/">
           <Image
             src={logo}

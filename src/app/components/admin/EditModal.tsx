@@ -28,9 +28,7 @@ export default function EditModal({
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-4/5 md:w-2/3 lg:w-1/2">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium text-gray-900">
-            ویرایش درباره ما
-          </h3>
+          <h3 className="text-lg font-medium text-gray-900">ویرایش</h3>
           <button
             onClick={onClose}
             className="text-gray-600 hover:text-gray-800 font-bold text-xl"

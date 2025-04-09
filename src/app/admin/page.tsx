@@ -3,7 +3,6 @@
 import { Card, CardContent, CardTitle } from "@/app/components/ui/Card";
 import { orders, products, users } from "@/data";
 import { useEffect, useState } from "react";
-import { GridLoader } from "react-spinners";
 import {
   Bar,
   BarChart,
@@ -69,7 +68,6 @@ const barData = Object.entries(orderedCategoryCounts).map(([name, value]) => ({
 export default function AdminDashboard() {
   const [isMobile, setIsMobile] = useState(false);
   const [rotateLabels, setRotateLabels] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -91,26 +89,6 @@ export default function AdminDashboard() {
 
     return () => window.removeEventListener("resize", handleResize);
   }, [barData.length]);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timeout);
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <GridLoader
-          color="#677284"
-          size={24}
-          className="absolute top-72 left-2/5 transform -translate-x-1/2"
-        />
-      </div>
-    );
-  }
 
   return (
     <div className="p-6 space-y-6 bg-gray-100">

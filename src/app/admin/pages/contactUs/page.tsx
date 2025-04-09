@@ -3,7 +3,6 @@ import EditModal from "@/app/components/admin/contactUs/EditModal";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { GridLoader } from "react-spinners";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -28,7 +27,6 @@ export default function AboutUsPage() {
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = async () => {
     try {
@@ -136,26 +134,6 @@ export default function AboutUsPage() {
     }
   };
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timeout);
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <GridLoader
-          color="#677284"
-          size={24}
-          className="absolute top-72 left-2/5 transform -translate-x-1/2"
-        />
-      </div>
-    );
-  }
-
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded shadow">
       <h2 className="text-2xl font-bold mb-6">تماس با ما</h2>
@@ -168,6 +146,7 @@ export default function AboutUsPage() {
             name="address"
             className="w-full border rounded px-3 py-2 h-28 resize-none bg-gray-100"
             rows={2}
+            disabled
           ></textarea>
         </div>
         <div>

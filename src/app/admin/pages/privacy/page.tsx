@@ -6,14 +6,14 @@ import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-interface ShoppingGuideProps {
+interface PrivacyProps {
   id?: string;
   title: string;
   description: string;
 }
 
-export default function ShoppingGuidePage() {
-  const [formData, setFormData] = useState<ShoppingGuideProps>({
+export default function PrivacyPage() {
+  const [formData, setFormData] = useState<PrivacyProps>({
     title: "",
     description: "",
   });
@@ -24,12 +24,9 @@ export default function ShoppingGuidePage() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_url}/api/records/shoppingGuide`,
-        {
-          headers: { api_key: API_KEY },
-        }
-      );
+      const response = await axios.get(`${BASE_url}/api/records/privacy`, {
+        headers: { api_key: API_KEY },
+      });
 
       const records = response.data.records;
       if (records && records.length > 0) {
@@ -71,7 +68,7 @@ export default function ShoppingGuidePage() {
 
       if (isEdit) {
         response = await axios.put(
-          `${BASE_url}/api/records/shoppingGuide/${formData.id}`,
+          `${BASE_url}/api/records/privacy/${formData.id}`,
           {
             title: formData.title,
             description: formData.description,
@@ -83,10 +80,10 @@ export default function ShoppingGuidePage() {
             },
           }
         );
-        toast.success("راهنمای خرید با موفقیت ویرایش شد");
+        toast.success("قوانین و مقررات با موفقیت ویرایش شد");
       } else {
         response = await axios.post(
-          `${BASE_url}/api/records/shoppingGuide`,
+          `${BASE_url}/api/records/privacy`,
           {
             title: formData.title,
             description: formData.description,
@@ -98,7 +95,7 @@ export default function ShoppingGuidePage() {
             },
           }
         );
-        toast.success("راهنمای خرید با موفقیت ارسال شد");
+        toast.success("قوانین و مقررات با موفقیت ارسال شد");
       }
 
       if (response.data?.records) {
@@ -121,7 +118,7 @@ export default function ShoppingGuidePage() {
 
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h2 className="text-2xl font-bold mb-6"> راهنمای خرید</h2>
+      <h2 className="text-2xl font-bold mb-6"> قوانین و مقررات </h2>
 
       <div className="space-y-4">
         <div>

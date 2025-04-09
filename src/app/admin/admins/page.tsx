@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Card, CardContent } from "@/app/components/ui/Card";
 import Button from "@/app/shared/Button";
 import Modal from "@/app/components/admin/modal/Modal";
 import Swal from "sweetalert2";
-import { GridLoader } from "react-spinners";
 
 const admins = [
   {
@@ -42,7 +41,6 @@ export default function AdminPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentAdmin, setCurrentAdmin] = useState<any>(null);
   const [viewMode, setViewMode] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -81,29 +79,11 @@ export default function AdminPage() {
     });
   };
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timeout);
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <GridLoader
-          color="#677284"
-          size={24}
-          className="absolute top-72 left-2/5 transform -translate-x-1/2"
-        />
-      </div>
-    );
-  }
-
   return (
-    <div className="p-6 space-y-6 bg-gray-100 rounded-lg">
-      <h1 className="text-2xl font-bold text-gray-800">لیست ادمین‌ها</h1>
+    <div className="px-0 text-sm lg:p-6 lg:tex-[16px] space-y-6 lg:bg-gray-100 rounded-lg pt-2">
+      <h1 className=" text-xl lg:text-2xl font-bold text-gray-800">
+        لیست ادمین‌ها
+      </h1>
 
       <Card>
         <CardContent>
@@ -127,13 +107,13 @@ export default function AdminPage() {
                   key={admin.id}
                   className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
                 >
-                  <td className="px-4 py-2 border-b border-gray-200 text-center">
+                  <td className="px-4 py-2 border-b border-gray-200 text-center font-semibold">
                     {admin.username}
                   </td>
                   <td className="px-4 py-2 border-b border-gray-200 text-center">
                     {admin.email}
                   </td>
-                  <td className="px-4 py-2 border-b border-gray-200 text-center flex gap-2 items-center justify-center">
+                  <td className="px-4 py-2 border-b border-gray-200 text-center flex flex-col md:flex-row gap-2 items-center justify-center">
                     <Button
                       className="bg-yellow-600 text-white"
                       onClick={() => {
