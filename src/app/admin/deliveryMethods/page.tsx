@@ -1,22 +1,22 @@
 "use client";
 
+import { getAuthToken } from "@/app/base/getAuthToken";
 import { Card, CardContent } from "@/app/components/ui/Card";
-import { Base_Url } from "@/app/constants/api/BASE_URL";
+import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
+import {
+  deliveryMethodsLocalization,
+  faLocalization,
+  sweetAlert,
+} from "@/app/constants/localization/fa/localization";
 import Button from "@/app/shared/Button";
 import { Input } from "@/app/shared/Input";
+import { DeliveryMethod } from "@/app/types/deliveryMethods";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { GridLoader } from "react-spinners";
-
-type DeliveryMethod = {
-  id: string;
-  name: string;
-  freeShippingOver: number;
-  minCost: number;
-  maxWeight: number;
-};
+import Swal from "sweetalert2";
 
 export default function DeliveryMethodsPage() {
+  const token = getAuthToken();
   const [methods, setMethods] = useState<DeliveryMethod[]>([]);
   const [form, setForm] = useState<Omit<DeliveryMethod, "id">>({
     name: "",
@@ -26,11 +26,23 @@ export default function DeliveryMethodsPage() {
   });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchMethods = async () => {
-    const res = await axios.get(`${Base_Url}`);
-    setMethods(res.data);
+    setIsLoading(true);
+    try {
+      const res = await axios.get(`${BASE_url}/api/records/deliveryMethods`, {
+        headers: {
+          api_key: API_KEY,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setMethods(res.data.records);
+    } catch (err) {
+      console.error(sweetAlert.errorInReceiveData, err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -38,15 +50,60 @@ export default function DeliveryMethodsPage() {
   }, []);
 
   const handleSubmit = async () => {
-    if (editingId) {
-      await axios.put(`${Base_Url}/${editingId}`, form);
-      setEditingId(null);
-    } else {
-      await axios.post(`${Base_Url}`, form);
+    if (!form.name.trim()) {
+      Swal.fire({
+        icon: "error",
+        title: sweetAlert.error,
+        text: deliveryMethodsLocalization.addNamePlease,
+        confirmButtonText: sweetAlert.okay,
+      });
+      return;
     }
-    setForm({ name: "", freeShippingOver: 0, minCost: 0, maxWeight: 0 });
-    fetchMethods();
-    setIsModalOpen(false);
+    setIsLoading(true);
+    try {
+      if (editingId) {
+        await axios.put(
+          `${BASE_url}/api/records/deliveryMethods/${editingId}`,
+          form,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              api_key: API_KEY,
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setEditingId(null);
+      } else {
+        await axios.post(`${BASE_url}/api/records/deliveryMethods`, form, {
+          headers: {
+            api_key: API_KEY,
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
+
+      setForm({ name: "", freeShippingOver: 0, minCost: 0, maxWeight: 0 });
+      fetchMethods();
+      setIsModalOpen(false);
+
+      Swal.fire({
+        icon: "success",
+        title: editingId
+          ? sweetAlert.successfullyEdited
+          : sweetAlert.seccessfullyAdded,
+        confirmButtonText: sweetAlert.ok,
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: sweetAlert.errorInSubmit,
+        text: sweetAlert.tryAgain,
+        confirmButtonText: sweetAlert.okay,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleEdit = (method: DeliveryMethod) => {
@@ -61,36 +118,42 @@ export default function DeliveryMethodsPage() {
   };
 
   const handleDelete = async (id: string) => {
-    await axios.delete(`${Base_Url}/${id}`);
-    fetchMethods();
+    const result = await Swal.fire({
+      title: sweetAlert.areYouSure,
+      text: sweetAlert.irrevocable,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: sweetAlert.yesDelete,
+      cancelButtonText: sweetAlert.cancel,
+    });
+
+    if (result.isConfirmed) {
+      await axios.delete(`${BASE_url}/api/records/deliveryMethods/${id}`, {
+        headers: {
+          api_key: API_KEY,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      fetchMethods();
+      Swal.fire({
+        title: sweetAlert.delete,
+        text: sweetAlert.successfullyDeleted,
+        icon: "success",
+        confirmButtonText: sweetAlert.okay,
+      });
+    }
   };
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timeout);
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <GridLoader
-          color="#677284"
-          size={24}
-          className="absolute top-72 left-2/5 transform -translate-x-1/2"
-        />
-      </div>
-    );
-  }
 
   return (
     <div className="p-4 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">مدیریت روش‌های ارسال</h1>
+      <div className="flex flex-col gap-4 lg:flex-row justify-between items-center">
+        <h1 className="text-2xl font-bold">
+          {deliveryMethodsLocalization.deliveryMethodsManagment}
+        </h1>
         <Button
-          children="افزودن روش جدید"
+          children={deliveryMethodsLocalization.addNewMethod}
           onClick={() => setIsModalOpen(true)}
           className="bg-red-500 hover:bg-red-700"
         />
@@ -102,14 +165,14 @@ export default function DeliveryMethodsPage() {
             <Card className="max-w-xl">
               <CardContent className="space-y-4 p-6">
                 <Input
-                  label="نام روش ارسالی"
-                  placeholder="اینجا بنویسید..."
+                  label={deliveryMethodsLocalization.methodName}
+                  placeholder={deliveryMethodsLocalization.typeHere}
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                 />
                 <Input
                   type="number"
-                  label="ارسال رایگان از مبلغ"
+                  label={deliveryMethodsLocalization.free}
                   placeholder="0"
                   value={form.freeShippingOver}
                   onChange={(e) =>
@@ -118,7 +181,7 @@ export default function DeliveryMethodsPage() {
                 />
                 <Input
                   type="number"
-                  label="حداقل هزینه ارسال"
+                  label={deliveryMethodsLocalization.minCost}
                   placeholder="0"
                   value={form.minCost}
                   onChange={(e) =>
@@ -127,7 +190,7 @@ export default function DeliveryMethodsPage() {
                 />
                 <Input
                   type="number"
-                  label="حداکثر وزن قابل ارسال (کیلوگرم)"
+                  label={deliveryMethodsLocalization.maxWeight}
                   placeholder="0"
                   value={form.maxWeight}
                   onChange={(e) =>
@@ -144,7 +207,13 @@ export default function DeliveryMethodsPage() {
                     onClick={handleSubmit}
                     className="bg-green-500 hover:bg-green-700"
                   >
-                    {editingId ? "ویرایش روش ارسال" : "افزودن روش جدید"}
+                    {isLoading
+                      ? editingId
+                        ? deliveryMethodsLocalization.editing
+                        : deliveryMethodsLocalization.editing
+                      : editingId
+                      ? deliveryMethodsLocalization.edit
+                      : deliveryMethodsLocalization.addNewMethod}
                   </Button>
                 </div>
               </CardContent>
@@ -157,40 +226,66 @@ export default function DeliveryMethodsPage() {
         <table className="min-w-full border text-right">
           <thead className="bg-gray-100 text-sm font-bold">
             <tr className="text-center">
-              <th className="p-2 border">نام</th>
-              <th className="p-2 border">ارسال رایگان از مبلغ</th>
-              <th className="p-2 border">حداقل هزینه</th>
-              <th className="p-2 border">حداکثر وزن</th>
-              <th className="p-2 border">عملیات</th>
+              <th className="p-2 border">{deliveryMethodsLocalization.name}</th>
+              <th className="p-2 border">
+                {" "}
+                {deliveryMethodsLocalization.free}{" "}
+              </th>
+              <th className="p-2 border">
+                {" "}
+                {deliveryMethodsLocalization.minCost}
+              </th>
+              <th className="p-2 border">
+                {" "}
+                {deliveryMethodsLocalization.maxWeight}
+              </th>
+              <th className="p-2 border">
+                {deliveryMethodsLocalization.operation}
+              </th>
             </tr>
           </thead>
+
           <tbody className="text-center">
-            {methods.map((method) => (
-              <tr key={method.id} className="text-sm">
-                <td className="p-2 border">{method.name}</td>
-                <td className="p-2 border">
-                  {method.freeShippingOver.toLocaleString()} ریال
-                </td>
-                <td className="p-2 border">
-                  {method.minCost.toLocaleString()} ریال
-                </td>
-                <td className="p-2 border">{method.maxWeight} کیلوگرم</td>
-                <td className="p-2 border space-x-2">
-                  <Button
-                    onClick={() => handleEdit(method)}
-                    className="bg-blue-500 hover:bg-blue-700"
-                  >
-                    ویرایش
-                  </Button>
-                  <Button
-                    onClick={() => handleDelete(method.id)}
-                    className="bg-yellow-500 hover:bg-yellow-700"
-                  >
-                    حذف
-                  </Button>
+            {isLoading ? (
+              <tr>
+                <td colSpan={5} className="p-4 text-center">
+                  {faLocalization.loading}{" "}
                 </td>
               </tr>
-            ))}
+            ) : (
+              methods.map((method) => (
+                <tr key={method.id} className="text-sm">
+                  <td className="p-2 border">{method.name}</td>
+                  <td className="p-2 border">
+                    {method.freeShippingOver.toLocaleString()}{" "}
+                    {deliveryMethodsLocalization.rial}
+                  </td>
+                  <td className="p-2 border">
+                    {method.minCost.toLocaleString()}{" "}
+                    {deliveryMethodsLocalization.rial}
+                  </td>
+                  <td className="p-2 border">
+                    {method.maxWeight} {deliveryMethodsLocalization.kilo}
+                  </td>
+                  <td className="p-2 border space-x-2">
+                    <div className="flex flex-col gap-2 items-center justify-center lg:flex-row ">
+                      <Button
+                        onClick={() => handleEdit(method)}
+                        className="bg-blue-500 hover:bg-blue-700"
+                      >
+                        {faLocalization.edit}{" "}
+                      </Button>
+                      <Button
+                        onClick={() => handleDelete(method.id)}
+                        className="bg-yellow-500 hover:bg-yellow-700"
+                      >
+                        {faLocalization.delete}
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

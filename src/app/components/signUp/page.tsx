@@ -1,5 +1,6 @@
 "use client";
 import signUpPage from "@/app/assets/images/signUpPage.jpg";
+import { getAuthToken } from "@/app/base/getAuthToken";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
 import { signUpLocalization } from "@/app/constants/localization/fa/localization";
 import ValidateInput from "@/app/utils/ValidateInput";
@@ -29,6 +30,8 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const isFormValid = formData.name && formData.email && formData.password;
+
+  const token = getAuthToken();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -61,7 +64,7 @@ const SignUp = () => {
         {
           headers: {
             api_key: API_KEY,
-            Authorization: `Bearer {eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YmRlYzRhZjIxYTkwMzExMzZkZmE3OSIsImlhdCI6MTc0MDUwMDA4MSwiZXhwIjoxNzQwNjcyODgxfQ.UNOv7P_MPhYnt4vqgLQ3RyQx4CuwMVALen8BebtXChM}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );

@@ -1,12 +1,11 @@
-"use client";
 import axios from "axios";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
 import { getAuthToken } from "../base/getAuthToken";
 
-export const getBlogs = async () => {
+export const getProducts = async () => {
   const token = getAuthToken();
   try {
-    const response = await axios.get(`${BASE_url}/api/records/blogs`, {
+    const response = await axios.get(`${BASE_url}/api/records/drugs`, {
       headers: {
         api_key: API_KEY,
         Authorization: `Bearer ${token}`,

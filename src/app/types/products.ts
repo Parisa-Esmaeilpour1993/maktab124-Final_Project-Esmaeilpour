@@ -3,3 +3,14 @@ export interface SingleProductPageProps {
     id: string;
   };
 }
+export interface ProductsProps {
+  id: string;
+  productName: string;
+  productCategory: string;
+  productPrice: number | "";
+  productQuantity: number | "";
+  productDescription: string;
+  productSpecifications: string;
+  productExpired: string;
+  image: string;
+}

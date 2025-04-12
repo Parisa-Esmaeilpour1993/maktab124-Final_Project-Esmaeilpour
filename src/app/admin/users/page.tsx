@@ -1,7 +1,7 @@
 import React from "react";
 
-function UsersListPage() {
-  return <div>users list</div>;
+function page() {
+  return <div>userList</div>;
 }
 
-export default UsersListPage;
+export default page;

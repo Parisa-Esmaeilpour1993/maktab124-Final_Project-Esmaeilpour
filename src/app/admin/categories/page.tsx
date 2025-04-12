@@ -2,46 +2,57 @@
 
 import {
   adminCategories,
+  faLocalization,
   sweetAlert,
 } from "@/app/constants/localization/fa/localization";
 import { useAppDispatch, useAppSelector } from "@/app/redux/store/hooks";
 import { addCategory } from "@/app/services/addCategory";
-import { addSubCategory } from "@/app/services/addSubCategory";
 import { deleteCategory } from "@/app/services/deleteCategory";
-import { deleteSubCategory } from "@/app/services/deleteSubCategory";
 import { editCategory } from "@/app/services/editCategory";
-import { editSubCategory } from "@/app/services/editSubCategory";
 import { fetchCategories } from "@/app/services/fetchCategory";
 import { useEffect, useState } from "react";
-import { GridLoader } from "react-spinners";
 import Swal from "sweetalert2";
+import SearchInput from "@/app/shared/SearchInput";
 
 export default function AdminCategoriesPage() {
   const [mainModalOpen, setMainModalOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [editId, setEditId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState("");
-  const [activeAddSubId, setActiveAddSubId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const [activeEditSub, setActiveEditSub] = useState<{
-    categoryId: string;
-    subCategoryId: string;
-  } | null>(null);
-  const [subTitle, setSubTitle] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const dispatch = useAppDispatch();
   const { categories, error } = useAppSelector((state) => state.categories);
+
+  const itemsPerPage = 5;
 
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  const handleAddCategory = () => {
+  const handleAddCategory = async () => {
     if (title.trim()) {
-      dispatch(addCategory(title));
-      setTitle("");
-      setMainModalOpen(false);
+      const isDuplicate = categories.some(
+        (cat) => cat.title.trim().toLowerCase() === title.trim().toLowerCase()
+      );
+
+      if (isDuplicate) {
+        Swal.fire({
+          icon: "error",
+          text: adminCategories.repetitive,
+        });
+        return;
+      }
+
+      try {
+        await dispatch(addCategory(title));
+        await dispatch(fetchCategories());
+        setTitle("");
+        setMainModalOpen(false);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -56,7 +67,7 @@ export default function AdminCategoriesPage() {
     });
 
     if (result.isConfirmed) {
-      dispatch(deleteCategory(id));
+      await dispatch(deleteCategory(id));
       dispatch(fetchCategories());
       Swal.fire({
         title: sweetAlert.delete,
@@ -67,109 +78,68 @@ export default function AdminCategoriesPage() {
     }
   };
 
-  const handleEditCategory = (id: string) => {
+  const handleEditCategory = async (id: string) => {
     if (editValue.trim()) {
-      dispatch(editCategory({ id, title: editValue }));
-      setEditId(null);
-      dispatch(fetchCategories());
-      Swal.fire({
-        title: sweetAlert.edit,
-        icon: "success",
-        confirmButtonText: sweetAlert.ok,
-      });
-    }
-  };
-
-  const handleDeleteSubCategory = async (
-    categoryId: string,
-    subCategoryId: string
-  ) => {
-    const result = await Swal.fire({
-      title: sweetAlert.areYouSure,
-      text: sweetAlert.irrevocable,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: sweetAlert.yesDelete,
-      cancelButtonText: sweetAlert.cancel,
-    });
-
-    if (result.isConfirmed) {
-      await dispatch(deleteSubCategory({ categoryId, subCategoryId }));
-      dispatch(fetchCategories());
-
-      Swal.fire({
-        title: sweetAlert.delete,
-        text: sweetAlert.deleteCategory,
-        icon: "success",
-        confirmButtonText: sweetAlert.ok,
-      });
-    }
-  };
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timeout);
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <GridLoader
-          color="#677284"
-          size={24}
-          className="absolute top-72 left-2/5 transform -translate-x-1/2"
-        />
-      </div>
-    );
-  }
-
-  const handleAddSubCategory = (categoryId: string) => {
-    if (subTitle.trim()) {
-      dispatch(addSubCategory({ parentId: categoryId, title: subTitle })).then(
-        () => {
-          setSubTitle("");
-          setActiveAddSubId(null);
-          dispatch(fetchCategories());
-          Swal.fire({
-            title: sweetAlert.addSubCategory,
-            icon: "success",
-            confirmButtonText: sweetAlert.ok,
-          });
-        }
+      const isDuplicate = categories.some(
+        (cat) =>
+          cat.title.trim().toLowerCase() === editValue.trim().toLowerCase()
       );
-    }
-  };
 
-  const handleEditSubCategory = (categoryId: string, subCategoryId: string) => {
-    if (subTitle.trim()) {
-      dispatch(
-        editSubCategory({ categoryId, subCategoryId, title: subTitle })
-      ).then(() => {
-        setSubTitle("");
-        setActiveEditSub(null);
-        dispatch(fetchCategories());
+      if (isDuplicate) {
         Swal.fire({
-          title: sweetAlert.editSubCategory,
+          icon: "error",
+          text: adminCategories.repetitive,
+        });
+        return;
+      }
+      try {
+        await dispatch(editCategory({ id, title: editValue })).unwrap();
+        await dispatch(fetchCategories()).unwrap();
+        setEditId(null);
+        setEditValue("");
+        Swal.fire({
+          title: sweetAlert.edit,
           icon: "success",
           confirmButtonText: sweetAlert.ok,
         });
-      });
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
+  const filteredCategories = categories.filter((cat) =>
+    cat?.title?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
+  const paginatedCategories = filteredCategories.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
-    <div className="px-10 py-4 w-full">
-      <div className="flex justify-between items-center">
-        <h1 className="text-xl font-bold">{adminCategories.categoriesList}</h1>
+    <div className="px-10 py-2 w-full">
+      <div className="flex flex-col gap-4 md:flex-row justify-between items-center mb-4">
+        <h1 className="text-lg md:text-xl font-bold">
+          {adminCategories.categoriesList}
+        </h1>
         <button
           onClick={() => setMainModalOpen(true)}
-          className="bg-blue-400 text-white px-4 py-2 rounded active:scale-95 hover:bg-blue-500 cursor-pointer"
+          className="bg-blue-400 text-white px-2 md:px-4 py-1 md:py-2 rounded active:scale-95 hover:bg-blue-500 cursor-pointer"
         >
           {adminCategories.addCategory}
         </button>
+      </div>
+
+      <div className="mb-4 flex">
+        <SearchInput
+          value={searchTerm}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1);
+          }}
+        />
       </div>
 
       {mainModalOpen && (
@@ -202,147 +172,108 @@ export default function AdminCategoriesPage() {
 
       {error && <p className="text-red-500">{error}</p>}
 
-      <ul className="flex flex-col justify-between mt-4 p-3 space-y-4 shadow-2xl rounded-2xl">
-        {categories.map((cat, index) => (
-          <li key={cat.id} className="px-3 py-1 border-b border-gray-300">
-            <div className="flex justify-between items-center pb-1">
-              {editId === cat.id ? (
-                <div className="flex gap-2 items-center justify-center">
-                  <span className="font-bold">{index + 1}. </span>
-                  <input
-                    value={editValue}
-                    onChange={(e) => setEditValue(e.target.value)}
-                    className="border border-gray-600 rounded-md p-1 outline-none hover:border-black"
-                  />
-                  <button
-                    onClick={() => handleEditCategory(cat.id)}
-                    className="text-green-500 px-2 hover:text-green-700 cursor-pointer"
-                  >
-                    {adminCategories.save}
-                  </button>
-                </div>
-              ) : (
-                <div>
-                  <span className="font-bold text-xl">{index + 1}. </span>
-                  <span className="text-lg">{cat.title}</span>
-                </div>
-              )}
-              <div className="flex gap-4">
-                <button
-                  onClick={() => {
-                    setEditId(cat.id);
-                    setEditValue(cat.title);
-                  }}
-                  className="text-yellow-600 hover:text-yellow-700 cursor-pointer"
-                >
-                  {adminCategories.edit}
-                </button>
-                <button
-                  onClick={() => handleDeleteCategory(cat.id)}
-                  className="text-red-500 hover:text-red-700 cursor-pointer"
-                >
-                  {adminCategories.delete}
-                </button>
-                <button
-                  onClick={() => {
-                    setActiveAddSubId(cat.id);
-                    setSubTitle("");
-                    setActiveEditSub(null);
-                  }}
-                  className="text-blue-500 hover:text-blue-700 cursor-pointer"
-                >
-                  {adminCategories.addSub}
-                </button>
-              </div>
-            </div>
-
-            {Array.isArray(cat.children) &&
-              cat.children.map((sub, subIndex) => (
-                <div
-                  key={sub.id}
-                  className="flex justify-between items-center pr-6 my-1"
-                >
-                  {activeEditSub?.categoryId === cat.id &&
-                  activeEditSub.subCategoryId === sub.id ? (
-                    <div className="flex gap-2 items-center">
-                      <span className="font-medium">
-                        {index + 1}.{subIndex + 1}-
-                      </span>
-                      <input
-                        value={subTitle}
-                        onChange={(e) => setSubTitle(e.target.value)}
-                        className="border p-1"
-                      />
+      <ul className="flex flex-col justify-between mt-6 p-3 space-y-4 shadow-2xl border rounded-2xl">
+        {paginatedCategories.map((cat, index) => {
+          if (!cat) return null;
+          return (
+            <li key={cat.id} className="px-3 py-1 border-b border-gray-300">
+              <div className="flex justify-between items-center pb-1">
+                {editId === cat.id ? (
+                  <div className="flex gap-2 items-center justify-center">
+                    <span className="font-bold">
+                      {(currentPage - 1) * itemsPerPage + index + 1}.{" "}
+                    </span>
+                    <input
+                      value={editValue}
+                      onChange={(e) => setEditValue(e.target.value)}
+                      className="border border-gray-600 rounded-md p-1 outline-none hover:border-black"
+                    />
+                    <div className="flex grid-1 items-center">
                       <button
-                        onClick={() => handleEditSubCategory(cat.id, sub.id)}
-                        className="text-green-600 cursor-pointer"
+                        onClick={() => handleEditCategory(cat.id)}
+                        className="text-green-500 px-2 hover:text-green-700 cursor-pointer"
                       >
                         {adminCategories.save}
                       </button>
+                      <button
+                        onClick={() => {
+                          setEditId(null);
+                          setEditValue("");
+                        }}
+                        className="text-gray-600 hover:text-gray-800 cursor-pointer"
+                      >
+                        {adminCategories.cancel}
+                      </button>
                     </div>
-                  ) : (
-                    <>
-                      <span className="flex gap-2 items-center">
-                        <span className="font-medium">
-                          {index + 1}.{subIndex + 1}-
-                        </span>
-                        <span className="text-gray-700">{sub.title}</span>
-                      </span>
-                      <div className="flex gap-4">
-                        <button
-                          onClick={() => {
-                            setActiveEditSub({
-                              categoryId: cat.id,
-                              subCategoryId: sub.id,
-                            });
-                            setSubTitle(sub.title);
-                            setActiveAddSubId(null);
-                          }}
-                          className="text-yellow-600 cursor-pointer hover:text-yellow-700"
-                        >
-                          {adminCategories.edit}
-                        </button>
-                        <button
-                          onClick={() =>
-                            handleDeleteSubCategory(cat.id, sub.id)
-                          }
-                          className="text-red-500 cursor-pointer hover:text-red-700"
-                        >
-                          {adminCategories.delete}
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
-
-            {activeAddSubId === cat.id && (
-              <div className="bg-gray-100 p-3 rounded mt-2">
-                <input
-                  value={subTitle}
-                  onChange={(e) => setSubTitle(e.target.value)}
-                  placeholder={adminCategories.subTitle}
-                  className="border p-2 w-full mb-2"
-                />
-                <div className="flex gap-2 justify-end">
+                  </div>
+                ) : (
+                  <div>
+                    <span className="font-bold text-xl">
+                      {(currentPage - 1) * itemsPerPage + index + 1}.{" "}
+                    </span>
+                    <span className="text-[14px] md:text-[16px]">
+                      {cat.title}
+                    </span>
+                  </div>
+                )}
+                <div className="flex gap-4">
                   <button
-                    onClick={() => setActiveAddSubId(null)}
-                    className="bg-gray-400 text-white px-3 py-1 rounded cursor-pointer active:scale-95"
+                    onClick={() => {
+                      setEditId(cat.id);
+                      setEditValue(cat.title);
+                    }}
+                    className="text-yellow-600 hover:text-yellow-700 cursor-pointer text-[14px] md:text-[16px]"
                   >
-                    {adminCategories.cancel}
+                    {adminCategories.edit}
                   </button>
                   <button
-                    onClick={() => handleAddSubCategory(cat.id)}
-                    className="bg-green-600 text-white px-3 py-1 rounded cursor-pointer active:scale-95"
+                    onClick={() => handleDeleteCategory(cat.id)}
+                    className="text-red-500 hover:text-red-700 cursor-pointer text-[14px] md:text-[16px]"
                   >
-                    {adminCategories.add}
+                    {adminCategories.delete}
                   </button>
                 </div>
               </div>
-            )}
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ul>
+
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center mt-4 gap-4">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className={`px-2 py-1 rounded-md border border-gray-600 ${
+              currentPage === 1
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-white text-black hover:border-black hover:translate-y-0.5"
+            }`}
+          >
+            {faLocalization.prev}{" "}
+          </button>
+
+          <span>
+            {faLocalization.page}{" "}
+            <span className="text-red-500">{currentPage}</span>{" "}
+            {faLocalization.from} {totalPages}
+          </span>
+
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className={`px-2 py-1 rounded-md border border-gray-600 ${
+              currentPage === totalPages
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-white text-black hover:border-black hover:translate-y-0.5"
+            }`}
+          >
+            {faLocalization.next}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

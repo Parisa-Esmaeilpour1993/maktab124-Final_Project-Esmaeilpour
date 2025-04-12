@@ -7,19 +7,20 @@ import axios from "axios";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-interface Blog {
-  id: string;
-  title: string;
-  summary: string;
-  content: string;
-  image: string;
-}
+import Button from "@/app/shared/Button";
+import { BlogProps } from "@/app/types/blogList";
+import {
+  blogLocalization,
+  faLocalization,
+  sweetAlert,
+} from "@/app/constants/localization/fa/localization";
+import Swal from "sweetalert2";
+ 
 
 export default function BlogList() {
-  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [blogs, setBlogs] = useState<BlogProps[]>([]);
   const [loading, setLoading] = useState(true);
-  const [editBlog, setEditBlog] = useState<Blog | null>(null);
+  const [editBlog, setEditBlog] = useState<BlogProps | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -31,29 +32,42 @@ export default function BlogList() {
   }, []);
 
   const handleDelete = async (id: string) => {
-    try {
-      setLoading(true);
-      const response = await axios.delete(
-        `${BASE_url}/api/records/blogs/${id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            api_key: API_KEY,
-          },
-        }
-      );
+    const result = await Swal.fire({
+      title: sweetAlert.areYouSure,
+      text: sweetAlert.irrevocable,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: sweetAlert.yesDelete,
+      cancelButtonText: sweetAlert.cancel,
+    });
 
-      if (response.status === 200) {
-        toast.success("پست با موفقیت حذف شد");
-        setBlogs(blogs.filter((blog) => blog.id !== id));
-      } else {
-        toast.error("خطا در حذف پست");
+    if (result.isConfirmed) {
+      try {
+        setLoading(true);
+        const response = await axios.delete(
+          `${BASE_url}/api/records/blogs/${id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              api_key: API_KEY,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          toast.success(sweetAlert.successfullyDeleted);
+          setBlogs(blogs.filter((blog) => blog.id !== id));
+        } else {
+          toast.error(blogLocalization.deleteError);
+        }
+      } catch (error) {
+        console.error("Error deleting blog:", error);
+        toast.error(blogLocalization.deleteError);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Error deleting blog:", error);
-      toast.error("مشکلی در حذف پست پیش آمده");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -81,7 +95,7 @@ export default function BlogList() {
       );
 
       if (response.status === 200) {
-        toast.success("پست با موفقیت ویرایش شد");
+        toast.success(sweetAlert.successfullyEdited);
         setBlogs(
           blogs.map((blog) =>
             blog.id === editBlog.id ? { ...blog, ...editBlog } : blog
@@ -89,54 +103,59 @@ export default function BlogList() {
         );
         setEditBlog(null);
       } else {
-        toast.error("خطا در ویرایش پست");
+        toast.error(blogLocalization.editError);
       }
     } catch (error) {
       console.error("Error updating blog:", error);
-      toast.error("مشکلی در ویرایش پست پیش آمده");
+      toast.error(blogLocalization.editError);
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) return <p className="mt-10">در حال دریافت پست‌ها...</p>;
+  if (loading) return <p className="mt-10">{blogLocalization.loading}</p>;
 
-  if (!blogs.length) return <p className="mt-10">هیچ پستی وجود ندارد</p>;
+  if (!blogs.length)
+    return <p className="mt-10">{blogLocalization.noPostToShow}</p>;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10 px-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8 px-4">
       {blogs.map((blog) => (
         <div
           key={blog.id}
-          className="border rounded-lg p-4 shadow-sm hover:shadow-md transition"
+          className="border rounded-lg flex flex-col justify-between p-4 shadow-sm hover:shadow-md transition"
         >
-          <img
-            src={`${BASE_url}${blog.image}`}
-            alt={blog.title}
-            className="w-full h-48 object-cover rounded-md mb-3"
-          />
-          <h3 className="text-lg font-bold mb-1">{blog.title}</h3>
-          <p className="text-sm text-gray-600">{blog.summary}</p>
+          <div>
+            {" "}
+            <img
+              src={`${BASE_url}${blog.image}`}
+              alt={blog.title}
+              className="w-full h-44 object-cover rounded-md mb-3 cursor-pointer"
+            />
+            <h3 className="font-bold mb-2 cursor-pointer">{blog.title}</h3>
+            <p className="text-sm text-gray-600 line-clamp-3">{blog.summary}</p>
+          </div>
 
           <div className="flex justify-between mt-4">
-            <button
+            <Button
               onClick={() => handleEdit(blog.id)}
-              className="text-blue-600 hover:text-blue-800"
+              className="!text-blue-600 hover:!text-blue-900"
             >
-              <FaEdit /> ویرایش
-            </button>
-            <button
+              {" "}
+              <FaEdit /> {faLocalization.edit}
+            </Button>
+            <Button
               onClick={() => handleDelete(blog.id)}
-              className="text-red-600 hover:text-red-800"
+              className="!text-red-600 hover:!text-red-800"
             >
-              <FaTrash /> حذف
-            </button>
+              <FaTrash /> {faLocalization.delete}
+            </Button>
           </div>
         </div>
       ))}
 
       {editBlog && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6 relative">
             <button
               onClick={() => setEditBlog(null)}
@@ -146,11 +165,11 @@ export default function BlogList() {
             </button>
 
             <h2 className="text-xl font-semibold text-center mb-4">
-              ویرایش پست
+              {faLocalization.edit}{" "}
             </h2>
 
             <div className="mb-4">
-              <label className="block mb-1">عنوان</label>
+              <label className="block mb-1">{blogLocalization.title}</label>
               <input
                 type="text"
                 value={editBlog.title}
@@ -163,7 +182,7 @@ export default function BlogList() {
             </div>
 
             <div className="mb-4">
-              <label className="block mb-1">خلاصه</label>
+              <label className="block mb-1">{blogLocalization.abstract}</label>
               <textarea
                 value={editBlog.summary}
                 onChange={(e) =>
@@ -176,7 +195,7 @@ export default function BlogList() {
             </div>
 
             <div className="mb-4">
-              <label className="block mb-1">محتوا</label>
+              <label className="block mb-1">{blogLocalization.content}</label>
               <textarea
                 value={editBlog.content}
                 onChange={(e) =>
@@ -193,13 +212,13 @@ export default function BlogList() {
                 onClick={handleUpdate}
                 className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
               >
-                بروزرسانی
+                {faLocalization.update}
               </button>
               <button
                 onClick={() => setEditBlog(null)}
                 className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
               >
-                لغو
+                {sweetAlert.cancel}
               </button>
             </div>
           </div>
