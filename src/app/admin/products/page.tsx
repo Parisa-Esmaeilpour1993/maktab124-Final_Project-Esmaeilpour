@@ -1,26 +1,26 @@
 "use client";
 
 import { getAuthToken } from "@/app/base/getAuthToken";
-import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa";
-import { ToastContainer, toast } from "react-toastify";
-import Swal from "sweetalert2";
-import "react-toastify/dist/ReactToastify.css";
-import SearchInput from "@/app/shared/SearchInput";
-import { Category } from "@/app/types/category";
 import AddProductModal from "@/app/components/admin/products/AddProductModal";
-import { ProductsProps } from "@/app/types/products";
-import ProductTable from "@/app/components/admin/products/ProductTable";
 import Pagination from "@/app/components/admin/products/Pagination";
+import ProductTable from "@/app/components/admin/products/ProductTable";
+import { resetForm } from "@/app/components/admin/products/resetForm";
 import ShowDetailProducts from "@/app/components/admin/products/ShowDetailProduct";
+import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
 import {
   productsLocalization,
   sweetAlert,
 } from "@/app/constants/localization/fa/localization";
 import { uploadImage } from "@/app/services/uploadService";
-import { resetForm } from "@/app/components/admin/products/resetForm";
+import SearchInput from "@/app/shared/SearchInput";
+import { Category } from "@/app/types/category";
+import { ProductsProps } from "@/app/types/products";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { FaPlus } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
 
 export default function ProductsPage() {
   const [formData, setFormData] = useState(resetForm);

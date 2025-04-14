@@ -3,6 +3,7 @@
 import { getAuthToken } from "@/app/base/getAuthToken";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
 import {
+  bestSeller,
   faLocalization,
   newestProduct,
   productsLocalization,
@@ -13,11 +14,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
-const NewestProductsAdmin = () => {
-  const [newestProducts, setNewestProducts] = useState<ProductsProps[]>([]);
+const BestSellerAdmin = () => {
+  const [bestProductsToSell, setBestProductsToSell] = useState<ProductsProps[]>(
+    []
+  );
   const [allProducts, setAllProducts] = useState<ProductsProps[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newProductId, setNewProductId] = useState("");
+  const [bestProductsToSellID, setBestProductsToSellID] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,20 +28,20 @@ const NewestProductsAdmin = () => {
   const token = getAuthToken();
 
   useEffect(() => {
-    fetchNewest();
+    fetchBestSeller();
     fetchAllProducts();
   }, []);
 
-  const fetchNewest = async () => {
+  const fetchBestSeller = async () => {
     setLoading(true);
-    const res = await axios.get(`${BASE_url}/api/records/newestProducts`, {
+    const res = await axios.get(`${BASE_url}/api/records/bestProductsToSell`, {
       headers: {
         "Content-Type": "application/json",
         api_key: API_KEY,
         Authorization: `Bearer ${token}`,
       },
     });
-    setNewestProducts(res.data.records);
+    setBestProductsToSell(res.data.records);
     setLoading(false);
   };
 
@@ -54,7 +57,9 @@ const NewestProductsAdmin = () => {
   };
 
   const handleAdd = async () => {
-    const product = allProducts.find((p) => p.id === newProductId.trim());
+    const product = allProducts.find(
+      (p) => p.id === bestProductsToSellID.trim()
+    );
 
     if (!product) {
       toast.error(productsLocalization.notFound);
@@ -62,9 +67,9 @@ const NewestProductsAdmin = () => {
     }
 
     console.log("Selected product to add:", product);
-    console.log("Newest products list:", newestProducts);
+    console.log("Newest products list:", bestProductsToSell);
 
-    const alreadyExists = newestProducts.some(
+    const alreadyExists = bestProductsToSell.some(
       (p) => p.productName === product.productName
     );
 
@@ -77,7 +82,7 @@ const NewestProductsAdmin = () => {
 
     try {
       await axios.post(
-        `${BASE_url}/api/records/newestProducts`,
+        `${BASE_url}/api/records/bestProductsToSell`,
         { ...product },
         {
           headers: {
@@ -89,9 +94,9 @@ const NewestProductsAdmin = () => {
       );
 
       toast.success(sweetAlert.successful);
-      setNewProductId("");
+      setBestProductsToSellID("");
       setIsModalOpen(false);
-      fetchNewest();
+      fetchBestSeller();
     } catch (error) {
       toast.error(sweetAlert.errorInSubmit);
       console.error("Error in adding product:", error);
@@ -103,14 +108,14 @@ const NewestProductsAdmin = () => {
   const handleDelete = async (id: string) => {
     setDeletingId(id);
     try {
-      await axios.delete(`${BASE_url}/api/records/newestProducts/${id}`, {
+      await axios.delete(`${BASE_url}/api/records/bestProductsToSell/${id}`, {
         headers: {
           "Content-Type": "application/json",
           api_key: API_KEY,
           Authorization: `Bearer ${token}`,
         },
       });
-      fetchNewest();
+      fetchBestSeller();
     } catch (error) {
       toast.error(sweetAlert.errorInDeleteData);
     } finally {
@@ -122,7 +127,7 @@ const NewestProductsAdmin = () => {
     <div>
       <div className="p-4 max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">{newestProduct.newProduct}</h2>
+          <h2 className="text-xl font-bold">{bestSeller.bestSellerProduct}</h2>
           <button
             onClick={() => setIsModalOpen(true)}
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
@@ -138,8 +143,8 @@ const NewestProductsAdmin = () => {
               <input
                 type="text"
                 placeholder={newestProduct.addProductID}
-                value={newProductId}
-                onChange={(e) => setNewProductId(e.target.value)}
+                value={bestProductsToSellID}
+                onChange={(e) => setBestProductsToSellID(e.target.value)}
                 className="w-full border px-3 py-2 rounded"
               />
               <div className="flex justify-end gap-2">
@@ -165,11 +170,11 @@ const NewestProductsAdmin = () => {
             <div className="w-6 h-6 border-t-4 border-blue-500 border-solid rounded-full animate-spin "></div>
             {productsLocalization.loading}...
           </div>
-        ) : newestProducts.length === 0 ? (
-          <div className="mt-8">{faLocalization.noProductFound}</div>
+        ) : bestProductsToSell.length === 0 ? (
+          <div className="my-8">{faLocalization.noProductFound}</div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {newestProducts.map((product) => (
+            {bestProductsToSell.map((product) => (
               <div
                 key={product.id}
                 className="border rounded p-2 flex flex-col gap-2 items-center shadow"
@@ -202,4 +207,4 @@ const NewestProductsAdmin = () => {
   );
 };
 
-export default NewestProductsAdmin;
+export default BestSellerAdmin;

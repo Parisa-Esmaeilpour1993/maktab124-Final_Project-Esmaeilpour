@@ -1,7 +1,12 @@
+import BestSellerAdmin from "@/app/components/admin/best-seller/BestSeller";
 import React from "react";
 
 function BestSeller() {
-  return <div>best sellerProducts</div>;
+  return (
+    <div>
+      <BestSellerAdmin />
+    </div>
+  );
 }
 
 export default BestSeller;

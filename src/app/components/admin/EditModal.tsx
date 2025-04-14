@@ -1,4 +1,7 @@
 import { IoCloseCircleSharp } from "react-icons/io5";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import React from "react";
 
 interface EditModalProps {
   isOpen: boolean;
@@ -8,7 +11,9 @@ interface EditModalProps {
     description: string;
   };
   onChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e:
+      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | { target: { name: string; value: string } }
   ) => void;
   onSubmit: (e: React.FormEvent) => void;
   loading: boolean;
@@ -23,6 +28,10 @@ export default function EditModal({
   loading,
 }: EditModalProps) {
   if (!isOpen) return null;
+
+  const handleDescriptionChange = (value: string) => {
+    onChange({ target: { name: "description", value } });
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
@@ -55,13 +64,11 @@ export default function EditModal({
             <label className="block text-sm font-medium text-gray-700 mb-1">
               توضیحات
             </label>
-            <textarea
-              name="description"
+            <ReactQuill
+              theme="snow"
               value={formData.description}
-              onChange={onChange}
-              rows={4}
-              className="w-full border rounded-lg p-2 text-sm text-gray-700"
-              required
+              onChange={handleDescriptionChange}
+              className="bg-white text-sm"
             />
           </div>
 

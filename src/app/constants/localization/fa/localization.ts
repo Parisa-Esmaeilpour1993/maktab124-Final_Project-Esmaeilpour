@@ -18,6 +18,7 @@ export const faLocalization = {
   add: "افزودن",
   adding: "در حال افزودن...",
   rial: "ریال",
+  noProductFound: "محصولی برای نمایش وجود ندارد.",
 };
 
 export const sweetAlert = {
@@ -194,9 +195,13 @@ export const productsLocalization = {
 };
 
 export const newestProduct = {
-  newProduct: "محصول جدید",
+  newProduct: "محصولات جدید",
   addNewProduct: "افزودن محصول جدید",
   addID: "افزودن آیدی محصول",
   addProductID: "آیدی محصول را وارد کنید",
   duplicate: "این محصول قبلاً اضافه شده است.",
+};
+
+export const bestSeller = {
+  bestSellerProduct: "محصولات پرفروش",
 };
