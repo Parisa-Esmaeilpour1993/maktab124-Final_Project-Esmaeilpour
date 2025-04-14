@@ -20,7 +20,7 @@ const ShowDetailProducts = ({
 }: DetailProps) => {
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg w-full max-w-4xl space-y-3">
+      <div className="max-h-full overflow-y-auto bg-white p-6 lg:rounded-lg w-full max-w-4xl space-y-3">
         <p className="border-2 border-gray-200 p-2">
           <strong>{productsLocalization.name}:</strong>{" "}
           {selectedProduct.productName}
@@ -38,18 +38,18 @@ const ShowDetailProducts = ({
           <strong>{productsLocalization.available}:</strong>{" "}
           {selectedProduct.productQuantity}
         </p>
-        <p className="border-2 border-gray-200 p-2">
+        <div className="border-2 border-gray-200 p-2">
           <strong>{productsLocalization.description}:</strong>
           <div className="max-h-24 overflow-y-auto">
             {selectedProduct.productDescription}
           </div>
-        </p>
-        <p className="border-2 border-gray-200 p-2">
+        </div>
+        <div className="border-2 border-gray-200 p-2">
           <strong>{productsLocalization.specification}:</strong>
           <div className="max-h-28 overflow-y-auto">
             {selectedProduct.productSpecifications}
           </div>
-        </p>
+        </div>
 
         <div className="flex justify-end">
           <button

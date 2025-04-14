@@ -88,7 +88,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                   key={product.id}
                   className={`hover:bg-gray-50 ${
                     +product.productQuantity === 0
-                      ? "bg-red-100 hover:bg-red-200"
+                      ? "bg-red-100 hover:bg-red-200 opacity-60 hover:opacity-100"
                       : ""
                   }`}
                 >
@@ -234,60 +234,68 @@ const ProductTable: React.FC<ProductTableProps> = ({
 
       {/* Mobile & Tablet View */}
       <div className="lg:hidden flex flex-col gap-6">
-        {products.map((product) => (
-          <div
-            key={product.id}
-            className="flex flex-col gap-2 border rounded-lg p-4 shadow-sm bg-white"
-          >
-            <div className="flex justify-between items-center mb-2">
-              <strong>{product.productName}</strong>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleDelete(product.id)}
-                  className="text-red-500"
-                >
-                  <FaTrash />
-                </button>
-                <button
-                  onClick={() => onEditClick(product)}
-                  className="text-blue-500"
-                >
-                  <FaEdit />
-                </button>
-                <button
-                  onClick={() => onDetailClick(product)}
-                  className="text-yellow-500"
-                >
-                  <BiSolidDetail />
-                </button>
-              </div>
-            </div>
-            <img
-              src={`${BASE_url}${product.image}`}
-              alt={product.productName}
-              className="w-full h-40 object-cover rounded my-6"
-            />
-            <p>
-              <strong>{productsLocalization.category}:</strong>{" "}
-              {
-                category.find((cat) => cat.id === product.productCategory)
-                  ?.title
-              }
-            </p>
-            <p>
-              <strong>{productsLocalization.price}:</strong>{" "}
-              {product.productPrice}
-            </p>
-            <p>
-              <strong>{productsLocalization.available}:</strong>{" "}
-              {product.productQuantity}
-            </p>
-            <p>
-              <strong>{productsLocalization.expireDate} :</strong>{" "}
-              {product.productExpired || "-"}
-            </p>
+        {products.length === 0 ? (
+          <div className="text-center">
+            <span className="text-gray-500">
+              {productsLocalization.notFound}
+            </span>
           </div>
-        ))}
+        ) : (
+          products.map((product) => (
+            <div
+              key={product.id}
+              className="flex flex-col gap-2 border rounded-lg p-4 shadow-sm bg-white"
+            >
+              <div className="flex justify-between items-center mb-2">
+                <strong>{product.productName}</strong>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleDelete(product.id)}
+                    className="text-red-500"
+                  >
+                    <FaTrash />
+                  </button>
+                  <button
+                    onClick={() => onEditClick(product)}
+                    className="text-blue-500"
+                  >
+                    <FaEdit />
+                  </button>
+                  <button
+                    onClick={() => onDetailClick(product)}
+                    className="text-yellow-500"
+                  >
+                    <BiSolidDetail />
+                  </button>
+                </div>
+              </div>
+              <img
+                src={`${BASE_url}${product.image}`}
+                alt={product.productName}
+                className="w-full h-40 object-cover rounded my-6"
+              />
+              <p>
+                <strong>{productsLocalization.category}:</strong>{" "}
+                {
+                  category.find((cat) => cat.id === product.productCategory)
+                    ?.title
+                }
+              </p>
+              <p>
+                <strong>{productsLocalization.price}:</strong>{" "}
+                {product.productPrice}
+              </p>
+              <p>
+                <strong>{productsLocalization.available}:</strong>{" "}
+                {product.productQuantity}
+              </p>
+              <p>
+                <strong>{productsLocalization.expireDate} :</strong>{" "}
+                {product.productExpired || "-"}
+              </p>
+            </div>
+          ))
+        )}
       </div>
     </>
   );

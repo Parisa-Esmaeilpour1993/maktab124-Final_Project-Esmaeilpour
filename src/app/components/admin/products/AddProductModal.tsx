@@ -123,15 +123,15 @@ const AddProductModal: React.FC<Props> = ({
             value={formData.productSpecifications}
             onChange={onChange}
             placeholder={productsLocalization.specification}
-            className="w-full border px-3 py-2 rounded h-2/3"
+            className="w-full border px-3 py-2 rounded h-1/3 md:h-1/2 lg:h-2/3"
             title={productsLocalization.specification}
           />
 
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col gap-2 md:flex-row justify-between items-center">
             <div>
               <label
                 htmlFor="fileInp"
-                className="block w-full text-center bg-blue-100 py-1 px-2 rounded-md cursor-pointer"
+                className="block w-full text-center bg-blue-100 py-1 px-2 rounded-md cursor-pointer text-sm md:text-[16px]"
               >
                 {productsLocalization.addImagePlease}
               </label>
@@ -149,11 +149,11 @@ const AddProductModal: React.FC<Props> = ({
               )}
             </div>
 
-            <div className="flex gap-2 items-center mt-4">
+            <div className="flex gap-2 items-center">
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-blue-600 hover:bg-blue-700 transition text-white px-2 py-1 rounded"
+                className="bg-blue-600 hover:bg-blue-700 transition text-white px-2 py-1 rounded text-sm md:text-[16px]"
               >
                 {loading
                   ? faLocalization.sending
@@ -164,7 +164,7 @@ const AddProductModal: React.FC<Props> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="bg-gray-300 hover:bg-gray-400 transition px-2 py-1 rounded"
+                className="bg-gray-300 hover:bg-gray-400 transition px-2 py-1 rounded text-sm md:text-[16px]"
               >
                 {sweetAlert.cancel}
               </button>
