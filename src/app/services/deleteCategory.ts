@@ -5,6 +5,7 @@ import { API_KEY, BASE_url } from "../constants/api/BASE_URL";
 import { getAuthToken } from "../base/getAuthToken";
 
 const token = getAuthToken();
+
 export const deleteCategory = createAsyncThunk(
   "categories/deleteCategory",
   async (id: string) => {

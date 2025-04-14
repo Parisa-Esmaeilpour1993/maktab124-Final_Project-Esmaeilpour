@@ -4,6 +4,7 @@ export const faLocalization = {
   cart: "سبد خرید",
   edit: "ویرایش",
   delete: "حذف",
+  deleting: "در حال حذف...",
   loading: "درحال بارگزاری...",
   errorInImageUpload: "آپلود تصویر با خطا مواجه شد",
   sending: "در حال ارسال...",
@@ -14,6 +15,9 @@ export const faLocalization = {
   from: "از",
   errorInFetchingCategories: "خطا در دریافت دسته بندی",
   errorInAddingCategories: "خطا در اضافه کردن دسته بندی",
+  add: "افزودن",
+  adding: "در حال افزودن...",
+  rial: "ریال",
 };
 
 export const sweetAlert = {
@@ -38,6 +42,7 @@ export const sweetAlert = {
   error: "خطا",
   del: "حذف",
   errorInDeleteData: "خطا در حذف محصولات",
+  successful: "محصول با موفقیت ادد شد.",
 };
 
 export const adminCategories = {
@@ -186,4 +191,12 @@ export const productsLocalization = {
   errorInEditingProduct: "خطا در ویرایش محصول",
   loading: "در حال بارگزاری...",
   canNotBeNegative: "تعداد محصول نمی تواند منفی باشد",
+};
+
+export const newestProduct = {
+  newProduct: "محصول جدید",
+  addNewProduct: "افزودن محصول جدید",
+  addID: "افزودن آیدی محصول",
+  addProductID: "آیدی محصول را وارد کنید",
+  duplicate: "این محصول قبلاً اضافه شده است.",
 };

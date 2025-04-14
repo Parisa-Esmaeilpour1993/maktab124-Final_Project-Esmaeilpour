@@ -76,7 +76,7 @@ export default function AddBlogPage() {
         setFormData({ title: "", summary: "", content: "", image: "" });
         setFileName(null);
         setIsModalOpen(false);
-        setBlogListKey((prev) => prev + 1); //
+        setBlogListKey((prev) => prev + 1);
       } else {
         toast.error(sweetAlert.errorInSubmit);
       }

@@ -1,7 +1,12 @@
 import React from "react";
+import NewestProductsPage from "@/app/components/admin/newest-products/NewestProducts";
 
-function NewestProducts() {
-  return <div>newest products</div>;
+function newestProducts() {
+  return (
+    <div>
+      <NewestProductsPage />
+    </div>
+  );
 }
 
-export default NewestProducts;
+export default newestProducts;
