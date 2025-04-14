@@ -10,23 +10,20 @@ import Swal from "sweetalert2";
 import "react-toastify/dist/ReactToastify.css";
 import SearchInput from "@/app/shared/SearchInput";
 import { Category } from "@/app/types/category";
-import AddProductModal from "@/app/components/products/AddProductModal";
+import AddProductModal from "@/app/components/admin/products/AddProductModal";
 import { ProductsProps } from "@/app/types/products";
-import ProductTable from "@/app/components/products/ProductTable";
-import Pagination from "@/app/components/products/Pagination";
-import ShowDetailProducts from "@/app/components/products/ShowDetailProduct";
+import ProductTable from "@/app/components/admin/products/ProductTable";
+import Pagination from "@/app/components/admin/products/Pagination";
+import ShowDetailProducts from "@/app/components/admin/products/ShowDetailProduct";
+import {
+  productsLocalization,
+  sweetAlert,
+} from "@/app/constants/localization/fa/localization";
+import { uploadImage } from "@/app/services/uploadService";
+import { resetForm } from "@/app/components/admin/products/resetForm";
 
 export default function ProductsPage() {
-  const [formData, setFormData] = useState({
-    productName: "",
-    productCategory: "",
-    productPrice: "",
-    productQuantity: "",
-    productDescription: "",
-    productSpecifications: "",
-    productExpired: "",
-    image: "",
-  });
+  const [formData, setFormData] = useState(resetForm);
 
   const [products, setProducts] = useState<ProductsProps[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<ProductsProps[]>([]);
@@ -48,6 +45,8 @@ export default function ProductsPage() {
   const token = getAuthToken();
 
   const fetchProducts = async () => {
+    setLoading(true);
+
     try {
       const response = await axios.get(`${BASE_url}/api/records/drugs`, {
         headers: {
@@ -59,11 +58,13 @@ export default function ProductsPage() {
       if (response.status === 200) {
         setProducts(response.data?.records || []);
       } else {
-        toast.error("دریافت محصولات با خطا مواجه شد");
+        toast.error(productsLocalization.errorInReceiveData);
       }
     } catch (error) {
       console.error("Error fetching products:", error);
-      toast.error("خطا در دریافت محصولات");
+      toast.error(productsLocalization.errorInReceiveData);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -80,7 +81,7 @@ export default function ProductsPage() {
           setCategory(response.data.records || []);
         }
       } catch (error) {
-        console.error("خطا در دریافت دسته‌بندی‌ها:", error);
+        console.error(error);
       }
     };
 
@@ -135,29 +136,6 @@ export default function ProductsPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const uploadImage = async (file: File) => {
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const response = await axios.post(
-        `${BASE_url}/api/files/upload`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            api_key: API_KEY,
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return response.data?.downloadLink || null;
-    } catch (error) {
-      toast.error("آپلود تصویر با خطا مواجه شد");
-      return null;
-    }
-  };
-
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -180,7 +158,7 @@ export default function ProductsPage() {
     e.preventDefault();
 
     if (!formData.image) {
-      toast.error("لطفاً تصویر را بارگذاری کنید");
+      toast.error(productsLocalization.addImagePlease);
       return;
     }
 
@@ -194,12 +172,12 @@ export default function ProductsPage() {
             Authorization: `Bearer ${token}`,
           },
         });
-        toast.success("محصول با موفقیت ویرایش شد");
+        toast.success(sweetAlert.successfullyEdited);
         fetchProducts();
         setEditId(null);
       } else {
         if (checkDuplicateProduct(formData.productName)) {
-          toast.error("محصول با این نام قبلاً موجود است");
+          toast.error(productsLocalization.repetitive);
           return;
         }
         await axios.post(`${BASE_url}/api/records/drugs`, formData, {
@@ -209,24 +187,15 @@ export default function ProductsPage() {
             Authorization: `Bearer ${token}`,
           },
         });
-        toast.success("محصول با موفقیت اضافه شد");
+        toast.success(sweetAlert.seccessfullyAdded);
       }
 
-      setFormData({
-        productName: "",
-        productCategory: "",
-        productPrice: "",
-        productQuantity: "",
-        productDescription: "",
-        productSpecifications: "",
-        productExpired: "",
-        image: "",
-      });
+      setFormData(resetForm);
       setFileName(null);
       setIsModalOpen(false);
       fetchProducts();
     } catch (error) {
-      toast.error("مشکلی در ارسال اطلاعات پیش آمده");
+      toast.error(productsLocalization.errorInSendingData);
     } finally {
       setLoading(false);
     }
@@ -234,10 +203,11 @@ export default function ProductsPage() {
 
   const handleDelete = async (id: string) => {
     const result = await Swal.fire({
-      title: "آیا از حذف مطمئن هستید؟",
+      title: sweetAlert.areYouSure,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "حذف",
+      confirmButtonText: sweetAlert.del,
+      cancelButtonText: sweetAlert.cancel,
     });
 
     if (result.isConfirmed) {
@@ -248,11 +218,46 @@ export default function ProductsPage() {
             Authorization: `Bearer ${token}`,
           },
         });
-        Swal.fire("حذف شد!", "محصول حذف شد.", "success");
+        Swal.fire({
+          title: sweetAlert.delete,
+          text: sweetAlert.deleteProduct,
+          icon: "success",
+          confirmButtonText: sweetAlert.ok,
+        });
         fetchProducts();
       } catch (err) {
-        Swal.fire("خطا", "خطا در حذف محصول", "error");
+        Swal.fire(sweetAlert.error, sweetAlert.errorInDeleteData, "error");
       }
+    }
+  };
+
+  const handleInlineEdit = async (id: string, field: string, value: string) => {
+    try {
+      const updatedProduct = { [field]: value };
+
+      const response = await fetch(`${BASE_url}/api/records/drugs/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          api_key: API_KEY,
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updatedProduct),
+      });
+
+      const data = await response.json();
+      console.log("API response:", data);
+
+      if (!response.ok) {
+        throw new Error(productsLocalization.errorInEditingProduct);
+      }
+
+      const updatedProducts = products.map((p) =>
+        p.id === id ? { ...p, [field]: value } : p
+      );
+      setProducts(updatedProducts);
+    } catch (error) {
+      console.error("خطا:", error);
     }
   };
 
@@ -262,16 +267,7 @@ export default function ProductsPage() {
       <div className="flex flex-col md:flex-row items-center gap-4 justify-between">
         <button
           onClick={() => {
-            setFormData({
-              productName: "",
-              productCategory: "",
-              productPrice: "",
-              productQuantity: "",
-              productDescription: "",
-              productSpecifications: "",
-              productExpired: "",
-              image: "",
-            });
+            setFormData(resetForm);
             setFileName(null);
             setEditId(null);
             setIsModalOpen(true);
@@ -279,7 +275,7 @@ export default function ProductsPage() {
           className="flex gap-2 items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition active:scale-95"
         >
           <FaPlus />
-          افزودن محصول
+          {productsLocalization.addProduct}
         </button>
 
         <div className="flex flex-wrap gap-2 w-full md:w-auto">
@@ -292,7 +288,7 @@ export default function ProductsPage() {
             onChange={(e) => setFilterCategory(e.target.value)}
             className="border px-2 py-1 rounded-md"
           >
-            <option value="all">همه دسته‌ها</option>
+            <option value="all">{productsLocalization.allCategories}</option>
             {category.map((cat) => (
               <option key={cat.id} value={cat.id}>
                 {cat.title}
@@ -300,7 +296,7 @@ export default function ProductsPage() {
             ))}
           </select>
           <option value="" disabled hidden>
-            انتخاب دسته‌بندی
+            {productsLocalization.chooseCategories}
           </option>
 
           <select
@@ -308,43 +304,53 @@ export default function ProductsPage() {
             onChange={(e) => setFilterStock(e.target.value)}
             className="border px-2 py-1 rounded-md"
           >
-            <option value="all">همه موجودی‌ها</option>
-            <option value="unavailable">ناموجود </option>
-            <option value="low">کمتر از 10</option>
-            <option value="enough">10 یا بیشتر</option>
+            <option value="all">{productsLocalization.all}</option>
+            <option value="unavailable">
+              {productsLocalization.unavailable}
+            </option>
+            <option value="low"> {productsLocalization.low}</option>
+            <option value="enough">{productsLocalization.enough}</option>
           </select>
           <select
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value)}
             className="border px-2 py-1 rounded-md"
           >
-            <option value="newest">جدیدترین</option>
-            <option value="oldest">قدیمی‌ترین</option>
-            <option value="az">مرتب A-Z</option>
-            <option value="za">مرتب Z-A</option>
+            <option value="newest">{productsLocalization.newest}</option>
+            <option value="oldest">{productsLocalization.oldest}</option>
+            <option value="az">{productsLocalization.az} </option>
+            <option value="za">{productsLocalization.za} </option>
           </select>
         </div>
       </div>
 
-      <ProductTable
-        products={filteredProducts}
-        category={category}
-        handleDelete={handleDelete}
-        onEditClick={(product) => {
-          setFormData({
-            ...product,
-            productPrice: product.productPrice.toString(),
-            productQuantity: product.productQuantity.toString(),
-          });
-          setFileName(product.image.split("/").pop() ?? null);
-          setIsModalOpen(true);
-          setEditId(product.id);
-        }}
-        onDetailClick={(product) => {
-          setSelectedProduct(product);
-          setIsDetailModalOpen(true);
-        }}
-      />
+      {loading ? (
+        <div className="w-full text-center py-10 text-lg font-semibold flex items-center justify-center gap-2">
+          <div className="w-6 h-6 border-t-4 border-blue-500 border-solid rounded-full animate-spin "></div>
+          {productsLocalization.loading}...
+        </div>
+      ) : (
+        <ProductTable
+          products={filteredProducts}
+          category={category}
+          handleDelete={handleDelete}
+          onEditClick={(product) => {
+            setFormData({
+              ...product,
+              productPrice: product.productPrice.toString(),
+              productQuantity: product.productQuantity.toString(),
+            });
+            setFileName(product.image.split("/").pop() ?? null);
+            setIsModalOpen(true);
+            setEditId(product.id);
+          }}
+          onDetailClick={(product) => {
+            setSelectedProduct(product);
+            setIsDetailModalOpen(true);
+          }}
+          onInlineEdit={handleInlineEdit}
+        />
+      )}
 
       {totalPages > 1 && (
         <Pagination

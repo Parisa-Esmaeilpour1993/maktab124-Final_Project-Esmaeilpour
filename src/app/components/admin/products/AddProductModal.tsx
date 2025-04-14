@@ -1,8 +1,12 @@
-// components/products/AddProductModal.tsx
 "use client";
 
 import React from "react";
 import { Category } from "@/app/types/category";
+import {
+  faLocalization,
+  productsLocalization,
+  sweetAlert,
+} from "@/app/constants/localization/fa/localization";
 
 interface Props {
   isOpen: boolean;
@@ -39,7 +43,7 @@ const AddProductModal: React.FC<Props> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="bg-white py-4 px-6 w-full h-full flex flex-col gap-2">
         <h2 className="text-xl font-bold text-center">
-          {editId ? "ویرایش محصول" : "افزودن محصول"}
+          {editId ? productsLocalization.edit : productsLocalization.addProduct}
         </h2>
 
         <form onSubmit={onSubmit} className="space-y-4">
@@ -49,10 +53,10 @@ const AddProductModal: React.FC<Props> = ({
               name="productName"
               value={formData.productName}
               onChange={onChange}
-              placeholder="نام محصول"
+              placeholder={productsLocalization.productName}
               className="w-full border px-3 py-2 rounded"
               required
-              title="نام محصول"
+              title={productsLocalization.productName}
             />
 
             <select
@@ -61,9 +65,9 @@ const AddProductModal: React.FC<Props> = ({
               onChange={onChange}
               className="w-full border px-3 py-2 rounded"
               required
-              title="دسته بندی محصول"
+              title={productsLocalization.productCategory}
             >
-              <option value="">انتخاب دسته‌بندی</option>
+              <option value="">{productsLocalization.chooseCategories} </option>
               {category.map((cat) => (
                 <option key={cat.id} value={cat.id}>
                   {cat.title}
@@ -77,10 +81,10 @@ const AddProductModal: React.FC<Props> = ({
               name="productPrice"
               value={formData.productPrice}
               onChange={onChange}
-              placeholder="قیمت"
+              placeholder={productsLocalization.price}
               className="w-full border px-3 py-2 rounded"
               required
-              title="قیمت"
+              title={productsLocalization.price}
             />
 
             <input
@@ -88,20 +92,20 @@ const AddProductModal: React.FC<Props> = ({
               name="productQuantity"
               value={formData.productQuantity}
               onChange={onChange}
-              placeholder="تعداد موجودی"
+              placeholder={productsLocalization.available}
               className="w-full border px-3 py-2 rounded"
               required
-              title="موجودی"
+              title={productsLocalization.available}
             />
             <input
               type="date"
               name="productExpired"
               value={formData.productExpired}
               onChange={onChange}
-              placeholder="تاریخ انقضای محصول "
+              placeholder={productsLocalization.productExpired}
               className="w-full border px-3 py-2 rounded"
               required
-              title="تاریخ انقضا"
+              title={productsLocalization.expireDate}
             />
           </div>
 
@@ -109,18 +113,18 @@ const AddProductModal: React.FC<Props> = ({
             name="productDescription"
             value={formData.productDescription}
             onChange={onChange}
-            placeholder="توضیحات محصول"
+            placeholder={productsLocalization.description}
             className="w-full border px-3 py-2 rounded h-1/3"
-            title="توضیحات محصول"
+            title={productsLocalization.description}
           />
 
           <textarea
             name="productSpecifications"
             value={formData.productSpecifications}
             onChange={onChange}
-            placeholder="مشخصات محصول"
+            placeholder={productsLocalization.specification}
             className="w-full border px-3 py-2 rounded h-2/3"
-            title="مشخصات محصول"
+            title={productsLocalization.specification}
           />
 
           <div className="flex justify-between items-center">
@@ -129,7 +133,7 @@ const AddProductModal: React.FC<Props> = ({
                 htmlFor="fileInp"
                 className="block w-full text-center bg-blue-100 py-1 px-2 rounded-md cursor-pointer"
               >
-                تصویر مورد نظر را انتخاب کنید
+                {productsLocalization.addImagePlease}
               </label>
               <input
                 type="file"
@@ -140,7 +144,7 @@ const AddProductModal: React.FC<Props> = ({
               />
               {fileName && (
                 <p className="text-sm text-gray-500">
-                  فایل انتخاب شده: {fileName}
+                  {productsLocalization.choosenFile}: {fileName}
                 </p>
               )}
             </div>
@@ -152,17 +156,17 @@ const AddProductModal: React.FC<Props> = ({
                 className="bg-blue-600 hover:bg-blue-700 transition text-white px-2 py-1 rounded"
               >
                 {loading
-                  ? "در حال ارسال..."
+                  ? faLocalization.sending
                   : editId
-                  ? "ویرایش محصول"
-                  : "افزودن محصول"}
+                  ? productsLocalization.edit
+                  : productsLocalization.addProduct}
               </button>
               <button
                 type="button"
                 onClick={onClose}
                 className="bg-gray-300 hover:bg-gray-400 transition px-2 py-1 rounded"
               >
-                انصراف
+                {sweetAlert.cancel}
               </button>
             </div>
           </div>

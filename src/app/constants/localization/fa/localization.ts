@@ -12,6 +12,8 @@ export const faLocalization = {
   next: "بعدی",
   page: "صفحه",
   from: "از",
+  errorInFetchingCategories: "خطا در دریافت دسته بندی",
+  errorInAddingCategories: "خطا در اضافه کردن دسته بندی",
 };
 
 export const sweetAlert = {
@@ -22,6 +24,7 @@ export const sweetAlert = {
   ok: "تایید",
   delete: "حذف شد.",
   deleteCategory: "دسته‌بندی حذف شد.",
+  deleteProduct: "محصول موردنظر حذف شد.",
   edit: "ویرایش شد!",
   addSubCategory: "زیردسته اضافه شد.",
   editSubCategory: "زیردسته ویرایش شد.",
@@ -33,6 +36,8 @@ export const sweetAlert = {
   tryAgain: "لطفاً مجدداً تلاش کنید.",
   errorInReceiveData: "خطا در دریافت اطلاعات :",
   error: "خطا",
+  del: "حذف",
+  errorInDeleteData: "خطا در حذف محصولات",
 };
 
 export const adminCategories = {
@@ -139,4 +144,46 @@ export const blogLocalization = {
   editError: "مشکلی در ویرایش پست پیش آمده است.",
   loading: "در حال دریافت پست ها...",
   noPostToShow: "هیچ پستی وجود ندارد.",
+};
+
+export const productsLocalization = {
+  errorInReceiveData: "دریافت محصولات با خطا مواجه شد.",
+  errorInUploadImage: "آپلود تصویر با خطا مواجه شد",
+  addImagePlease: "لطفاً تصویر را بارگذاری کنید",
+  repetitive: "محصول با این نام قبلاً موجود است",
+  errorInSendingData: "مشکلی در ارسال اطلاعات پیش آمده است",
+  addProduct: "افزودن محصول",
+  allCategories: "همه دسته بندی ها",
+  chooseCategories: "انتخاب دسته بندی ها",
+  all: "همه محصولات",
+  unavailable: "ناموجود",
+  low: "کمتر از 10",
+  enough: "10 یا بیشتر",
+  newest: "جدیدترین",
+  oldest: "قدیمی‌ترین",
+  az: "مرتب A-Z",
+  za: "مرتب Z-A",
+  id: "کد محصول",
+  image: "تصویر",
+  name: "نام",
+  category: "دسته",
+  price: "قیمت",
+  available: "موجودی",
+  expireDate: "تاریخ انقضا",
+  operation: "عملیات",
+  notFound: "محصولی یافت نشد.",
+  undefiend: "نامشخص",
+  delete: "حذف محصول",
+  edit: "ویرایش محصول",
+  detail: "جزئیات محصول",
+  description: "توضیحات",
+  specification: "ویژگی‌ها",
+  close: "بستن",
+  productName: "نام محصول",
+  productCategory: "دسته بندی محصول",
+  productExpired: "تاریخ انقضای محصول",
+  choosenFile: "فایل انتخاب شده",
+  errorInEditingProduct: "خطا در ویرایش محصول",
+  loading: "در حال بارگزاری...",
+  canNotBeNegative: "تعداد محصول نمی تواند منفی باشد",
 };

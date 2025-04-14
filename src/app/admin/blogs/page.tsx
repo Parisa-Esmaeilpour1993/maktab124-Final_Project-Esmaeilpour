@@ -8,6 +8,7 @@ import {
   faLocalization,
   sweetAlert,
 } from "@/app/constants/localization/fa/localization";
+import { uploadImage } from "@/app/services/uploadService";
 import axios from "axios";
 import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -34,30 +35,6 @@ export default function AddBlogPage() {
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const uploadImage = async (file: File) => {
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const response = await axios.post(
-        `${BASE_url}/api/files/upload`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            api_key: API_KEY,
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return response.data?.downloadLink || null;
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      toast.error(faLocalization.errorInImageUpload);
-      return null;
-    }
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

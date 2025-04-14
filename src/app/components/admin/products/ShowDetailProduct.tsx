@@ -1,5 +1,9 @@
 // ProductDetailModal.js
 
+import {
+  dashboardLocalization,
+  productsLocalization,
+} from "@/app/constants/localization/fa/localization";
 import { Category } from "@/app/types/category";
 import { ProductsProps } from "@/app/types/products";
 import React from "react";
@@ -18,27 +22,30 @@ const ShowDetailProducts = ({
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-lg w-full max-w-4xl space-y-3">
         <p className="border-2 border-gray-200 p-2">
-          <strong>نام:</strong> {selectedProduct.productName}
+          <strong>{productsLocalization.name}:</strong>{" "}
+          {selectedProduct.productName}
         </p>
         <p className="border-2 border-gray-200 p-2">
-          <strong>دسته:</strong>{" "}
+          <strong>{productsLocalization.category}:</strong>{" "}
           {category.find((cat) => cat.id === selectedProduct.productCategory)
-            ?.title || "نامشخص"}
+            ?.title || productsLocalization.undefiend}
         </p>
         <p className="border-2 border-gray-200 p-2">
-          <strong>قیمت:</strong> {selectedProduct.productPrice} تومان
+          <strong>{[productsLocalization.price]}:</strong>{" "}
+          {selectedProduct.productPrice} {dashboardLocalization.rial}
         </p>
         <p className="border-2 border-gray-200 p-2">
-          <strong>موجودی:</strong> {selectedProduct.productQuantity}
+          <strong>{productsLocalization.available}:</strong>{" "}
+          {selectedProduct.productQuantity}
         </p>
         <p className="border-2 border-gray-200 p-2">
-          <strong>توضیحات:</strong>
+          <strong>{productsLocalization.description}:</strong>
           <div className="max-h-24 overflow-y-auto">
             {selectedProduct.productDescription}
           </div>
         </p>
         <p className="border-2 border-gray-200 p-2">
-          <strong>ویژگی‌ها:</strong>
+          <strong>{productsLocalization.specification}:</strong>
           <div className="max-h-28 overflow-y-auto">
             {selectedProduct.productSpecifications}
           </div>
@@ -49,7 +56,7 @@ const ShowDetailProducts = ({
             onClick={() => setIsDetailModalOpen(false)}
             className="mt-2 bg-blue-500 hover:bg-blue-600 text-white py-1 px-4 rounded"
           >
-            بستن
+            {productsLocalization.close}
           </button>
         </div>
       </div>
