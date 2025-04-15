@@ -1,5 +1,5 @@
 "use client";
-import EditModal from "@/app/components/admin/EditModal";
+import EditModal from "@/app/components/admin/pages/aboutUs/EditModal";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
 import axios from "axios";
 import React, { useEffect, useState } from "react";

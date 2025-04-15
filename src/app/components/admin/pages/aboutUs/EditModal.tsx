@@ -1,5 +1,4 @@
 import { IoCloseCircleSharp } from "react-icons/io5";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import React from "react";
 
@@ -64,11 +63,13 @@ export default function EditModal({
             <label className="block text-sm font-medium text-gray-700 mb-1">
               توضیحات
             </label>
-            <ReactQuill
-              theme="snow"
+            <textarea
+              name="description"
               value={formData.description}
-              onChange={handleDescriptionChange}
-              className="bg-white text-sm"
+              onChange={onChange}
+              rows={5}
+              className="w-full border rounded-lg p-2 text-sm text-gray-700 resize-y"
+              required
             />
           </div>
 

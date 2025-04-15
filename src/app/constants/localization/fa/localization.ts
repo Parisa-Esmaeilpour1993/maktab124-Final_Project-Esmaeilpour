@@ -19,6 +19,8 @@ export const faLocalization = {
   adding: "در حال افزودن...",
   rial: "ریال",
   noProductFound: "محصولی برای نمایش وجود ندارد.",
+  saving: "در حال ذخیره...",
+  save: "ذخیره",
 };
 
 export const sweetAlert = {
@@ -204,4 +206,17 @@ export const newestProduct = {
 
 export const bestSeller = {
   bestSellerProduct: "محصولات پرفروش",
+};
+
+export const bannerLocalization = {
+  addBanner: "افزودن بنر",
+  title: "عنوان",
+  description: "توضیحات",
+  link: "لینک هدایت‌شونده (اختیاری)",
+  order: "ترتیب",
+  isActive: "فعال باشد",
+  mainImage: "تصویر اصلی بنر:",
+  bgImage: "تصویر پس‌زمینه:",
+  saveBanner: "ثبت بنر",
+  errorInEditBanner: "ویرایش بنر با مشکل مواجه شد.",
 };
