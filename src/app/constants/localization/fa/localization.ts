@@ -21,6 +21,7 @@ export const faLocalization = {
   noProductFound: "محصولی برای نمایش وجود ندارد.",
   saving: "در حال ذخیره...",
   save: "ذخیره",
+  show: "نمایش",
 };
 
 export const sweetAlert = {
@@ -46,6 +47,7 @@ export const sweetAlert = {
   del: "حذف",
   errorInDeleteData: "خطا در حذف محصولات",
   successful: "محصول با موفقیت ادد شد.",
+  successfulEdit: "محصول با موفقیت ویرایش شد.",
 };
 
 export const adminCategories = {
@@ -219,4 +221,10 @@ export const bannerLocalization = {
   bgImage: "تصویر پس‌زمینه:",
   saveBanner: "ثبت بنر",
   errorInEditBanner: "ویرایش بنر با مشکل مواجه شد.",
+  existOrder: "شماره ترتیب قبلاً استفاده شده است. لطفاً عدد دیگری وارد کنید.",
+};
+
+export const offerProducts = {
+  offProducts: "محصولات تخفیف دار",
+  discountPercent: "درصد تخفیف",
 };

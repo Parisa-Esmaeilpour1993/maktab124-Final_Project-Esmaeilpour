@@ -11,6 +11,7 @@ import { BannerListProps, BannerProps } from "@/app/types/Banner";
 import axios from "axios";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import DescriptionModal from "./descriptionModal";
 
 export default function BannerList({ banners, onRefresh }: BannerListProps) {
   const token = getAuthToken();
@@ -30,6 +31,10 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
   const [bgFile, setBgFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [selectedDescription, setSelectedDescription] = useState<string | null>(
+    null
+  );
+  const [showDescriptionModal, setShowDescriptionModal] = useState(false);
 
   const handleDelete = async (id: string) => {
     setDeletingId(id);
@@ -269,29 +274,70 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
               key={banner.id}
               className="border p-4 rounded-lg bg-white shadow-md"
             >
-              <h3 className="font-bold mb-2">{banner.title}</h3>
-              <h3 className="font-bold mb-2">{banner.description}</h3>
-              <h3 className="font-bold mb-2">{banner.link}</h3>
-              <img
-                src={`${BASE_url}${banner.image}`}
-                alt="Banner"
-                className="w-full h-40 object-cover rounded mb-2"
-              />
-              <img
-                src={`${BASE_url}${banner.background}`}
-                alt="Background"
-                className="w-full h-20 object-cover rounded mb-2"
-              />
+              <div className="flex gap-2 items-center">
+                <label>
+                  {bannerLocalization.title}
+                  {" :"}
+                </label>
+                <h3 className="font-semibold">{banner.title}</h3>
+              </div>
+              <div className="flex gap-2 items-center">
+                <label>
+                  {bannerLocalization.description}
+                  {" :"}
+                </label>
+                <button
+                  onClick={() => {
+                    setSelectedDescription(banner.description);
+                    setShowDescriptionModal(true);
+                  }}
+                  className="text-blue-600 underline"
+                >
+                  {faLocalization.show}
+                </button>
+              </div>
+              <div className="flex gap-2 items-center">
+                <label>
+                  {bannerLocalization.link}
+                  {" :"}
+                </label>
+                <h3 className="font-semibold">{banner.link}</h3>
+              </div>
+              <div className="flex gap-2 items-center">
+                <label>
+                  {bannerLocalization.order}
+                  {" :"}
+                </label>
+                <h3 className="font-semibold">{banner.order}</h3>
+              </div>
+              <div className="w-full flex flex-col lg:flex-row gap-6 justify-between my-6">
+                <div className="flex gap-2 items-center">
+                  <label>{bannerLocalization.mainImage}</label>
+                  <img
+                    src={`${BASE_url}${banner.image}`}
+                    alt="Banner"
+                    className="w-20 h-20 lg:w-30 lg:h-30 object-cover rounded"
+                  />
+                </div>
+                <div className="flex gap-2 items-center">
+                  <label>{bannerLocalization.bgImage}</label>
+                  <img
+                    src={`${BASE_url}${banner.background}`}
+                    alt="Background"
+                    className="w-20 h-20 lg:w-30 lg:h-30 object-cover rounded"
+                  />
+                </div>
+              </div>
               <div className="flex gap-2">
                 <button
                   onClick={() => handleEditClick(banner)}
-                  className="bg-yellow-500 text-white px-4 py-1 rounded"
+                  className="bg-gray-500 text-white px-4 py-1 rounded"
                 >
                   {faLocalization.edit}
                 </button>
                 <button
                   onClick={() => handleDelete(banner.id)}
-                  className="bg-red-500 text-white px-4 py-1 rounded"
+                  className="bg-gray-300 text-white px-4 py-1 rounded"
                   disabled={deletingId === banner.id}
                 >
                   {deletingId === banner.id
@@ -302,6 +348,15 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
             </div>
           )
         )
+      )}
+      {showDescriptionModal && selectedDescription && (
+        <DescriptionModal
+          description={selectedDescription}
+          onClose={() => {
+            setShowDescriptionModal(false);
+            setSelectedDescription(null);
+          }}
+        />
       )}
     </div>
   );

@@ -13,4 +13,5 @@ export interface ProductsProps {
   productSpecifications: string;
   productExpired: string;
   image: string;
+  discountPercent?: number;
 }

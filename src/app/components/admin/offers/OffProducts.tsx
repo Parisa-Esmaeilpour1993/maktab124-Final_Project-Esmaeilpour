@@ -5,6 +5,7 @@ import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
 import {
   faLocalization,
   newestProduct,
+  offerProducts,
   productsLocalization,
   sweetAlert,
 } from "@/app/constants/localization/fa/localization";
@@ -14,14 +15,19 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
 
-const NewestProductsAdmin = () => {
-  const [newestProducts, setNewestProducts] = useState<ProductsProps[]>([]);
+const OffProducts = () => {
+  const [offProducts, setOffProducts] = useState<ProductsProps[]>([]);
   const [allProducts, setAllProducts] = useState<ProductsProps[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newProductId, setNewProductId] = useState("");
+  const [offProductId, setOffProductId] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [discount, setDiscount] = useState<number>(0);
+  const [editableProductId, setEditableProductId] = useState<string | null>(
+    null
+  );
+  const [editableDiscount, setEditableDiscount] = useState<number>(0);
 
   const token = getAuthToken();
 
@@ -32,14 +38,14 @@ const NewestProductsAdmin = () => {
 
   const fetchNewest = async () => {
     setLoading(true);
-    const res = await axios.get(`${BASE_url}/api/records/newestProducts`, {
+    const res = await axios.get(`${BASE_url}/api/records/offProducts`, {
       headers: {
         "Content-Type": "application/json",
         api_key: API_KEY,
         Authorization: `Bearer ${token}`,
       },
     });
-    setNewestProducts(res.data.records);
+    setOffProducts(res.data.records);
     setLoading(false);
   };
 
@@ -55,17 +61,14 @@ const NewestProductsAdmin = () => {
   };
 
   const handleAdd = async () => {
-    const product = allProducts.find((p) => p.id === newProductId.trim());
+    const product = allProducts.find((p) => p.id === offProductId.trim());
 
     if (!product) {
       toast.error(productsLocalization.notFound);
       return;
     }
 
-    console.log("Selected product to add:", product);
-    console.log("Newest products list:", newestProducts);
-
-    const alreadyExists = newestProducts.some(
+    const alreadyExists = offProducts.some(
       (p) => p.productName === product.productName
     );
 
@@ -78,8 +81,8 @@ const NewestProductsAdmin = () => {
 
     try {
       await axios.post(
-        `${BASE_url}/api/records/newestProducts`,
-        { ...product },
+        `${BASE_url}/api/records/offProducts`,
+        { ...product, discountPercent: discount },
         {
           headers: {
             "Content-Type": "application/json",
@@ -90,7 +93,7 @@ const NewestProductsAdmin = () => {
       );
 
       toast.success(sweetAlert.successful);
-      setNewProductId("");
+      setOffProductId("");
       setIsModalOpen(false);
       fetchNewest();
     } catch (error) {
@@ -114,7 +117,7 @@ const NewestProductsAdmin = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`${BASE_url}/api/records/newestProducts/${id}`, {
+        await axios.delete(`${BASE_url}/api/records/offProducts/${id}`, {
           headers: {
             "Content-Type": "application/json",
             api_key: API_KEY,
@@ -136,11 +139,39 @@ const NewestProductsAdmin = () => {
     }
   };
 
+  const handleDiscountSave = async (id: string) => {
+    const product = offProducts.find((p) => p.id === id);
+    if (!product) return;
+
+    try {
+      await axios.put(
+        `${BASE_url}/api/records/offProducts/${id}`,
+        {
+          ...product,
+          discountPercent: editableDiscount,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            api_key: API_KEY,
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success(sweetAlert.successfulEdit);
+      fetchNewest();
+    } catch (error) {
+      toast.error(sweetAlert.errorInSubmit);
+    } finally {
+      setEditableProductId(null);
+    }
+  };
+
   return (
     <div>
       <div className="p-4 max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">{newestProduct.newProduct}</h2>
+          <h2 className="text-xl font-bold">{offerProducts.offProducts}</h2>
           <button
             onClick={() => setIsModalOpen(true)}
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
@@ -156,9 +187,18 @@ const NewestProductsAdmin = () => {
               <input
                 type="text"
                 placeholder={newestProduct.addProductID}
-                value={newProductId}
-                onChange={(e) => setNewProductId(e.target.value)}
+                value={offProductId}
+                onChange={(e) => setOffProductId(e.target.value)}
                 className="w-full border px-3 py-2 rounded"
+              />
+              <input
+                type="number"
+                placeholder={offerProducts.discountPercent}
+                min={1}
+                max={100}
+                className="w-full border px-3 py-2 rounded"
+                onChange={(e) => setDiscount(Number(e.target.value))}
+                value={discount}
               />
               <div className="flex justify-end gap-2">
                 <button
@@ -183,11 +223,11 @@ const NewestProductsAdmin = () => {
             <div className="w-6 h-6 border-t-4 border-blue-500 border-solid rounded-full animate-spin "></div>
             {productsLocalization.loading}...
           </div>
-        ) : newestProducts.length === 0 ? (
+        ) : offProducts.length === 0 ? (
           <div className="mt-8">{faLocalization.noProductFound}</div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {newestProducts.map((product) => (
+            {offProducts.map((product) => (
               <div
                 key={product.id}
                 className="border rounded p-2 flex flex-col gap-2 items-center shadow"
@@ -198,9 +238,48 @@ const NewestProductsAdmin = () => {
                   className="object-contain p-8 md:p-6 rounded"
                 />
                 <h4 className="font-semibold">{product.productName}</h4>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 line-through">
                   {product.productPrice} {faLocalization.rial}
                 </p>
+                <p
+                  className="text-sm text-gray-700 cursor-pointer"
+                  onClick={() => {
+                    setEditableProductId(product.id);
+                    setEditableDiscount(product.discountPercent || 0);
+                  }}
+                >
+                  {offerProducts.discountPercent}:{" "}
+                  {editableProductId === product.id ? (
+                    <input
+                      type="number"
+                      className="border px-1 py-0.5 w-16 text-center rounded"
+                      value={editableDiscount}
+                      autoFocus
+                      min={1}
+                      max={100}
+                      onChange={(e) =>
+                        setEditableDiscount(Number(e.target.value))
+                      }
+                      onBlur={() => handleDiscountSave(product.id)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          (e.target as HTMLInputElement).blur();
+                        }
+                      }}
+                    />
+                  ) : (
+                    <span>{product.discountPercent || 0}</span>
+                  )}
+                </p>
+
+                <p className="text-sm text-green-600 font-semibold">
+                  {Math.round(
+                    +product.productPrice *
+                      (1 - (product.discountPercent || 0) / 100)
+                  )}{" "}
+                  {faLocalization.rial}
+                </p>
+
                 <button
                   onClick={() => handleDelete(product.id)}
                   className=" bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 disabled:opacity-50"
@@ -220,4 +299,4 @@ const NewestProductsAdmin = () => {
   );
 };
 
-export default NewestProductsAdmin;
+export default OffProducts;

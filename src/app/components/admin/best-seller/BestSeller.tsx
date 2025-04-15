@@ -13,6 +13,7 @@ import { ProductsProps } from "@/app/types/products";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import Swal from "sweetalert2";
 
 const BestSellerAdmin = () => {
   const [bestProductsToSell, setBestProductsToSell] = useState<ProductsProps[]>(
@@ -107,19 +108,36 @@ const BestSellerAdmin = () => {
 
   const handleDelete = async (id: string) => {
     setDeletingId(id);
-    try {
-      await axios.delete(`${BASE_url}/api/records/bestProductsToSell/${id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          api_key: API_KEY,
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      fetchBestSeller();
-    } catch (error) {
-      toast.error(sweetAlert.errorInDeleteData);
-    } finally {
-      setDeletingId(null);
+    const result = await Swal.fire({
+      title: sweetAlert.areYouSure,
+      text: sweetAlert.irrevocable,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: sweetAlert.yesDelete,
+      cancelButtonText: sweetAlert.cancel,
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`${BASE_url}/api/records/bestProductsToSell/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            api_key: API_KEY,
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        Swal.fire({
+          title: sweetAlert.delete,
+          text: sweetAlert.successfullyDeleted,
+          icon: "success",
+          confirmButtonText: sweetAlert.okay,
+        });
+        fetchBestSeller();
+      } catch (error) {
+        toast.error(sweetAlert.errorInDeleteData);
+      } finally {
+        setDeletingId(null);
+      }
     }
   };
 
