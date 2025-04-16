@@ -27,7 +27,7 @@ const ShowDetailProducts = ({
         </p>
         <p className="border-2 border-gray-200 p-2">
           <strong>{productsLocalization.category}:</strong>{" "}
-          {category.find((cat) => cat.id === selectedProduct.productCategory)
+          {category?.find((cat) => cat.id === selectedProduct.productCategory)
             ?.title || productsLocalization.undefiend}
         </p>
         <p className="border-2 border-gray-200 p-2">

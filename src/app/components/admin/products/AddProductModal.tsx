@@ -68,7 +68,7 @@ const AddProductModal: React.FC<Props> = ({
               title={productsLocalization.productCategory}
             >
               <option value="">{productsLocalization.chooseCategories} </option>
-              {category.map((cat) => (
+              {category?.map((cat) => (
                 <option key={cat.id} value={cat.id}>
                   {cat.title}
                 </option>

@@ -138,7 +138,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                       }
                       className="border px-2 py-1 rounded-md"
                     >
-                      {category.map((cat) => (
+                      {category?.map((cat) => (
                         <option key={cat.id} value={cat.id}>
                           {cat.title}
                         </option>
@@ -277,7 +277,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
               <p>
                 <strong>{productsLocalization.category}:</strong>{" "}
                 {
-                  category.find((cat) => cat.id === product.productCategory)
+                  category?.find((cat) => cat.id === product.productCategory)
                     ?.title
                 }
               </p>

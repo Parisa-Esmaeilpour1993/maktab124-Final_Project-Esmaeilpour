@@ -15,3 +15,11 @@ export interface ProductsProps {
   image: string;
   discountPercent?: number;
 }
+
+export interface ProductsState {
+  products: ProductsProps[];
+  loading: boolean;
+  error: string | null;
+}
+
+export type NewProductProps = Omit<ProductsProps, "id">;

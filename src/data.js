@@ -1,5 +1,3 @@
-// app/(admin)/dashboard/data.js
-
 export const users = [
   { id: 1, name: "علی" },
   { id: 2, name: "زهرا" },
@@ -65,4 +63,59 @@ export const orders = [
     ],
   },
   // ...
+];
+
+export const usersOrders = [
+  {
+    id: "123456789",
+    customer: "کاربر1",
+    createdAt: "2025-04-15T08:20",
+    totalPrice: 540000,
+    deliveryStatus: false,
+    deliveryDate: null,
+    items: [
+      { id: 1, name: "کرم مرطوب‌کننده", quantity: 2, price: 120000 },
+      { id: 2, name: "مولتی‌ویتامین", quantity: 1, price: 80000 },
+      { id: 3, name: "ضدآفتاب", quantity: 3, price: 300000 },
+    ],
+  },
+  {
+    id: "101112131",
+    customer: "کاربر2",
+    createdAt: "2025-04-14T14:00",
+    totalPrice: 580000,
+    deliveryStatus: true,
+    deliveryDate: "2025-04-15T10:30",
+    items: [
+      { id: 4, name: "شامپو تقویت‌کننده", quantity: 1, price: 180000 },
+      { id: 5, name: "زینک پلاس", quantity: 2, price: 200000 },
+    ],
+  },
+  {
+    id: "141516171",
+    customer: "کاربر3",
+    createdAt: "2025-04-20T16:00",
+    totalPrice: 1180000,
+    deliveryStatus: true,
+    deliveryDate: "2025-04-26T10:30",
+    items: [
+      { id: 4, name: "شامپو تقویت‌کننده", quantity: 1, price: 180000 },
+      { id: 5, name: "زینک پلاس", quantity: 2, price: 200000 },
+      { id: 2, name: "مولتی‌ویتامین", quantity: 2, price: 80000 },
+      { id: 6, name: "رویال ژلی", quantity: 3, price: 600000 },
+    ],
+  },
+  {
+    id: "181920212",
+    customer: "کاربر4",
+    createdAt: "2025-04-20T16:00",
+    totalPrice: 1180000,
+    deliveryStatus: true,
+    deliveryDate: "2025-04-26T10:30",
+    items: [
+      { id: 4, name: "شامپو تقویت‌کننده", quantity: 5, price: 180000 },
+      { id: 5, name: "زینک پلاس", quantity: 2, price: 200000 },
+      { id: 6, name: "رویال ژلی", quantity: 2, price: 600000 },
+    ],
+  },
 ];

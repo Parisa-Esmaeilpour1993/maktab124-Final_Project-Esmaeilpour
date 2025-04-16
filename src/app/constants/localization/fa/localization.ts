@@ -116,7 +116,7 @@ export const asideBarLocalization = {
 export const dashboardLocalization = {
   managementDashboard: "داشبورد مدیریت",
   users: "کاربران",
-  orders: "سفارش‌ها",
+  orders: "سفارشات",
   totalIncome: "درآمد کل",
   rial: "ریال",
   categoriesNumber: "تعداد محصولات در هر دسته‌بندی",

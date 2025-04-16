@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardTitle } from "@/app/components/ui/Card";
-import { orders, products, users } from "@/data";
+import { orders, products, users, usersOrders } from "@/data";
 import { useEffect, useState } from "react";
 import {
   Bar,
@@ -111,7 +111,9 @@ export default function AdminDashboard() {
             <CardTitle className="text-gray-600">
               📦 {dashboardLocalization.orders}
             </CardTitle>
-            <p className="text-xl font-bold text-green-600">{orders.length}</p>
+            <p className="text-xl font-bold text-green-600">
+              {usersOrders.length}
+            </p>
           </CardContent>
         </Card>
 
