@@ -2,14 +2,16 @@
 import { useState } from "react";
 import AdminSidebar from "../components/admin/asideBar/AsideBar";
 import AdminHeader from "../components/admin/header/Header";
+import { useAuthRedirect } from "../base/useAuthRedirect";
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  useAuthRedirect();
 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
   const closeSidebar = () => setSidebarOpen(false);
 

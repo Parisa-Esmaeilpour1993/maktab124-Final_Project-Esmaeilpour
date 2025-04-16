@@ -7,7 +7,6 @@ export default function StoreLayout({ children }: LayoutProps) {
   return (
     <div>
       <Header />
-      <Navbar />
       <main>{children}</main>
       <footer>Pharmacy Footer</footer>
     </div>

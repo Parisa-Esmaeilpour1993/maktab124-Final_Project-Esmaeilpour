@@ -25,6 +25,8 @@ export default function AdminSidebar({
   }, [pathname]);
 
   const handleLogout = () => {
+    document.cookie =
+      "fromAdmin=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";
     localStorage.removeItem("authToken");
     router.push("/login");
   };
@@ -102,6 +104,26 @@ export default function AdminSidebar({
                     </div>
                   )}
                 </div>
+              );
+            }
+
+            if (link.id === "home") {
+              return (
+                <a
+                  key={link.id}
+                  href={link.href}
+                  onClick={(e) => {
+                    document.cookie = "fromAdmin=true; path=/";
+                    router.push(link.href);
+                  }}
+                  className={`transition-all duration-150 hover:text-yellow-300 hover:-translate-y-1 ${
+                    pathname === link.href
+                      ? "text-yellow-300 bg-slate-800 py-1 px-2 shadow-lg md:text-sm lg:text-[16px]"
+                      : ""
+                  }`}
+                >
+                  {link.label}
+                </a>
               );
             }
 

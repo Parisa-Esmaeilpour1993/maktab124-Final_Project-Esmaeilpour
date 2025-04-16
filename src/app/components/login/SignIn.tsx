@@ -38,6 +38,7 @@ const Login = () => {
       const { accessToken } = response.data;
 
       localStorage.setItem("authToken", accessToken);
+      localStorage.setItem("loginTime", Date.now().toString());
 
       const admin = adminEmails.find((admin) => admin.email === email);
       if (admin) {

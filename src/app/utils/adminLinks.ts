@@ -49,4 +49,12 @@ export const links = [
     label: "🚚 روش‌های ارسال",
     id: "deliveryMethods",
   },
+  {
+    href: "/",
+    label: "🏚 ورود به صفحه اصلی سایت",
+    id: "home",
+    onClick: (e: React.MouseEvent) => {
+      document.cookie = "fromAdmin=true; path=/";
+    },
+  },
 ];
