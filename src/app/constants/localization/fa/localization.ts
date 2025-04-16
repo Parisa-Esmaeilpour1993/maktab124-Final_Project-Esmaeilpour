@@ -1,6 +1,6 @@
 export const faLocalization = {
   loginOrRegister: "ثبت نام/ ورود",
-  search: "محصول مورد نطر خود را جستجو کنید...",
+  search: "محصول مورد نظر خود را جستجو کنید...",
   cart: "سبد خرید",
   edit: "ویرایش",
   delete: "حذف",
@@ -227,4 +227,25 @@ export const bannerLocalization = {
 export const offerProducts = {
   offProducts: "محصولات تخفیف دار",
   discountPercent: "درصد تخفیف",
+};
+
+export const ordersLocalization = {
+  ordersManagement: "مدیریت سفارش ها",
+  all: "همه",
+  delivered: "تحویل داده شده",
+  inDelivery: "در حال ارسال",
+  placeholder: "شناسه سفارش را وارد کنید",
+  id: "شناسه سفارش",
+  customer: "مشتری",
+  createdAt: "زمان ثبت",
+  totalPrice: "مبلغ کل",
+  status: "وضعیت",
+  detail: "جزئیات",
+  ordersDetail: "جزئیات سفارش ",
+  deliveryTime: "زمان تحویل",
+  ordersProducts: "محصولات سفارش",
+  item: "عدد",
+  sum: "مجموع",
+  saveChanges: "ذخیره تغییرات",
+  deleteOrder: "حذف سفارش",
 };

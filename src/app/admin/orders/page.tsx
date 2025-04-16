@@ -1,7 +1,11 @@
-import React from "react";
+import Orders from "@/app/components/admin/orders/Orders";
 
 function OrdersPage() {
-  return <div>orders</div>;
+  return (
+    <div>
+      <Orders />
+    </div>
+  );
 }
 
 export default OrdersPage;
