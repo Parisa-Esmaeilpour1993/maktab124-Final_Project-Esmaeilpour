@@ -22,6 +22,7 @@ export const faLocalization = {
   saving: "در حال ذخیره...",
   save: "ذخیره",
   show: "نمایش",
+  management: "مدیریت",
 };
 
 export const sweetAlert = {

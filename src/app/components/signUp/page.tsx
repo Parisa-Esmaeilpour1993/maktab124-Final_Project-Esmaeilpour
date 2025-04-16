@@ -1,8 +1,10 @@
 "use client";
-import signUpPage from "@/app/assets/images/signUpPage.jpg";
+import signUpPage from "@/app/assets/images/signUp.jpg";
 import { getAuthToken } from "@/app/base/getAuthToken";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
 import { signUpLocalization } from "@/app/constants/localization/fa/localization";
+import Button from "@/app/shared/Button";
+import { Input } from "@/app/shared/Input";
 import ValidateInput from "@/app/utils/ValidateInput";
 import axios from "axios";
 import Image from "next/image";
@@ -69,7 +71,6 @@ const SignUp = () => {
         }
       );
 
-      console.log("Signup successful:", response.data);
       router.push("/login");
     } catch (err: any) {
       console.error("Signup error:", err);
@@ -85,19 +86,18 @@ const SignUp = () => {
 
   return (
     <div className="flex items-center justify-center">
-      <div className="bg-indigo-50 p-8 rounded-2xl shadow-md my-4 w-full max-w-md md:max-w-2xl flex flex-col md:flex-row ">
+      <div className="bg-light px-8 py-6 rounded-2xl shadow-md my-3 w-full max-w-md md:max-w-2xl flex flex-col md:flex-row ">
         <div className="flex-1  flex flex-col gap-4">
-          <h1 className="text-xl font-bold text-gray-800">
+          <h1 className="text-xl font-bold text-primary">
             {signUpLocalization.Signup}
           </h1>
-          <p className="text-gray-600 text-sm">
+          <p className="text-secondary hover:text-primary text-sm">
             {signUpLocalization.AlreadyHaveAccount}{" "}
-            <a
-              href="/login"
-              className="text-blue-900 underline hover:text-blue-950 active:scale-95"
-            >
-              {signUpLocalization.Login}
-            </a>
+            <Button
+              onClick={() => router.push("/login")}
+              children={signUpLocalization.Login}
+              className="!py-1 !px-2 "
+            />
           </p>
 
           <form
@@ -107,72 +107,76 @@ const SignUp = () => {
           >
             <div>
               <label
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-primary"
                 htmlFor="name"
               >
                 {signUpLocalization.Name}
               </label>
-              <input
+              <Input
                 type="text"
                 id="name"
                 placeholder={signUpLocalization.EnterName}
                 value={formData.name}
                 onFocus={handleFocus}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100"
+                className="text-sm"
               />
               {errors.name && (
-                <p className="text-red-500 text-sm">{errors.name}</p>
+                <p className="text-red-600 text-sm">{errors.name}</p>
               )}
             </div>
 
             <div>
               <label
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-primary"
                 htmlFor="email"
               >
                 {signUpLocalization.Email}
               </label>
-              <input
+              <Input
                 type="email"
                 id="email"
                 placeholder={signUpLocalization.EnterEmail}
                 value={formData.email}
                 onChange={handleChange}
                 onFocus={handleFocus}
-                className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100"
+                className="text-sm"
               />
               {errors.email && (
-                <p className="text-red-500 text-sm">{errors.email}</p>
+                <p className="text-red-600 text-sm">{errors.email}</p>
               )}
             </div>
 
             <div className=" relative">
               <label
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-primary"
                 htmlFor="password"
               >
                 {signUpLocalization.Password}
               </label>
-              <input
+              <Input
                 type={showPassword ? "text" : "password"}
                 id="password"
                 value={formData.password}
                 onChange={handleChange}
                 onFocus={handleFocus}
                 placeholder={signUpLocalization.EnterPassword}
-                className="w-full px-4 py-2 text-sm border bg-white border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 "
+                className="text-sm"
               />
-              <button
+              <Button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute left-3 top-10 text-gray-500 hover:text-gray-700"
+                className="absolute !bg-white left-[1px] top-8"
                 tabIndex={-1}
               >
-                {showPassword ? <MdRemoveRedEye /> : <IoEyeOffSharp />}
-              </button>
+                {showPassword ? (
+                  <MdRemoveRedEye className="text-secondary" />
+                ) : (
+                  <IoEyeOffSharp className="text-secondary" />
+                )}
+              </Button>
               {errors.password && (
-                <p className="text-red-500 text-sm">{errors.password}</p>
+                <p className="text-red-600 text-sm">{errors.password}</p>
               )}
             </div>
 
@@ -180,9 +184,9 @@ const SignUp = () => {
               <input
                 type="checkbox"
                 id="updates"
-                className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-0"
+                className="w-4 h-4 accent-primary text-primary border-secondary rounded focus:ring-0"
               />
-              <label htmlFor="updates" className="ml-2 text-sm text-gray-600">
+              <label htmlFor="updates" className="ml-2 text-sm text-secondary">
                 {signUpLocalization.signUpDescription}
               </label>
             </div>
@@ -191,8 +195,8 @@ const SignUp = () => {
               type="submit"
               className={`w-full py-2 rounded-lg transition duration-200 ${
                 isFormValid && !isSubmitting
-                  ? "bg-blue-900 text-white hover:bg-blue-600"
-                  : "bg-blue-300 text-white cursor-not-allowed"
+                  ? "bg-primary text-white active:scale-95"
+                  : "bg-accent text-white cursor-not-allowed"
               }`}
               disabled={!isFormValid || isSubmitting}
             >

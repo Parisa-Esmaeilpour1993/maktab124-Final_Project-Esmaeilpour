@@ -25,22 +25,22 @@ const Header = async () => {
         <SearchInput />
       </div>
       <div className="flex gap-3 justify-center items-center">
-        <div className="flex justify-center items-center border border-gray-400 rounded-2xl  hover:scale-105 hover:border-gray-600">
+        <div className="flex justify-center items-center border border-primary rounded-2xl  hover:scale-105 hover:border-primary">
           <AiOutlineShoppingCart
             size={32}
-            className="bg-gray-100 p-[6px] rounded-2xl"
-            color="gray"
+            className="bg-light p-[6px] rounded-2xl text-primary"
           />
         </div>
         <Link href={fromAdmin ? "/admin" : "/login"}>
-          <div className="flex justify-center items-center border border-gray-400 rounded-2xl hover:scale-105 hover:border-gray-600">
+          <div className="flex justify-center items-center border border-primary rounded-2xl hover:scale-105 hover:border-primary">
             <FaRegUser
-              size={30}
-              className="bg-gray-100 p-[7px] rounded-r-2xl"
-              color="gray"
+              size={32}
+              className="bg-light p-[7px] rounded-r-2xl text-primary"
             />
-            <button className="cursor-pointer bg-gray-100 text-gray-700 text-sm pl-3 pt-1 pb-2 rounded-l-2xl">
-              {fromAdmin ? "مدیریت" : faLocalization.loginOrRegister}
+            <button className="cursor-pointer bg-light text-primary text-sm pl-3 pt-1 pb-2 rounded-l-2xl">
+              {fromAdmin
+                ? faLocalization.management
+                : faLocalization.loginOrRegister}
             </button>
           </div>
         </Link>
