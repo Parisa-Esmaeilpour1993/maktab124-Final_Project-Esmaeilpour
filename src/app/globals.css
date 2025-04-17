@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Vazir";
+  src: url("assets/fonts/Vazir-FD-WOL.woff2") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: "Vazir", sans-serif;
+}
+
 :root {
   --color-primary: #328e6e;
   --color-secondary: #67ae6e;

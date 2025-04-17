@@ -12,12 +12,38 @@ export default function AdminHeader({
   toggleSidebar: () => void;
 }) {
   const [adminUserName, setAdminUserName] = useState<string>("");
+  const [currentTime, setCurrentTime] = useState<string>("");
 
   useEffect(() => {
     const username = localStorage.getItem("username");
     if (username) {
       setAdminUserName(username);
     }
+  }, []);
+
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date();
+      const time = now.toLocaleTimeString("fa-IR", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+
+      const date = now.toLocaleDateString("fa-IR", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+
+      setCurrentTime(`${time} - ${date}`);
+    };
+
+    updateClock();
+    const interval = setInterval(updateClock, 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -46,12 +72,17 @@ export default function AdminHeader({
             </span>
           </div>
 
-          <div className="w-20 h-20 mx-6 border border-primary md:bg-secondary rounded-full hidden md:flex items-center justify-center">
-            <Image
-              src={logo}
-              alt={"logo"}
-              className="filter brightness-200 contrast-150 animate-pulse"
-            />
+          <div className="flex gap-2 items-center">
+            <span className="text-xs text-gray-600 flex gap-2">
+              🕒 {currentTime}
+            </span>
+            <div className="w-20 h-20 mx-6 border border-primary md:bg-secondary rounded-full hidden md:flex items-center justify-center">
+              <Image
+                src={logo}
+                alt={"logo"}
+                className="filter brightness-200 contrast-150 animate-pulse"
+              />
+            </div>
           </div>
         </div>
       </div>

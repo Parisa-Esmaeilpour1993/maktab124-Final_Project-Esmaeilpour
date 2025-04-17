@@ -23,6 +23,7 @@ export const faLocalization = {
   save: "ذخیره",
   show: "نمایش",
   management: "مدیریت",
+  blogs: "مجله داروفارم",
 };
 
 export const sweetAlert = {
@@ -68,7 +69,7 @@ export const adminCategories = {
 
 export const loginLocalization = {
   Login: " ورود",
-  DontHaveAccount: "آیا قبلا حساب کاربری نداشتید؟",
+  DontHaveAccount: "آیا قبلا حساب کاربری داشته اید؟",
   SignupHere: " ثبت نام کنید ",
   Email: " ایمیل ",
   Password: " رمز ورود ",

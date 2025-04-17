@@ -43,7 +43,7 @@ export const links = [
     ],
   },
   { href: "/admin/sliders", label: "🖼️ بنرهای نمایشی", id: "sliders" },
-  { href: "/admin/blogs", label: "📝 وبلاگ", id: "blogs" },
+  { href: "/admin/blogs", label: "📝 مجله داروفارم", id: "blogs" },
   {
     href: "/admin/deliveryMethods",
     label: "🚚 روش‌های ارسال",

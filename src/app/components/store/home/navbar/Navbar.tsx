@@ -1,5 +1,6 @@
 "use client";
 
+import { faLocalization } from "@/app/constants/localization/fa/localization";
 import { useAppDispatch, useAppSelector } from "@/app/redux/store/hooks";
 import { fetchCategories } from "@/app/services/fetchCategory";
 import { useEffect } from "react";
@@ -16,12 +17,12 @@ export default function Navbar() {
     <nav className="flex gap-6 font-medium text-gray-800 mx-4 mb-4 px-4 py-3 border-b border-accent rounded-2xl shadow-accent overflow-x-auto whitespace-nowrap custom-scrollbar ">
       {categories.map((cat) => (
         <div className="transition-transform duration-300  hover:translate-y-1 hover:-translate-x-1 hover:text-secondary cursor-pointer">
-          <button key={cat.id}>{cat.title}</button>
-          <span className="font-normal" key={cat.id}>
-            {" > "}
-          </span>
+          <button key={cat.id}>
+            {cat.title} {">"}
+          </button>
         </div>
       ))}
+      <button>{faLocalization.blogs}</button>
     </nav>
   );
 }
