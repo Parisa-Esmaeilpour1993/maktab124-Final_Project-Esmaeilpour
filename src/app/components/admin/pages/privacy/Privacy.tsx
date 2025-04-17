@@ -7,15 +7,20 @@ import {
   sweetAlert,
 } from "@/app/constants/localization/fa/localization";
 import Button from "@/app/shared/Button";
-import { AboutUsData } from "@/app/types/adminGeneralPages";
+import { Textarea } from "@/app/shared/TextArea";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EditModal from "../EditModal";
+interface PrivacyProps {
+  id?: string;
+  title: string;
+  description: string;
+}
 
-export default function AboutUs() {
-  const [formData, setFormData] = useState<AboutUsData>({
+export default function Privacy() {
+  const [formData, setFormData] = useState<PrivacyProps>({
     title: "",
     description: "",
   });
@@ -23,9 +28,10 @@ export default function AboutUs() {
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${BASE_url}/api/records/aboutUs`, {
+      const response = await axios.get(`${BASE_url}/api/records/privacy`, {
         headers: { api_key: API_KEY },
       });
 
@@ -71,7 +77,7 @@ export default function AboutUs() {
 
       if (isEdit) {
         response = await axios.put(
-          `${BASE_url}/api/records/aboutUs/${formData.id}`,
+          `${BASE_url}/api/records/privacy/${formData.id}`,
           {
             title: formData.title,
             description: formData.description,
@@ -86,7 +92,7 @@ export default function AboutUs() {
         toast.success(sweetAlert.successfullyEdited);
       } else {
         response = await axios.post(
-          `${BASE_url}/api/records/aboutUs`,
+          `${BASE_url}/api/records/privacy`,
           {
             title: formData.title,
             description: formData.description,
@@ -121,13 +127,19 @@ export default function AboutUs() {
 
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-light rounded shadow">
-      <h2 className="text-2xl font-bold mb-6">{pageLocalization.aboutUs}</h2>
+      <h2 className="text-2xl font-bold mb-6">{pageLocalization.privacy} </h2>
       <div className="space-y-4">
-        <div>{formData.title}</div>
-        <div>{formData.description}</div>
+        <label className="block mb-1 font-medium">{formData.title}</label>
+        <Textarea
+          value={formData.description}
+          rows={10}
+          disabled
+          className="bg-white"
+        />
+
         <Button
-          onClick={() => setIsModalOpen(true)}
           children={isEditMode ? faLocalization.edit : faLocalization.add}
+          onClick={() => setIsModalOpen(true)}
         />
       </div>
       <EditModal

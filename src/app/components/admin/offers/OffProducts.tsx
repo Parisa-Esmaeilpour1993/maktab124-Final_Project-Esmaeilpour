@@ -9,7 +9,10 @@ import {
   productsLocalization,
   sweetAlert,
 } from "@/app/constants/localization/fa/localization";
+import Button from "@/app/shared/Button";
+import { Input } from "@/app/shared/Input";
 import { ProductsProps } from "@/app/types/products";
+import { confirmDelete, successDelete } from "@/app/utils/sweetAlert";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
@@ -71,14 +74,11 @@ const OffProducts = () => {
     const alreadyExists = offProducts.some(
       (p) => p.productName === product.productName
     );
-
     if (alreadyExists) {
       toast.error(newestProduct.duplicate);
       return;
     }
-
     setIsAdding(true);
-
     try {
       await axios.post(
         `${BASE_url}/api/records/offProducts`,
@@ -91,7 +91,6 @@ const OffProducts = () => {
           },
         }
       );
-
       toast.success(sweetAlert.successful);
       setOffProductId("");
       setIsModalOpen(false);
@@ -106,14 +105,7 @@ const OffProducts = () => {
 
   const handleDelete = async (id: string) => {
     setDeletingId(id);
-    const result = await Swal.fire({
-      title: sweetAlert.areYouSure,
-      text: sweetAlert.irrevocable,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: sweetAlert.yesDelete,
-      cancelButtonText: sweetAlert.cancel,
-    });
+    const result = await confirmDelete();
 
     if (result.isConfirmed) {
       try {
@@ -124,25 +116,21 @@ const OffProducts = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        Swal.fire({
-          title: sweetAlert.delete,
-          text: sweetAlert.successfullyDeleted,
-          icon: "success",
-          confirmButtonText: sweetAlert.okay,
-        });
+        await successDelete();
         fetchNewest();
       } catch (error) {
         toast.error(sweetAlert.errorInDeleteData);
       } finally {
         setDeletingId(null);
       }
+    } else {
+      setDeletingId(null);
     }
   };
 
   const handleDiscountSave = async (id: string) => {
     const product = offProducts.find((p) => p.id === id);
     if (!product) return;
-
     try {
       await axios.put(
         `${BASE_url}/api/records/offProducts/${id}`,
@@ -171,42 +159,41 @@ const OffProducts = () => {
     <div>
       <div className="p-4 max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">{offerProducts.offProducts}</h2>
-          <button
+          <h2 className="text-xl font-bold text-primary">
+            {offerProducts.offProducts}
+          </h2>
+          <Button
             onClick={() => setIsModalOpen(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-          >
-            {newestProduct.addNewProduct}
-          </button>
+            children={newestProduct.addNewProduct}
+          />
         </div>
 
         {isModalOpen && (
           <div className="fixed inset-0 bg-black/40 z-50 flex justify-center items-center">
             <div className="bg-white rounded p-4 w-4/5 md:w-2/3 space-y-4">
-              <h3 className="text-lg font-semibold">{newestProduct.addID}</h3>
-              <input
-                type="text"
+              <h3 className="text-lg font-semibold text-secondary">
+                {newestProduct.addID}
+              </h3>
+              <Input
                 placeholder={newestProduct.addProductID}
                 value={offProductId}
                 onChange={(e) => setOffProductId(e.target.value)}
-                className="w-full border px-3 py-2 rounded"
               />
-              <input
+              <Input
                 type="number"
                 placeholder={offerProducts.discountPercent}
                 min={1}
                 max={100}
-                className="w-full border px-3 py-2 rounded"
                 onChange={(e) => setDiscount(Number(e.target.value))}
                 value={discount}
               />
               <div className="flex justify-end gap-2">
-                <button
+                <Button
                   onClick={handleAdd}
-                  className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 cursor-pointer"
-                >
-                  {isAdding ? faLocalization.adding : faLocalization.add}
-                </button>
+                  children={
+                    isAdding ? faLocalization.adding : faLocalization.add
+                  }
+                />
                 <button
                   onClick={() => setIsModalOpen(false)}
                   className="bg-gray-300 px-3 py-1 rounded hover:bg-gray-400 cursor-pointer"
@@ -220,7 +207,7 @@ const OffProducts = () => {
 
         {loading ? (
           <div className="w-full text-center py-10 text-lg font-semibold flex items-center justify-center gap-2">
-            <div className="w-6 h-6 border-t-4 border-blue-500 border-solid rounded-full animate-spin "></div>
+            <div className="w-6 h-6 border-t-4 border-primary border-solid rounded-full animate-spin "></div>
             {productsLocalization.loading}...
           </div>
         ) : offProducts.length === 0 ? (
@@ -230,7 +217,7 @@ const OffProducts = () => {
             {offProducts.map((product) => (
               <div
                 key={product.id}
-                className="border rounded p-2 flex flex-col gap-2 items-center shadow"
+                className="border border-primary rounded p-2 flex flex-col gap-2 items-center shadow"
               >
                 <img
                   src={`${BASE_url}${product.image}`}
@@ -242,7 +229,7 @@ const OffProducts = () => {
                   {product.productPrice} {faLocalization.rial}
                 </p>
                 <p
-                  className="text-sm text-gray-700 cursor-pointer"
+                  className="text-sm text-gray-700 cursor-pointer flex gap-2 items-center"
                   onClick={() => {
                     setEditableProductId(product.id);
                     setEditableDiscount(product.discountPercent || 0);
@@ -250,9 +237,8 @@ const OffProducts = () => {
                 >
                   {offerProducts.discountPercent}:{" "}
                   {editableProductId === product.id ? (
-                    <input
+                    <Input
                       type="number"
-                      className="border px-1 py-0.5 w-16 text-center rounded"
                       value={editableDiscount}
                       autoFocus
                       min={1}

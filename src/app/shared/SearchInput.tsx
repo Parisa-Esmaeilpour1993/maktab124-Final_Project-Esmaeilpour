@@ -12,7 +12,7 @@ export default function SearchInput({
 }: SearchInputProps) {
   return (
     <div className="flex justify-center gap-2 items-center border-2 border-accent rounded-md px-2 p-1 w-80 md:w-[280px] lg:w-80 max-h-10 outline-none hover:border-[3px] hover:border-secondary text-primary">
-      <FaSearch className="text-primary" size={13} />
+      <FaSearch className="text-secondary" size={13} />
       <input
         placeholder={faLocalization.search}
         value={value}

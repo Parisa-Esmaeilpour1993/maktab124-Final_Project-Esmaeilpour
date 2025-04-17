@@ -1,5 +1,11 @@
 import { IoCloseCircleSharp } from "react-icons/io5";
 import React from "react";
+import {
+  faLocalization,
+  sweetAlert,
+} from "@/app/constants/localization/fa/localization";
+import { Textarea } from "@/app/shared/TextArea";
+import { Input } from "@/app/shared/Input";
 
 interface EditModalProps {
   isOpen: boolean;
@@ -27,28 +33,26 @@ export default function EditModal({
 }: EditModalProps) {
   if (!isOpen) return null;
 
-  const handleDescriptionChange = (value: string) => {
-    onChange({ target: { name: "description", value } });
-  };
-
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-4/5 md:w-2/3 lg:w-1/2">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-4/5 md:w-2/3">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium text-gray-900">ویرایش</h3>
+          <h3 className="text-lg font-medium text-primary">
+            {faLocalization.edit}
+          </h3>
           <button
             onClick={onClose}
-            className="text-gray-600 hover:text-gray-800 font-bold text-xl"
+            className="text-secondary hover:text-primary font-bold text-xl cursor-pointer"
           >
             <IoCloseCircleSharp size={30} />
           </button>
         </div>
         <form onSubmit={onSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block font-medium text-gray-700 mb-1">
               عنوان
             </label>
-            <input
+            <Input
               type="text"
               name="title"
               value={formData.title}
@@ -59,10 +63,10 @@ export default function EditModal({
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block font-medium text-gray-700 mb-1">
               توضیحات
             </label>
-            <textarea
+            <Textarea
               name="description"
               value={formData.description}
               onChange={onChange}
@@ -78,14 +82,14 @@ export default function EditModal({
               onClick={onClose}
               className="bg-gray-200 px-4 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-300"
             >
-              لغو
+              {sweetAlert.cancel}
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50"
+              className="bg-secondary text-white px-4 py-2 rounded-lg text-sm hover:bg-primary disabled:opacity-50"
             >
-              {loading ? "در حال ارسال..." : "ذخیره"}
+              {loading ? faLocalization.sending : faLocalization.save}
             </button>
           </div>
         </form>

@@ -1,20 +1,11 @@
 import { BASE_url } from "@/app/constants/api/BASE_URL";
 import { productsLocalization } from "@/app/constants/localization/fa/localization";
 import { Category } from "@/app/types/category";
-import { ProductsProps } from "@/app/types/products";
+import { ProductsProps, ProductTableProps } from "@/app/types/products";
 import React, { useState } from "react";
 import { BiSolidDetail } from "react-icons/bi";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
-
-interface ProductTableProps {
-  products: ProductsProps[];
-  category: Category[];
-  handleDelete: (id: string) => void;
-  onEditClick: (product: ProductsProps) => void;
-  onDetailClick: (product: ProductsProps) => void;
-  onInlineEdit: (id: string, field: string, value: string) => void;
-}
 
 const ProductTable: React.FC<ProductTableProps> = ({
   products,
@@ -61,18 +52,34 @@ const ProductTable: React.FC<ProductTableProps> = ({
   return (
     <>
       {/* Desktop View */}
-      <div className="hidden lg:block overflow-x-auto rounded-lg border border-gray-200">
+      <div className="hidden lg:block overflow-x-auto rounded-lg border border-secondary">
         <table className="w-full text-sm text-right border-collapse">
-          <thead className="bg-gray-100 text-gray-700 text-center">
+          <thead className="bg-light text-gray-700 text-center">
             <tr>
-              <th className="p-2 border">{productsLocalization.id}</th>
-              <th className="p-2 border">{productsLocalization.image}</th>
-              <th className="p-2 border">{productsLocalization.name}</th>
-              <th className="p-2 border">{productsLocalization.category}</th>
-              <th className="p-2 border">{productsLocalization.price}</th>
-              <th className="p-2 border">{productsLocalization.available}</th>
-              <th className="p-2 border">{productsLocalization.expireDate}</th>
-              <th className="p-2 border">{productsLocalization.operation}</th>
+              <th className="p-2 border border-accent">
+                {productsLocalization.image}
+              </th>
+              <th className="p-2 border border-accent">
+                {productsLocalization.id}
+              </th>
+              <th className="p-2 border border-accent">
+                {productsLocalization.name}
+              </th>
+              <th className="p-2 border border-accent">
+                {productsLocalization.category}
+              </th>
+              <th className="p-2 border border-accent">
+                {productsLocalization.price}
+              </th>
+              <th className="p-2 border border-accent">
+                {productsLocalization.available}
+              </th>
+              <th className="p-2 border border-accent">
+                {productsLocalization.expireDate}
+              </th>
+              <th className="p-2 border border-accent">
+                {productsLocalization.operation}
+              </th>
             </tr>
           </thead>
           <tbody className="text-center">
@@ -88,12 +95,12 @@ const ProductTable: React.FC<ProductTableProps> = ({
                   key={product.id}
                   className={`hover:bg-gray-50 ${
                     +product.productQuantity === 0
-                      ? "bg-red-100 hover:bg-red-200 opacity-60 hover:opacity-100"
+                      ? "bg-light hover:bg-accent opacity-60 hover:opacity-80"
                       : ""
                   }`}
                 >
-                  <td className="p-2 border">{product.id}</td>
-                  <td className="p-2 border">
+                  <td className="p-2 border border-accent">{product.id}</td>
+                  <td className="p-2 border border-accent">
                     <img
                       src={`${BASE_url}${product.image}`}
                       alt={product.productName}
@@ -101,7 +108,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                     />
                   </td>
                   <td
-                    className="p-2 border cursor-pointer"
+                    className="p-2 border cursor-pointer border-accent"
                     onClick={() =>
                       handleCellClick(
                         product.id,
@@ -126,7 +133,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                       product.productName
                     )}
                   </td>
-                  <td className="p-2 border">
+                  <td className="p-2 border border-accent">
                     <select
                       value={product.productCategory}
                       onChange={(e) =>
@@ -146,7 +153,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                     </select>
                   </td>
                   <td
-                    className="p-2 border cursor-pointer"
+                    className="p-2 border cursor-pointer border-accent"
                     onClick={() =>
                       handleCellClick(
                         product.id,
@@ -173,7 +180,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                     )}
                   </td>
                   <td
-                    className="p-2 border cursor-pointer"
+                    className="p-2 border cursor-pointer border-accent"
                     onClick={() =>
                       handleCellClick(
                         product.id,
@@ -199,12 +206,38 @@ const ProductTable: React.FC<ProductTableProps> = ({
                       product.productQuantity
                     )}
                   </td>
-                  <td className="p-2 border">{product.productExpired}</td>
-                  <td className="p-2 border">
+                  <td
+                    className="p-2 border cursor-pointer border-accent"
+                    onClick={() =>
+                      handleCellClick(
+                        product.id,
+                        "productExpired",
+                        product.productExpired || ""
+                      )
+                    }
+                  >
+                    {isEditing(product.id, "productExpired") ? (
+                      <input
+                        type="date"
+                        autoFocus
+                        value={tempValue}
+                        onChange={(e) => setTempValue(e.target.value)}
+                        onBlur={handleBlur}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") handleBlur();
+                          if (e.key === "Escape") setEditingCell(null);
+                        }}
+                        className="w-full p-1 border rounded"
+                      />
+                    ) : (
+                      product.productExpired || "-"
+                    )}
+                  </td>
+                  <td className="p-2 border border-accent">
                     <div className="flex justify-center gap-2 items-center">
                       <button
                         onClick={() => handleDelete(product.id)}
-                        className="text-red-500 hover:text-red-700"
+                        className="text-yellow-500 hover:text-yellow-700"
                         title={productsLocalization.delete}
                       >
                         <FaTrash size={16} />
@@ -218,7 +251,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                       </button>
                       <button
                         onClick={() => onDetailClick(product)}
-                        className="text-yellow-500 hover:text-yellow-700"
+                        className="text-red-500 hover:text-red-700"
                         title={productsLocalization.detail}
                       >
                         <BiSolidDetail size={18} />

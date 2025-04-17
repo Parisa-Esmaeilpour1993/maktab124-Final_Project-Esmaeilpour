@@ -19,6 +19,7 @@ import { deleteProduct } from "@/app/services/deleteProducts";
 import { editProduct } from "@/app/services/editProducts";
 import { fetchProducts } from "@/app/services/fetchProducts";
 import { uploadImage } from "@/app/services/uploadService";
+import Button from "@/app/shared/Button";
 import SearchInput from "@/app/shared/SearchInput";
 import { ProductsProps } from "@/app/types/products";
 import {
@@ -130,6 +131,10 @@ export default function ProductsPage() {
           })
         );
         toast.success(sweetAlert.seccessfullyAdded);
+        const newTotalPages = Math.ceil(
+          (filteredProducts.length + 1) / itemsPerPage
+        );
+        setCurrentPage(newTotalPages);
       }
       setFormData(resetForm);
       setFileName(null);
@@ -145,6 +150,9 @@ export default function ProductsPage() {
       try {
         await dispatch(deleteProduct(id));
         await successDelete();
+        if (paginatedProducts.length === 1 && currentPage > 1) {
+          setCurrentPage(currentPage - 1);
+        }
       } catch {
         await unSuccessDelete();
       }
@@ -164,27 +172,27 @@ export default function ProductsPage() {
       };
       await dispatch(editProduct(updatedProduct));
     } catch (error) {
-      console.error("خطا:", error);
+      console.error(error);
     }
   };
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="px-4 mt-6">
       <ToastContainer />
       <div className="flex flex-col items-center gap-4 justify-between">
         <div className="flex flex-col w-full justify-between lg:flex-row gap-4 items-center">
-          <button
+          <Button
             onClick={() => {
               setFormData(resetForm);
               setFileName(null);
               setEditId(null);
               setIsModalOpen(true);
             }}
-            className="flex gap-2 items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition active:scale-95"
+            className="flex items-center gap-2"
           >
             <FaPlus />
             {productsLocalization.addProduct}
-          </button>
+          </Button>
 
           <SearchInput
             value={searchTerm}
@@ -205,7 +213,7 @@ export default function ProductsPage() {
 
       {loading ? (
         <div className="w-full text-center py-10 text-lg font-semibold flex items-center justify-center gap-2">
-          <div className="w-6 h-6 border-t-4 border-blue-500 border-solid rounded-full animate-spin "></div>
+          <div className="w-6 h-6 border-t-4 border-secondary border-solid rounded-full animate-spin "></div>
           {productsLocalization.loading}...
         </div>
       ) : (

@@ -1,3 +1,5 @@
+import { Category } from "./category";
+
 export interface SingleProductPageProps {
   params: {
     id: string;
@@ -23,3 +25,22 @@ export interface ProductsState {
 }
 
 export type NewProductProps = Omit<ProductsProps, "id">;
+
+export interface ProductsFilterProps {
+  filterCategory: string;
+  filterStock: string;
+  sortOption: string;
+  setFilterCategory: React.Dispatch<React.SetStateAction<string>>;
+  setFilterStock: React.Dispatch<React.SetStateAction<string>>;
+  setSortOption: React.Dispatch<React.SetStateAction<string>>;
+  category: Category[];
+}
+
+export interface ProductTableProps {
+  products: ProductsProps[];
+  category: Category[];
+  handleDelete: (id: string) => void;
+  onEditClick: (product: ProductsProps) => void;
+  onDetailClick: (product: ProductsProps) => void;
+  onInlineEdit: (id: string, field: string, value: string) => void;
+}

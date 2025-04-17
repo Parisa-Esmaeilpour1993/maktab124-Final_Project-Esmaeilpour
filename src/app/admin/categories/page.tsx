@@ -63,10 +63,10 @@ export default function AdminCategoriesPage() {
       }
 
       try {
-        const previousLength = categories.length;
         await dispatch(addCategory(title));
         await dispatch(fetchCategories());
-        const newTotalPages = Math.ceil((previousLength + 1) / itemsPerPage);
+        const updatedTotal = categories.length + 1;
+        const newTotalPages = Math.ceil(updatedTotal / itemsPerPage);
         setCurrentPage(newTotalPages);
         setTitle("");
         setMainModalOpen(false);
@@ -82,6 +82,14 @@ export default function AdminCategoriesPage() {
     if (result.isConfirmed) {
       await dispatch(deleteCategory(id));
       dispatch(fetchCategories());
+      const updatedCategories = categories.filter((cat) => cat.id !== id);
+      const filtered = updatedCategories.filter((cat) =>
+        cat?.title?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      const newTotalPages = Math.ceil(filtered.length / itemsPerPage);
+      if (currentPage > newTotalPages) {
+        setCurrentPage((prev) => Math.max(prev - 1, 1));
+      }
       await successDelete();
     }
   };
@@ -252,10 +260,10 @@ export default function AdminCategoriesPage() {
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className={`px-2 py-1 rounded-md border border-gray-600 ${
+            className={`px-2 py-1 rounded-md border border-accent ${
               currentPage === 1
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-white text-black hover:border-black hover:translate-y-0.5"
+                ? "bg-light text-secondary cursor-not-allowed"
+                : "bg-accent text-white hover:border-primary hover:translate-y-0.5"
             }`}
           >
             {faLocalization.prev}{" "}
@@ -272,10 +280,10 @@ export default function AdminCategoriesPage() {
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))
             }
             disabled={currentPage === totalPages}
-            className={`px-2 py-1 rounded-md border border-gray-600 ${
+            className={`px-2 py-1 rounded-md border border-accent ${
               currentPage === totalPages
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-white text-black hover:border-black hover:translate-y-0.5"
+                ? "bg-light text-secondary cursor-not-allowed"
+                : "bg-accent text-white hover:border-primary hover:translate-y-0.5"
             }`}
           >
             {faLocalization.next}

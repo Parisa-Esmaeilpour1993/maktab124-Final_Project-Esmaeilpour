@@ -1,11 +1,11 @@
-import AboutUsPage from "@/app/components/admin/pages/aboutUs/AboutUs";
+import AboutUs from "@/app/components/admin/pages/aboutUs/AboutUs";
 
-function aboutUs() {
+function AboutUsPage() {
   return (
     <div>
-      <AboutUsPage />
+      <AboutUs />
     </div>
   );
 }
 
-export default aboutUs;
+export default AboutUsPage;

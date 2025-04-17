@@ -1,7 +1,15 @@
 import React, { forwardRef } from "react";
 
 type InputProps = {
-  type?: "text" | "number" | "password" | "email" | "file";
+  type?:
+    | "text"
+    | "number"
+    | "password"
+    | "email"
+    | "file"
+    | "radio"
+    | "datetime-local"
+    | "date";
   value?: string | number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
@@ -24,7 +32,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   ) => {
     return (
       <div className="flex flex-col gap-2">
-        {label && <label className="text-primary">{label}</label>}
+        {label && (
+          <label className="font-semibold text-gray-700">{label}</label>
+        )}
         <input
           ref={ref}
           type={type}

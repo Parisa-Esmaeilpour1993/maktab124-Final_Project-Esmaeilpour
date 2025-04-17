@@ -1,0 +1,197 @@
+"use client";
+import EditModal from "@/app/components/admin/pages/contactUS/EditModal";
+import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
+import {
+  faLocalization,
+  pageLocalization,
+  sweetAlert,
+} from "@/app/constants/localization/fa/localization";
+import Button from "@/app/shared/Button";
+import { ContactUsData } from "@/app/types/adminGeneralPages";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+export default function ContactUs() {
+  const [formData, setFormData] = useState<ContactUsData>({
+    email: "",
+    phone: 0,
+    managerEmail: "",
+    resumeEmail: "",
+    address: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`${BASE_url}/api/records/contactUs`, {
+        headers: { api_key: API_KEY },
+      });
+
+      const records = response.data.records;
+      if (records && records.length > 0) {
+        setFormData({
+          id: records[0].id,
+          email: records[0].email,
+          address: records[0].address,
+          phone: records[0].phone,
+          managerEmail: records[0].managerEmail,
+          resumeEmail: records[0].resumeEmail,
+        });
+        setIsEditMode(true);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(sweetAlert.errorInReceiveData);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const isEdit = !!formData.id;
+
+    try {
+      let response;
+
+      if (isEdit) {
+        response = await axios.put(
+          `${BASE_url}/api/records/contactUs/${formData.id}`,
+          {
+            email: formData.email,
+            address: formData.address,
+            phone: formData.phone,
+            managerEmail: formData.managerEmail,
+            resumeEmail: formData.resumeEmail,
+          },
+          {
+            headers: {
+              api_key: API_KEY,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        toast.success(sweetAlert.successfullyEdited);
+      } else {
+        response = await axios.post(
+          `${BASE_url}/api/records/contactUs`,
+          {
+            email: formData.email,
+            address: formData.address,
+            phone: formData.phone,
+            managerEmail: formData.managerEmail,
+            resumeEmail: formData.resumeEmail,
+          },
+          {
+            headers: {
+              api_key: API_KEY,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        toast.success(sweetAlert.seccessfullyAdded);
+      }
+
+      if (response.data?.records) {
+        setFormData({
+          id: response.data.records.id,
+          email: response.data.records.email,
+          address: response.data.records.address,
+          phone: response.data.records.phone,
+          managerEmail: response.data.records.managerEmail,
+          resumeEmail: response.data.records.resumeEmail,
+        });
+        setIsEditMode(true);
+      }
+      fetchData();
+      setIsModalOpen(false);
+    } catch (err) {
+      console.error(err);
+      toast.error(sweetAlert.errorInSendingData);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto mt-8 p-6 bg-light rounded shadow">
+      <h2 className="text-2xl font-bold mb-6">{pageLocalization.contactUs}</h2>
+
+      <div className="space-y-4">
+        <div>
+          <label className="block mb-1 font-medium">
+            {pageLocalization.address}
+          </label>
+          <div className="border border-secondary rounded-md py-1 px-2">
+            {formData.address}
+          </div>
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">
+            {pageLocalization.email}
+          </label>
+          <div className="border border-secondary rounded-md py-1 px-2">
+            {formData.email}
+          </div>
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">
+            {pageLocalization.phone}
+          </label>
+          <div className="border border-secondary rounded-md py-1 px-2">
+            {formData.phone}
+          </div>
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">
+            {pageLocalization.managerConnection}
+          </label>
+          <div className="border border-secondary rounded-md py-1 px-2">
+            {formData.managerEmail}
+          </div>
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">
+            {pageLocalization.resumeEmail}
+          </label>
+          <div className="border border-secondary rounded-md py-1 px-2">
+            {formData.resumeEmail}
+          </div>
+        </div>
+
+        <Button
+          children={isEditMode ? faLocalization.edit : faLocalization.add}
+          onClick={() => setIsModalOpen(true)}
+        />
+      </div>
+      <EditModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        formData={formData}
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+        loading={loading}
+      />
+      <ToastContainer />
+    </div>
+  );
+}

@@ -44,6 +44,7 @@ export const sweetAlert = {
   errorInSubmit: "خطا در ثبت اطلاعات",
   tryAgain: "لطفاً مجدداً تلاش کنید.",
   errorInReceiveData: "خطا در دریافت اطلاعات :",
+  errorInSendingData: "خطا در ارسال اطلاعات :",
   error: "خطا",
   del: "حذف",
   errorInDeleteData: "خطا در حذف محصولات",
@@ -267,4 +268,18 @@ export const adminLocalization = {
   editAdmin: "ویرایش اطلاعات ادمین",
   saveChanges: "ذخیره تغییرات",
   close: "بستن",
+};
+
+export const pageLocalization = {
+  aboutUs: "درباره ما",
+  contactUs: "تماس با ما",
+  contactUsEdit: "ویرایش تماس با ما",
+  title: "عنوان",
+  address: "آدرس",
+  email: "ایمیل",
+  phone: "شماره تماس",
+  managerConnection: "ارتباط با مدیریت",
+  resumeEmail: "ارسال رزومه",
+  privacy: "قوانین و مقررات",
+  guide: "راهنمای خرید",
 };
