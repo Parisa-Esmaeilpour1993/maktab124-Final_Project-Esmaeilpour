@@ -10,9 +10,12 @@ import { addCategory } from "@/app/services/addCategory";
 import { deleteCategory } from "@/app/services/deleteCategory";
 import { editCategory } from "@/app/services/editCategory";
 import { fetchCategories } from "@/app/services/fetchCategory";
-import { useEffect, useState } from "react";
-import Swal from "sweetalert2";
+import Button from "@/app/shared/Button";
+import { Input } from "@/app/shared/Input";
 import SearchInput from "@/app/shared/SearchInput";
+import { confirmDelete, successDelete } from "@/app/utils/sweetAlert";
+import { useEffect, useRef, useState } from "react";
+import Swal from "sweetalert2";
 
 export default function AdminCategoriesPage() {
   const [mainModalOpen, setMainModalOpen] = useState(false);
@@ -24,6 +27,20 @@ export default function AdminCategoriesPage() {
 
   const dispatch = useAppDispatch();
   const { categories, error } = useAppSelector((state) => state.categories);
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const editInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (mainModalOpen && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [mainModalOpen]);
+  useEffect(() => {
+    if (editId && editInputRef.current) {
+      editInputRef.current.focus();
+    }
+  }, [editId]);
 
   const itemsPerPage = 5;
 
@@ -46,8 +63,11 @@ export default function AdminCategoriesPage() {
       }
 
       try {
+        const previousLength = categories.length;
         await dispatch(addCategory(title));
         await dispatch(fetchCategories());
+        const newTotalPages = Math.ceil((previousLength + 1) / itemsPerPage);
+        setCurrentPage(newTotalPages);
         setTitle("");
         setMainModalOpen(false);
       } catch (error) {
@@ -57,24 +77,12 @@ export default function AdminCategoriesPage() {
   };
 
   const handleDeleteCategory = async (id: string) => {
-    const result = await Swal.fire({
-      title: sweetAlert.areYouSure,
-      text: sweetAlert.irrevocable,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: sweetAlert.yesDelete,
-      cancelButtonText: sweetAlert.cancel,
-    });
+    const result = await confirmDelete();
 
     if (result.isConfirmed) {
       await dispatch(deleteCategory(id));
       dispatch(fetchCategories());
-      Swal.fire({
-        title: sweetAlert.delete,
-        text: sweetAlert.deleteCategory,
-        icon: "success",
-        confirmButtonText: sweetAlert.ok,
-      });
+      await successDelete();
     }
   };
 
@@ -89,6 +97,8 @@ export default function AdminCategoriesPage() {
         Swal.fire({
           icon: "error",
           text: adminCategories.repetitive,
+          confirmButtonText: sweetAlert.okay,
+          confirmButtonColor: "#67ae6e",
         });
         return;
       }
@@ -101,6 +111,7 @@ export default function AdminCategoriesPage() {
           title: sweetAlert.edit,
           icon: "success",
           confirmButtonText: sweetAlert.ok,
+          confirmButtonColor: "#67ae6e",
         });
       } catch (error) {
         console.error(error);
@@ -124,12 +135,10 @@ export default function AdminCategoriesPage() {
         <h1 className="text-lg md:text-xl font-bold">
           {adminCategories.categoriesList}
         </h1>
-        <button
+        <Button
           onClick={() => setMainModalOpen(true)}
-          className="bg-blue-400 text-white px-2 md:px-4 py-1 md:py-2 rounded active:scale-95 hover:bg-blue-500 cursor-pointer"
-        >
-          {adminCategories.addCategory}
-        </button>
+          children={adminCategories.addCategory}
+        />
       </div>
 
       <div className="mb-4 flex">
@@ -146,11 +155,11 @@ export default function AdminCategoriesPage() {
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-1/3 flex flex-col gap-4">
             <h2 className="text-lg font-bold">{adminCategories.addCategory}</h2>
-            <input
+            <Input
+              ref={inputRef}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder={adminCategories.categoryName}
-              className="border p-2 w-full"
             />
             <div className="flex justify-end gap-2">
               <button
@@ -159,20 +168,18 @@ export default function AdminCategoriesPage() {
               >
                 {adminCategories.cancel}
               </button>
-              <button
+              <Button
                 onClick={handleAddCategory}
-                className="bg-blue-600 text-white px-3 py-1 rounded-md active:scale-95 cursor-pointer"
-              >
-                {adminCategories.confirm}
-              </button>
+                children={adminCategories.confirm}
+              />
             </div>
           </div>
         </div>
       )}
 
-      {error && <p className="text-red-500">{error}</p>}
+      {error && <p className="text-red-600">{error}</p>}
 
-      <ul className="flex flex-col justify-between mt-6 p-3 space-y-4 shadow-2xl border rounded-2xl">
+      <ul className="flex flex-col justify-between mt-6 p-3 space-y-4 shadow-lg border rounded-2xl">
         {paginatedCategories.map((cat, index) => {
           if (!cat) return null;
           return (
@@ -184,6 +191,7 @@ export default function AdminCategoriesPage() {
                       {(currentPage - 1) * itemsPerPage + index + 1}.{" "}
                     </span>
                     <input
+                      ref={editInputRef}
                       value={editValue}
                       onChange={(e) => setEditValue(e.target.value)}
                       className="border border-gray-600 rounded-md p-1 outline-none hover:border-black"
@@ -222,7 +230,7 @@ export default function AdminCategoriesPage() {
                       setEditId(cat.id);
                       setEditValue(cat.title);
                     }}
-                    className="text-yellow-600 hover:text-yellow-700 cursor-pointer text-[14px] md:text-[16px]"
+                    className="text-secondary hover:text-primary cursor-pointer text-[14px] md:text-[16px]"
                   >
                     {adminCategories.edit}
                   </button>

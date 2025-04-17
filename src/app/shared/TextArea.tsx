@@ -1,13 +1,8 @@
 import React from "react";
 
-interface TextareaProps {
+interface TextareaProps
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   value: string;
-  onChange?: React.ChangeEventHandler<HTMLTextAreaElement>;
-  placeholder?: string;
-  rows?: number;
-  cols?: number;
-  className?: string;
-  name?: string;
 }
 
 const Textarea: React.FC<TextareaProps> = ({
@@ -26,7 +21,7 @@ const Textarea: React.FC<TextareaProps> = ({
       placeholder={placeholder}
       rows={rows}
       cols={cols}
-      className={`border p-2 w-full resize-none ${className}`}
+      className={`border text-secondary border-secondary outline-none focus:ring-1 focus:ring-secondary p-2 w-full resize-none rounded-md ${className}`}
       {...other}
     />
   );

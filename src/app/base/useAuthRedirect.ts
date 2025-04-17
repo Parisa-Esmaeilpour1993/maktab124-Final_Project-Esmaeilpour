@@ -26,7 +26,7 @@ export const useAuthRedirect = (redirectPath: string = "/login") => {
         localStorage.removeItem("username");
         router.push(redirectPath);
       }
-    }, 5000);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, [router, redirectPath]);

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import logo from "@/app/assets/images/logo.png";
 import admin from "@/app/assets/images/admin.jpg";
 import { adminHeaderLocalization } from "@/app/constants/localization/fa/localization";
+import Button from "@/app/shared/Button";
 
 export default function AdminHeader({
   toggleSidebar,
@@ -20,24 +21,23 @@ export default function AdminHeader({
   }, []);
 
   return (
-    <header className=" shadow-xl rounded-xl pt-4 pb-[1px] flex items-center">
-      <div className="border-b border-gray-300 rounded-xl flex-1 flex pb-3 items-center">
-        <button
+    <header className=" shadow-accent rounded-b-xl pt-4 pb-[1px] flex items-center">
+      <div className=" rounded-xl flex-1 flex pb-3 items-center">
+        <Button
           onClick={toggleSidebar}
-          className="text-black px-4 text-xl font-bold md:hidden"
-        >
-          ☰
-        </button>
+          children={"☰"}
+          className=" px-4 text-xl mx-4 font-bold md:hidden"
+        />
         <div className="flex justify-between flex-1 px-4">
           <div className="flex items-center gap-2">
             <Image
               src={admin}
               alt={"admin"}
-              className="w-12 h-12 animate-bounce"
+              className="w-12 h-12 animate-bounce hidden md:block"
             />
             <span>
               {adminHeaderLocalization.hi}{" "}
-              <span className="text-red-600">
+              <span className="text-primary font-semibold">
                 {adminUserName
                   ? adminUserName
                   : adminHeaderLocalization.dearAdmin}
@@ -46,7 +46,7 @@ export default function AdminHeader({
             </span>
           </div>
 
-          <div className="w-20 h-20 mx-6 border border-slate-700 bg-slate-900/50 rounded-full hidden lg:flex items-center justify-center">
+          <div className="w-20 h-20 mx-6 border border-primary md:bg-secondary rounded-full hidden md:flex items-center justify-center">
             <Image
               src={logo}
               alt={"logo"}

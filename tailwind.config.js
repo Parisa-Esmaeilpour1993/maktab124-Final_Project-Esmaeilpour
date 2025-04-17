@@ -14,7 +14,7 @@ module.exports = {
         light: "#e1eebc",
       },
       boxShadow: {
-        primary: "0px 16px 19px -2px rgba(225,0,0,0.75);",
+        accent: "0px 3px 10px 1px rgba(10,50,10,0.4)",
       },
     },
   },

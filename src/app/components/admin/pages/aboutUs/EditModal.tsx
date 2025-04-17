@@ -1,5 +1,4 @@
 import { IoCloseCircleSharp } from "react-icons/io5";
-import "react-quill/dist/quill.snow.css";
 import React from "react";
 
 interface EditModalProps {

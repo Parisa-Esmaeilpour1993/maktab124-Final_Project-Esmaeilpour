@@ -8,11 +8,13 @@ import {
   productsLocalization,
   sweetAlert,
 } from "@/app/constants/localization/fa/localization";
+import Button from "@/app/shared/Button";
+import { Input } from "@/app/shared/Input";
 import { ProductsProps } from "@/app/types/products";
+import { confirmDelete, successDelete } from "@/app/utils/sweetAlert";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import Swal from "sweetalert2";
 
 const NewestProductsAdmin = () => {
   const [newestProducts, setNewestProducts] = useState<ProductsProps[]>([]);
@@ -24,6 +26,14 @@ const NewestProductsAdmin = () => {
   const [loading, setLoading] = useState(false);
 
   const token = getAuthToken();
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (isModalOpen && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isModalOpen]);
 
   useEffect(() => {
     fetchNewest();
@@ -61,9 +71,6 @@ const NewestProductsAdmin = () => {
       toast.error(productsLocalization.notFound);
       return;
     }
-
-    console.log("Selected product to add:", product);
-    console.log("Newest products list:", newestProducts);
 
     const alreadyExists = newestProducts.some(
       (p) => p.productName === product.productName
@@ -103,14 +110,7 @@ const NewestProductsAdmin = () => {
 
   const handleDelete = async (id: string) => {
     setDeletingId(id);
-    const result = await Swal.fire({
-      title: sweetAlert.areYouSure,
-      text: sweetAlert.irrevocable,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: sweetAlert.yesDelete,
-      cancelButtonText: sweetAlert.cancel,
-    });
+    const result = await confirmDelete();
 
     if (result.isConfirmed) {
       try {
@@ -121,18 +121,15 @@ const NewestProductsAdmin = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        Swal.fire({
-          title: sweetAlert.delete,
-          text: sweetAlert.successfullyDeleted,
-          icon: "success",
-          confirmButtonText: sweetAlert.okay,
-        });
+        await successDelete();
         fetchNewest();
       } catch (error) {
         toast.error(sweetAlert.errorInDeleteData);
       } finally {
         setDeletingId(null);
       }
+    } else {
+      setDeletingId(null);
     }
   };
 
@@ -141,32 +138,27 @@ const NewestProductsAdmin = () => {
       <div className="p-4 max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">{newestProduct.newProduct}</h2>
-          <button
+          <Button
             onClick={() => setIsModalOpen(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-          >
-            {newestProduct.addNewProduct}
-          </button>
+            children={newestProduct.addNewProduct}
+          />
         </div>
 
         {isModalOpen && (
           <div className="fixed inset-0 bg-black/40 z-50 flex justify-center items-center">
             <div className="bg-white rounded p-4 w-4/5 md:w-2/3 space-y-4">
               <h3 className="text-lg font-semibold">{newestProduct.addID}</h3>
-              <input
+              <Input
+                ref={inputRef}
                 type="text"
                 placeholder={newestProduct.addProductID}
                 value={newProductId}
                 onChange={(e) => setNewProductId(e.target.value)}
-                className="w-full border px-3 py-2 rounded"
               />
               <div className="flex justify-end gap-2">
-                <button
-                  onClick={handleAdd}
-                  className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 cursor-pointer"
-                >
+                <Button onClick={handleAdd}>
                   {isAdding ? faLocalization.adding : faLocalization.add}
-                </button>
+                </Button>
                 <button
                   onClick={() => setIsModalOpen(false)}
                   className="bg-gray-300 px-3 py-1 rounded hover:bg-gray-400 cursor-pointer"
@@ -180,7 +172,7 @@ const NewestProductsAdmin = () => {
 
         {loading ? (
           <div className="w-full text-center py-10 text-lg font-semibold flex items-center justify-center gap-2">
-            <div className="w-6 h-6 border-t-4 border-blue-500 border-solid rounded-full animate-spin "></div>
+            <div className="w-6 h-6 border-t-4 border-secondary border-solid rounded-full animate-spin "></div>
             {productsLocalization.loading}...
           </div>
         ) : newestProducts.length === 0 ? (
@@ -190,7 +182,7 @@ const NewestProductsAdmin = () => {
             {newestProducts.map((product) => (
               <div
                 key={product.id}
-                className="border rounded p-2 flex flex-col gap-2 items-center shadow"
+                className="border border-primary rounded p-2 flex flex-col gap-2 items-center shadow"
               >
                 <img
                   src={`${BASE_url}${product.image}`}
@@ -203,7 +195,7 @@ const NewestProductsAdmin = () => {
                 </p>
                 <button
                   onClick={() => handleDelete(product.id)}
-                  className=" bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 disabled:opacity-50"
+                  className=" bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 disabled:opacity-50 mt-2"
                   disabled={deletingId === product.id}
                 >
                   {deletingId === product.id

@@ -1,8 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AdminSidebar from "../components/admin/asideBar/AsideBar";
 import AdminHeader from "../components/admin/header/Header";
 import { useAuthRedirect } from "../base/useAuthRedirect";
+import { isAdmin } from "../utils/isAdmin";
+import { useRouter } from "next/navigation";
 
 export default function AdminLayout({
   children,
@@ -14,7 +16,14 @@ export default function AdminLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
   const closeSidebar = () => setSidebarOpen(false);
+  const router = useRouter();
 
+  useEffect(() => {
+    const email = localStorage.getItem("email");
+    if (!isAdmin(email)) {
+      router.replace("/unauthorized");
+    }
+  }, []);
   return (
     <div className="flex relative overflow-hidden">
       <AdminSidebar isOpen={sidebarOpen} closeSidebar={closeSidebar} />

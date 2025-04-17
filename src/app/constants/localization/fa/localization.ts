@@ -111,7 +111,8 @@ export const adminHeaderLocalization = {
 
 export const asideBarLocalization = {
   storeName: "داروفارم",
-  exit: "خروج",
+  exit: "خروج از حساب کاربری",
+  pleaseWait: "لطفا صبر کنید...",
 };
 
 export const dashboardLocalization = {
@@ -140,6 +141,7 @@ export const deliveryMethodsLocalization = {
   kilo: "کیلوگرم",
   rial: "ریال",
   addNamePlease: "لطفاً نام روش ارسالی را وارد کنید.",
+  close: "بستن",
 };
 
 export const blogLocalization = {
@@ -155,6 +157,7 @@ export const blogLocalization = {
   editError: "مشکلی در ویرایش پست پیش آمده است.",
   loading: "در حال دریافت پست ها...",
   noPostToShow: "هیچ پستی وجود ندارد.",
+  blogs: "خواندنی ها",
 };
 
 export const productsLocalization = {
@@ -249,4 +252,19 @@ export const ordersLocalization = {
   sum: "مجموع",
   saveChanges: "ذخیره تغییرات",
   deleteOrder: "حذف سفارش",
+};
+
+export const adminLocalization = {
+  adminsList: "لیست ادمین ها",
+  username: "نام کاربری",
+  email: "ایمیل",
+  age: "سن",
+  education: "تحصیلات",
+  phone: "شماره تلفن",
+  fullName: "نام و نام خانوادگی",
+  operation: "عملیات",
+  showAdmin: "مشاهده اطلاعات ادمین",
+  editAdmin: "ویرایش اطلاعات ادمین",
+  saveChanges: "ذخیره تغییرات",
+  close: "بستن",
 };

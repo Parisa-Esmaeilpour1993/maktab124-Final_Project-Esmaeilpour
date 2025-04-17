@@ -5,8 +5,10 @@ export const confirmDelete = () => {
   return Swal.fire({
     title: sweetAlert.areYouSure,
     icon: "warning",
+    iconColor: "#328e6e",
     showCancelButton: true,
     confirmButtonText: sweetAlert.del,
+    confirmButtonColor: "#328e6e",
     cancelButtonText: sweetAlert.cancel,
   });
 };
@@ -17,6 +19,7 @@ export const successDelete = () => {
     text: sweetAlert.deleteProduct,
     icon: "success",
     confirmButtonText: sweetAlert.ok,
+    confirmButtonColor: "#67ae6e",
   });
 };
 

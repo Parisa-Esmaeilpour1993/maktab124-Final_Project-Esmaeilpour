@@ -1,26 +1,26 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { getBlogs } from "@/app/services/getBlogs";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
-import axios from "axios";
-import { FaEdit, FaTrash } from "react-icons/fa";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import Button from "@/app/shared/Button";
-import { BlogProps } from "@/app/types/blogList";
 import {
   blogLocalization,
   faLocalization,
   sweetAlert,
 } from "@/app/constants/localization/fa/localization";
-import Swal from "sweetalert2";
- 
+import { getBlogs } from "@/app/services/getBlogs";
+import Button from "@/app/shared/Button";
+import { BlogProps } from "@/app/types/blogList";
+import { confirmDelete } from "@/app/utils/sweetAlert";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function BlogList() {
   const [blogs, setBlogs] = useState<BlogProps[]>([]);
   const [loading, setLoading] = useState(true);
   const [editBlog, setEditBlog] = useState<BlogProps | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -32,17 +32,8 @@ export default function BlogList() {
   }, []);
 
   const handleDelete = async (id: string) => {
-    const result = await Swal.fire({
-      title: sweetAlert.areYouSure,
-      text: sweetAlert.irrevocable,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: sweetAlert.yesDelete,
-      cancelButtonText: sweetAlert.cancel,
-    });
-
+    setDeletingId(id);
+    const result = await confirmDelete();
     if (result.isConfirmed) {
       try {
         setLoading(true);
@@ -67,7 +58,10 @@ export default function BlogList() {
         toast.error(blogLocalization.deleteError);
       } finally {
         setLoading(false);
+        setDeletingId(null);
       }
+    } else {
+      setDeletingId(null);
     }
   };
 
@@ -123,7 +117,7 @@ export default function BlogList() {
       {blogs.map((blog) => (
         <div
           key={blog.id}
-          className="border rounded-lg flex flex-col justify-between p-4 shadow-sm hover:shadow-md transition"
+          className="border border-primary rounded-lg flex flex-col justify-between p-4 shadow-sm hover:shadow-md transition"
         >
           <div>
             {" "}
@@ -139,16 +133,25 @@ export default function BlogList() {
           <div className="flex justify-between mt-4">
             <Button
               onClick={() => handleEdit(blog.id)}
-              className="!text-blue-600 hover:!text-blue-900"
+              className="flex items-center justify-center gap-2"
             >
               {" "}
               <FaEdit /> {faLocalization.edit}
             </Button>
             <Button
               onClick={() => handleDelete(blog.id)}
-              className="!text-red-600 hover:!text-red-800"
+              className="!text-red-600 hover:!text-red-800 hover:!bg-accent flex items-center justify-center gap-2"
+              disabled={deletingId === blog.id}
             >
-              <FaTrash /> {faLocalization.delete}
+              {deletingId === blog.id ? (
+                <span className="animate-pulse text-sm">
+                  {faLocalization.deleting}
+                </span>
+              ) : (
+                <>
+                  <FaTrash /> {faLocalization.delete}
+                </>
+              )}
             </Button>
           </div>
         </div>

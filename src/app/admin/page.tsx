@@ -91,15 +91,15 @@ export default function AdminDashboard() {
   }, [barData.length]);
 
   return (
-    <div className="p-6 space-y-6 bg-gray-100">
-      <h1 className="text-2xl font-bold text-gray-800">
+    <div className="px-6 space-y-6">
+      <h1 className="text-2xl font-bold mt-2 text-primary">
         {dashboardLocalization.managementDashboard}
       </h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card>
           <CardContent className="flex flex-col gap-4 md:flex-row md:items-center lg:flex-col">
-            <CardTitle className="text-gray-600">
+            <CardTitle className="text-gray-700">
               👤 {dashboardLocalization.users}
             </CardTitle>
             <p className="text-xl font-bold text-blue-600">{users.length}</p>
@@ -108,7 +108,7 @@ export default function AdminDashboard() {
 
         <Card>
           <CardContent className="flex flex-col gap-4 md:flex-row md:items-center lg:flex-col">
-            <CardTitle className="text-gray-600">
+            <CardTitle className="text-gray-700">
               📦 {dashboardLocalization.orders}
             </CardTitle>
             <p className="text-xl font-bold text-green-600">
@@ -119,7 +119,7 @@ export default function AdminDashboard() {
 
         <Card>
           <CardContent className="flex flex-col gap-4 md:flex-row md:items-center lg:flex-col">
-            <CardTitle className="text-gray-600">
+            <CardTitle className="text-gray-700">
               💰 {dashboardLocalization.totalIncome}
             </CardTitle>
             <p className="text-xl font-bold text-red-600">
@@ -195,7 +195,7 @@ export default function AdminDashboard() {
                   />
                   <YAxis allowDecimals={false} tickMargin={16} />
                   <Tooltip />
-                  <Bar dataKey="value" fill="#60a5fa" />
+                  <Bar dataKey="value" fill="#328e6e" />
                 </BarChart>
               </ResponsiveContainer>
             </div>

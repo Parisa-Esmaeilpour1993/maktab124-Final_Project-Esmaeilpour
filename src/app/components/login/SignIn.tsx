@@ -44,10 +44,11 @@ const Login = () => {
       const admin = adminEmails.find((admin) => admin.email === email);
       if (admin) {
         localStorage.setItem("username", admin.username);
-
+        localStorage.setItem("email", email);
         toast.success(loginLocalization.successLogin);
         router.push("/admin");
       } else {
+        localStorage.setItem("email", email);
         toast.success(loginLocalization.successLogin);
         router.push("/");
       }
@@ -121,7 +122,7 @@ const Login = () => {
               <Button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute !bg-white left-[2px] top-10"
+                className="absolute !bg-white left-[2px] top-8"
                 tabIndex={-1}
               >
                 {showPassword ? (

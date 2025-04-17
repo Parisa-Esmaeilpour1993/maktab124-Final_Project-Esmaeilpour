@@ -13,11 +13,12 @@ export default function Navbar() {
   }, [dispatch]);
 
   return (
-    <nav className="flex gap-4 text-gray-800 mx-4 mb-4 px-4 pb-3 pt-1 border-b drop-shadow-2xl  shadow-primary border-secondary rounded-2xl">
+    <nav className="flex gap-6 font-medium text-gray-800 mx-4 mb-4 px-4 py-3 border-b border-accent rounded-2xl shadow-accent overflow-x-auto whitespace-nowrap custom-scrollbar ">
       {categories.map((cat) => (
-        <button key={cat.id} className="hover:text-primary cursor-pointer">
-          {cat.title}
-        </button>
+        <div className="transition-transform duration-300  hover:translate-y-1 hover:-translate-x-1 hover:text-secondary cursor-pointer">
+          <button key={cat.id}>{cat.title}</button>
+          <span className="font-normal">{" > "}</span>
+        </div>
       ))}
     </nav>
   );

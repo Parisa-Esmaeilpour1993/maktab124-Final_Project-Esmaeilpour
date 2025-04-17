@@ -40,3 +40,18 @@
 .text-light {
   color: var(--color-light);
 }
+
+.custom-scrollbar::-webkit-scrollbar {
+  height: 6px; /* برای اسکرول افقی */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #e1eebc;
+  border-radius: 999px;
+  margin: 0 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #67ae6e;
+  border-radius: 999px;
+}
