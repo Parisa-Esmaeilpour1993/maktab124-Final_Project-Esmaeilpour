@@ -2,6 +2,7 @@ import {
   bannerLocalization,
   sweetAlert,
 } from "@/app/constants/localization/fa/localization";
+import Button from "@/app/shared/Button";
 import React from "react";
 
 function DescriptionModal({
@@ -24,10 +25,8 @@ function DescriptionModal({
           </p>
         </div>
 
-        <div className="text-right">
-          <button className="bg-gray-300 px-4 py-1 rounded" onClick={onClose}>
-            {sweetAlert.cancel}
-          </button>
+        <div className="text-left">
+          <Button onClick={onClose} children={sweetAlert.cancel} />
         </div>
       </div>
     </div>

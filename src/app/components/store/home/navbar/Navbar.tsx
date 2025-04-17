@@ -17,7 +17,9 @@ export default function Navbar() {
       {categories.map((cat) => (
         <div className="transition-transform duration-300  hover:translate-y-1 hover:-translate-x-1 hover:text-secondary cursor-pointer">
           <button key={cat.id}>{cat.title}</button>
-          <span className="font-normal">{" > "}</span>
+          <span className="font-normal" key={cat.id}>
+            {" > "}
+          </span>
         </div>
       ))}
     </nav>

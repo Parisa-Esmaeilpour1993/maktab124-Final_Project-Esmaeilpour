@@ -57,13 +57,13 @@ const AddProductModal: React.FC<Props> = ({
               placeholder={productsLocalization.productName}
               required
               title={productsLocalization.productName}
-              className="w-60"
+              className="w-60 !text-gray-700"
             />
             <select
               name="productCategory"
               value={formData.productCategory}
               onChange={onChange}
-              className=" border border-secondary text-secondary px-3 py-2 rounded outline-none focus:ring-1 focus:ring-secondary"
+              className=" border border-secondary text-gray-700 px-3 py-2 rounded outline-none focus:ring-1 focus:ring-secondary"
               required
               title={productsLocalization.productCategory}
             >
@@ -85,6 +85,7 @@ const AddProductModal: React.FC<Props> = ({
               placeholder={productsLocalization.price}
               required
               title={productsLocalization.price}
+              className="!text-gray-700"
             />
 
             <Input
@@ -95,6 +96,7 @@ const AddProductModal: React.FC<Props> = ({
               placeholder={productsLocalization.available}
               required
               title={productsLocalization.available}
+              className="!text-gray-700"
             />
             <Input
               type="date"
@@ -102,7 +104,7 @@ const AddProductModal: React.FC<Props> = ({
               value={formData.productExpired}
               onChange={onChange}
               placeholder={productsLocalization.productExpired}
-              className="w-full border px-3 py-2 rounded"
+              className="w-full border px-3 py-2 rounded !text-gray-700"
               required
               title={productsLocalization.expireDate}
             />
@@ -113,7 +115,7 @@ const AddProductModal: React.FC<Props> = ({
             value={formData.productDescription}
             onChange={onChange}
             placeholder={productsLocalization.description}
-            className="!h-1/5 lg:!h-1/2"
+            className="!h-1/5 lg:!h-1/2 !text-gray-700"
             title={productsLocalization.description}
           />
 
@@ -122,7 +124,7 @@ const AddProductModal: React.FC<Props> = ({
             value={formData.productSpecifications}
             onChange={onChange}
             placeholder={productsLocalization.specification}
-            className="!h-1/3 lg:!h-2/3"
+            className="!h-1/3 lg:!h-2/3 !text-gray-700"
             title={productsLocalization.specification}
           />
 

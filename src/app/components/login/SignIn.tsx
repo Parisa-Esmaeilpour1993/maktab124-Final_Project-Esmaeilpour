@@ -8,6 +8,7 @@ import { Input } from "@/app/shared/Input";
 import { adminEmails } from "@/app/utils/adminsEmail";
 import axios from "axios";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { IoEyeOffSharp } from "react-icons/io5";
@@ -20,6 +21,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +30,7 @@ const Login = () => {
       setError(loginLocalization.allFieldsRequired);
       return;
     }
-
+    setIsLoading(true);
     try {
       const response = await axios.post(
         `${BASE_url}/api/users/login`,
@@ -52,10 +54,14 @@ const Login = () => {
         toast.success(loginLocalization.successLogin);
         router.push("/");
       }
+
+      window.dispatchEvent(new Event("authChange"));
     } catch (error) {
       setError(loginLocalization.loginError);
       toast.error(loginLocalization.toastError);
       console.error("Login error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -149,19 +155,26 @@ const Login = () => {
                   {loginLocalization.RememberMe}
                 </label>
               </div>
-              <a
+              <Link
                 href="#"
                 className="text-sm text-secondary hover:text-primary underline"
               >
                 {loginLocalization.ForgotPassword}
-              </a>
+              </Link>
             </div>
 
             <button
               type="submit"
-              className="w-full bg-secondary text-white py-2 rounded-lg hover:bg-primary active:scale-95 transition duration-200"
+              disabled={isLoading}
+              className={`w-full flex justify-center items-center gap-2 bg-secondary text-white py-2 rounded-lg hover:bg-primary active:scale-95 transition duration-200 ${
+                isLoading ? "opacity-60 cursor-not-allowed" : ""
+              }`}
             >
-              {loginLocalization.Login}
+              {isLoading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                loginLocalization.Login
+              )}
             </button>
           </form>
         </div>

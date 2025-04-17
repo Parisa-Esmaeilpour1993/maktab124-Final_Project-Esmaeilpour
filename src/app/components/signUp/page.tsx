@@ -107,7 +107,7 @@ const SignUp = () => {
           >
             <div>
               <label
-                className="block text-sm font-medium text-primary"
+                className="block text-sm font-medium text-primary mb-2"
                 htmlFor="name"
               >
                 {signUpLocalization.Name}
@@ -128,7 +128,7 @@ const SignUp = () => {
 
             <div>
               <label
-                className="block text-sm font-medium text-primary"
+                className="block text-sm font-medium text-primary mb-2"
                 htmlFor="email"
               >
                 {signUpLocalization.Email}
@@ -149,7 +149,7 @@ const SignUp = () => {
 
             <div className=" relative">
               <label
-                className="block text-sm font-medium text-primary"
+                className="block text-sm font-medium text-primary mb-2"
                 htmlFor="password"
               >
                 {signUpLocalization.Password}

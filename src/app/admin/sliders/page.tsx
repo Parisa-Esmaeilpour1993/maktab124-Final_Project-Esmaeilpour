@@ -30,7 +30,7 @@ export default function BannerAdminPage() {
       <Button
         children={bannerLocalization.addBanner}
         onClick={() => setShowModal(true)}
-        className="bg-gray-500 hover:bg-gray-600"
+        className="!bg-primary"
       />
 
       <AddBannerModal

@@ -1,7 +1,12 @@
+import User from "@/app/components/admin/user/User";
 import React from "react";
 
-function page() {
-  return <div>userList</div>;
+function UsersPage() {
+  return (
+    <div>
+      <User />
+    </div>
+  );
 }
 
-export default page;
+export default UsersPage;

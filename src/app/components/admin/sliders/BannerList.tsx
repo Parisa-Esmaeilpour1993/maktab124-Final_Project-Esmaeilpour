@@ -12,6 +12,10 @@ import axios from "axios";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import DescriptionModal from "./descriptionModal";
+import { confirmDelete, successDelete } from "@/app/utils/sweetAlert";
+import { Input } from "@/app/shared/Input";
+import { Textarea } from "@/app/shared/TextArea";
+import Button from "@/app/shared/Button";
 
 export default function BannerList({ banners, onRefresh }: BannerListProps) {
   const token = getAuthToken();
@@ -38,14 +42,7 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
 
   const handleDelete = async (id: string) => {
     setDeletingId(id);
-    const result = await Swal.fire({
-      title: sweetAlert.areYouSure,
-      text: sweetAlert.irrevocable,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: sweetAlert.yesDelete,
-      cancelButtonText: sweetAlert.cancel,
-    });
+    const result = await confirmDelete();
 
     if (result.isConfirmed) {
       await axios.delete(`${BASE_url}/api/records/banners/${id}`, {
@@ -57,7 +54,7 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
       });
 
       setDeletingId(null);
-      Swal.fire(sweetAlert.delete, sweetAlert.successfullyDeleted, "success");
+      await successDelete();
       onRefresh();
     } else {
       setDeletingId(null);
@@ -75,6 +72,9 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
       image: banner.image,
       background: banner.background,
     });
+
+    setImageName(banner.image.split("/").pop() || "");
+    setFileName(banner.background.split("/").pop() || "");
   };
 
   const handleEditSubmit = async (e: React.FormEvent) => {
@@ -82,14 +82,11 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
     if (!editingId) return;
     try {
       setLoading(true);
-
       let updatedData = { ...formData };
-
       if (imageFile) {
         const newImage = await uploadImage(imageFile);
         updatedData.image = newImage;
       }
-
       if (bgFile) {
         const newBg = await uploadImage(bgFile);
         updatedData.background = newBg;
@@ -143,9 +140,9 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
             <form
               key={banner.id}
               onSubmit={handleEditSubmit}
-              className="space-y-2 border p-4 rounded-lg"
+              className="space-y-2 border p-4 border-primary rounded-lg"
             >
-              <input
+              <Input
                 className="border w-full p-2 rounded"
                 value={formData.title}
                 onChange={(e) =>
@@ -157,7 +154,7 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
               <div className="flex gap-4 items-center">
                 <label
                   htmlFor="imageInp"
-                  className="block text-center bg-blue-100 p-2 rounded-md cursor-pointer"
+                  className="block text-center bg-accent p-2 rounded-md cursor-pointer"
                 >
                   {bannerLocalization.mainImage}
                 </label>
@@ -176,15 +173,14 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
                   }}
                   className="hidden"
                 />
-
-                <p className="text-center text-sm text-red-500 mt-2">
+                <p className="text-center text-sm text-red-600 mt-2">
                   {imageName}
                 </p>
               </div>
               <div className="flex gap-4 items-center">
                 <label
                   htmlFor="fileInp"
-                  className="block text-center bg-blue-100 p-2 rounded-md cursor-pointer"
+                  className="block text-center bg-accent p-2 rounded-md cursor-pointer"
                 >
                   {bannerLocalization.bgImage}
                 </label>
@@ -203,35 +199,30 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
                     });
                   }}
                 />
-
-                <p className="text-center text-sm text-red-500 mt-2">
+                <p className="text-center text-sm text-red-600 mt-2">
                   {fileName}
                 </p>
               </div>
-              <textarea
+              <Textarea
                 name="description"
                 placeholder={bannerLocalization.description}
-                className="w-full border p-2 rounded"
-                rows={3}
                 value={formData.description}
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
                 }
               />
-              <input
+              <Input
                 name="link"
                 placeholder={bannerLocalization.link}
-                className="w-full border p-2 rounded"
                 value={formData.link}
                 onChange={(e) =>
                   setFormData({ ...formData, link: e.target.value })
                 }
               />
-              <input
+              <Input
                 name="order"
                 type="number"
                 placeholder={bannerLocalization.order}
-                className="w-full border p-2 rounded"
                 value={formData.order}
                 onChange={(e) =>
                   setFormData({ ...formData, order: +e.target.value })
@@ -247,13 +238,14 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
                   onChange={(e) =>
                     setFormData({ ...formData, isActive: e.target.checked })
                   }
+                  className="accent-secondary"
                 />
                 {bannerLocalization.isActive}
               </label>
-              <div className="flex gap-2">
+              <div className="flex gap-2 justify-end">
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white px-4 py-1 rounded"
+                  className="bg-secondary hover:bg-primary cursor-pointer text-white px-4 py-1 rounded"
                 >
                   {loading ? faLocalization.saving : faLocalization.save}
                 </button>
@@ -272,17 +264,17 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
           ) : (
             <div
               key={banner.id}
-              className="border p-4 rounded-lg bg-white shadow-md"
+              className="border border-primary p-4 rounded-lg bg-white shadow-md"
             >
               <div className="flex gap-2 items-center">
-                <label>
+                <label className="font-semibold">
                   {bannerLocalization.title}
                   {" :"}
                 </label>
-                <h3 className="font-semibold">{banner.title}</h3>
+                <h3>{banner.title}</h3>
               </div>
               <div className="flex gap-2 items-center">
-                <label>
+                <label className="font-semibold">
                   {bannerLocalization.description}
                   {" :"}
                 </label>
@@ -291,28 +283,30 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
                     setSelectedDescription(banner.description);
                     setShowDescriptionModal(true);
                   }}
-                  className="text-blue-600 underline"
+                  className="text-secondary hover:text-primary underline"
                 >
                   {faLocalization.show}
                 </button>
               </div>
               <div className="flex gap-2 items-center">
-                <label>
+                <label className="font-semibold">
                   {bannerLocalization.link}
                   {" :"}
                 </label>
-                <h3 className="font-semibold">{banner.link}</h3>
+                <h3>{banner.link}</h3>
               </div>
               <div className="flex gap-2 items-center">
-                <label>
+                <label className="font-semibold">
                   {bannerLocalization.order}
                   {" :"}
                 </label>
-                <h3 className="font-semibold">{banner.order}</h3>
+                <h3>{banner.order}</h3>
               </div>
-              <div className="w-full flex flex-col lg:flex-row gap-6 justify-between my-6">
+              <div className="w-full flex flex-col lg:flex-row gap-6 lg:gap-16 justify-center my-6">
                 <div className="flex gap-2 items-center">
-                  <label>{bannerLocalization.mainImage}</label>
+                  <label className="font-semibold">
+                    {bannerLocalization.mainImage}
+                  </label>
                   <img
                     src={`${BASE_url}${banner.image}`}
                     alt="Banner"
@@ -320,7 +314,9 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
                   />
                 </div>
                 <div className="flex gap-2 items-center">
-                  <label>{bannerLocalization.bgImage}</label>
+                  <label className="font-semibold">
+                    {bannerLocalization.bgImage}
+                  </label>
                   <img
                     src={`${BASE_url}${banner.background}`}
                     alt="Background"
@@ -329,15 +325,13 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button
+                <Button
                   onClick={() => handleEditClick(banner)}
-                  className="bg-gray-500 text-white px-4 py-1 rounded"
-                >
-                  {faLocalization.edit}
-                </button>
+                  children={faLocalization.edit}
+                />
                 <button
                   onClick={() => handleDelete(banner.id)}
-                  className="bg-gray-300 text-white px-4 py-1 rounded"
+                  className="bg-gray-300 cursor-pointer hover:bg-gray-400 text-white px-4 py-1 rounded"
                   disabled={deletingId === banner.id}
                 >
                   {deletingId === banner.id

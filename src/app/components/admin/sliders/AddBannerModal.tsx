@@ -7,6 +7,8 @@ import {
   sweetAlert,
 } from "@/app/constants/localization/fa/localization";
 import { addBanner } from "@/app/services/addBanners";
+import { Input } from "@/app/shared/Input";
+import { Textarea } from "@/app/shared/TextArea";
 import { AddBannerModalProps } from "@/app/types/Banner";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
@@ -92,36 +94,33 @@ export default function AddBannerModal({
     <div>
       <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
         <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl flex flex-col gap-6">
-          <h2 className="text-lg font-bold ">{bannerLocalization.addBanner}</h2>
+          <h2 className="text-lg font-bold text-secondary">
+            {bannerLocalization.addBanner}
+          </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <input
+            <Input
               name="title"
               placeholder={bannerLocalization.title}
-              className="w-full border p-2 rounded"
               value={formData.title}
               onChange={handleChange}
               required
             />
-            <textarea
+            <Textarea
               name="description"
               placeholder={bannerLocalization.description}
-              className="w-full border p-2 rounded"
-              rows={3}
               value={formData.description}
               onChange={handleChange}
             />
-            <input
+            <Input
               name="link"
               placeholder={bannerLocalization.link}
-              className="w-full border p-2 rounded"
               value={formData.link}
               onChange={handleChange}
             />
-            <input
+            <Input
               name="order"
               type="number"
               placeholder={bannerLocalization.order}
-              className="w-full border p-2 rounded"
               value={formData.order}
               onChange={handleChange}
               title={bannerLocalization.order}
@@ -133,6 +132,7 @@ export default function AddBannerModal({
                 name="isActive"
                 checked={formData.isActive}
                 onChange={handleChange}
+                className="accent-green-600"
               />
               {bannerLocalization.isActive}
             </label>
@@ -141,7 +141,7 @@ export default function AddBannerModal({
               <div className="flex gap-4 items-center">
                 <label
                   htmlFor="imageInp"
-                  className="block text-center bg-blue-100 p-2 rounded-md cursor-pointer"
+                  className="block text-center bg-accent p-2 rounded-md cursor-pointer"
                 >
                   {bannerLocalization.mainImage}
                 </label>
@@ -156,14 +156,14 @@ export default function AddBannerModal({
                   }}
                   className="hidden"
                 />
-                <p className="text-center text-sm text-red-500 mt-2">
+                <p className="text-center text-sm text-red-600 mt-2">
                   {imageName || blogLocalization.notChoosen}
                 </p>
               </div>
               <div className="flex gap-4 items-center">
                 <label
                   htmlFor="fileInp"
-                  className="block text-center bg-blue-100 p-2 rounded-md cursor-pointer"
+                  className="block text-center bg-accent p-2 rounded-md cursor-pointer"
                 >
                   {bannerLocalization.bgImage}
                 </label>
@@ -178,7 +178,7 @@ export default function AddBannerModal({
                     setFileName(file ? file.name : "");
                   }}
                 />
-                <p className="text-center text-sm text-red-500 mt-2">
+                <p className="text-center text-sm text-red-600 mt-2">
                   {fileName || blogLocalization.notChoosen}
                 </p>
               </div>
@@ -195,7 +195,7 @@ export default function AddBannerModal({
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+                className="px-4 py-2 bg-secondary hover:bg-primary text-white rounded disabled:opacity-50"
               >
                 {loading
                   ? faLocalization.sending

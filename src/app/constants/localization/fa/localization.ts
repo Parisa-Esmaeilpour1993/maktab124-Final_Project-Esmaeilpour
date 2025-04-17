@@ -80,6 +80,10 @@ export const loginLocalization = {
   toastError: "ورود موفقیت‌آمیز نبود.",
   successLogin: "ورود با موفقیت انجام شد!",
   allFieldsRequired: "همه فیلدها باید پر باشند.",
+  logoutSuccessfully: "شما با موفقیت از حساب خود خارج شدید.",
+  wannaLogout: " آیا می‌خواهید از حساب خود خارج شوید؟",
+  yes: "بله",
+  no: "خیر",
 };
 
 export const signUpLocalization = {
