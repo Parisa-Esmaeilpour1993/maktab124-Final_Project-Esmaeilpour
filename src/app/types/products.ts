@@ -16,6 +16,7 @@ export interface ProductsProps {
   productExpired: string;
   image: string;
   discountPercent?: number;
+  createdAt: string;
 }
 
 export interface ProductsState {

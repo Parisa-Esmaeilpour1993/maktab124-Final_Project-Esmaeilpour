@@ -44,9 +44,15 @@ const useFilteredProducts = ({
     else if (sortOption === "za")
       filtered.sort((a, b) => b.productName.localeCompare(a.productName, "fa"));
     else if (sortOption === "newest")
-      filtered.sort((a, b) => b.id.localeCompare(a.id));
+      filtered.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
     else if (sortOption === "oldest")
-      filtered.sort((a, b) => a.id.localeCompare(b.id));
+      filtered.sort(
+        (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      );
 
     setFilteredProducts(filtered);
   }, [products, searchTerm, filterCategory, filterStock, sortOption]);

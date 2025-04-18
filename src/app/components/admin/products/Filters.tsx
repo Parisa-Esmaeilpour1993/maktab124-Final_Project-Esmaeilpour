@@ -47,6 +47,8 @@ const Filters = ({
       >
         <option value="newest">{productsLocalization.newest}</option>
         <option value="oldest">{productsLocalization.oldest}</option>
+        <option value="az">{productsLocalization.az}</option>
+        <option value="za">{productsLocalization.za}</option>
       </select>
     </div>
   );

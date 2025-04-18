@@ -114,6 +114,7 @@ export default function ProductsPage() {
             id: editId,
             productPrice: Number(formData.productPrice),
             productQuantity: Number(formData.productQuantity),
+            createdAt: "",
           })
         );
         toast.success(sweetAlert.successfullyEdited);
@@ -128,6 +129,7 @@ export default function ProductsPage() {
             ...formData,
             productPrice: Number(formData.productPrice),
             productQuantity: Number(formData.productQuantity),
+            createdAt: "",
           })
         );
         toast.success(sweetAlert.seccessfullyAdded);
