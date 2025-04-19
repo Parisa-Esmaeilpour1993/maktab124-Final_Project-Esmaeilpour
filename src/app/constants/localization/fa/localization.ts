@@ -304,4 +304,5 @@ export const UsersLocalization = {
   usersList: "لیست کاربران",
   usersDetail: "اطلاعات کاربر",
   loginDate: "تاریخ عضویت",
+  add: "افزودن اطلاعات ادمین",
 };

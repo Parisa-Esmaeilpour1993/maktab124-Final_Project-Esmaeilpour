@@ -11,7 +11,7 @@ export interface UserProps {
   name: string;
 }
 
-export interface FormDataProps {
+export interface AdminDataProps {
   name: string;
   lastName: string;
   username: string;
@@ -20,4 +20,5 @@ export interface FormDataProps {
   nationalId: number;
   phone: string;
   address: string;
+  userID: string;
 }
