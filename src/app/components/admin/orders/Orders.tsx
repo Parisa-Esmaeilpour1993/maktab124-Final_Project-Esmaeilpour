@@ -121,14 +121,15 @@ export default function Orders() {
           <thead>
             <tr className="bg-light">
               <th className="p-2 border border-accent">
+                {ordersLocalization.id}
+              </th>
+              <th className="p-2 border border-accent">
                 {ordersLocalization.customer}
               </th>
               <th className="p-2 border border-accent">
                 {ordersLocalization.createdAt}
               </th>
-              <th className="p-2 border border-accent">
-                {ordersLocalization.id}
-              </th>
+
               <th className="p-2 border border-accent">
                 {ordersLocalization.totalPrice}
               </th>

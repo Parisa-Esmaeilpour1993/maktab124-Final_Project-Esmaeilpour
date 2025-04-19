@@ -24,6 +24,15 @@ export const faLocalization = {
   show: "نمایش",
   management: "مدیریت",
   blogs: "مجله داروفارم",
+  userProfile: "مشخصات کاربری",
+  orders: "سفارش‌ها",
+  favorites: "لیست علاقه‌مندی‌ها",
+  logout: "خروج از حساب کاربری",
+  first: "اولین صفحه",
+  end: "آخرین صفحه",
+  welCome: "خوش آمدید",
+  close: "بستن",
+  operation: "عملیات",
 };
 
 export const sweetAlert = {
@@ -44,8 +53,8 @@ export const sweetAlert = {
   okay: "باشه",
   errorInSubmit: "خطا در ثبت اطلاعات",
   tryAgain: "لطفاً مجدداً تلاش کنید.",
-  errorInReceiveData: "خطا در دریافت اطلاعات :",
-  errorInSendingData: "خطا در ارسال اطلاعات :",
+  errorInReceiveData: "خطا در دریافت اطلاعات",
+  errorInSendingData: "خطا در ارسال اطلاعات",
   error: "خطا",
   del: "حذف",
   errorInDeleteData: "خطا در حذف محصولات",
@@ -82,7 +91,7 @@ export const loginLocalization = {
   successLogin: "ورود با موفقیت انجام شد!",
   allFieldsRequired: "همه فیلدها باید پر باشند.",
   logoutSuccessfully: "شما با موفقیت از حساب خود خارج شدید.",
-  wannaLogout: " آیا می‌خواهید از حساب خود خارج شوید؟",
+  wannaLogout: "خروج از حساب کاربری",
   yes: "بله",
   no: "خیر",
 };
@@ -99,7 +108,7 @@ export const signUpLocalization = {
   EnterName: " نام خود را وارد کنید ",
   Email: " ایمیل ",
   EnterEmail: " ایمیل خود را وارد کنید  ",
-  tryAgain: "خطا، دوباره امتحان کنید.",
+  tryAgain: "این ایمیل قبلا ثبت نام کرده است.",
   confirm: "تایید",
   confirming: "در حال تایید...",
 };
@@ -206,6 +215,8 @@ export const productsLocalization = {
   errorInEditingProduct: "خطا در ویرایش محصول",
   loading: "در حال بارگزاری...",
   canNotBeNegative: "تعداد محصول نمی تواند منفی باشد",
+  copyId: "شناسه محصول کپی شد",
+  notCopyId: "شناسه محصول کپی نشد",
 };
 
 export const newestProduct = {
@@ -287,4 +298,10 @@ export const pageLocalization = {
   resumeEmail: "ارسال رزومه",
   privacy: "قوانین و مقررات",
   guide: "راهنمای خرید",
+};
+
+export const UsersLocalization = {
+  usersList: "لیست کاربران",
+  usersDetail: "اطلاعات کاربر",
+  loginDate: "تاریخ عضویت",
 };

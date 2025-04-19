@@ -191,7 +191,7 @@ const NewestProductsAdmin = () => {
                 />
                 <h4 className="font-semibold">{product.productName}</h4>
                 <p className="text-sm text-gray-600">
-                  {product.productPrice} {faLocalization.rial}
+                  {product.productPrice.toLocaleString()} {faLocalization.rial}
                 </p>
                 <button
                   onClick={() => handleDelete(product.id)}

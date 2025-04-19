@@ -182,7 +182,7 @@ const BestSellerAdmin = () => {
                   {product.productName}
                 </h4>
                 <p className="text-sm text-gray-600">
-                  {product.productPrice} {faLocalization.rial}
+                  {product.productPrice.toLocaleString()} {faLocalization.rial}
                 </p>
                 <Button
                   onClick={() => handleDelete(product.id)}

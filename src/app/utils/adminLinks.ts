@@ -4,6 +4,11 @@ export const links = [
   { href: "/admin/users", label: "👥 کاربران", id: "users" },
   { href: "/admin/categories", label: "🗂️ دسته‌بندی‌ها", id: "categories" },
   { href: "/admin/products", label: "📦 محصولات", id: "products" },
+  {
+    href: "/admin/priceAndQuantity",
+    label: "📊 قیمت و موجودی",
+    id: "priceAndQuantity",
+  },
   { href: "/admin/orders", label: "🛒 سفارشات", id: "orders" },
   {
     href: "/admin/best-seller",

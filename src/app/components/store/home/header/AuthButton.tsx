@@ -1,6 +1,7 @@
 "use client";
+import { motion, AnimatePresence } from "framer-motion";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { FaRegUser } from "react-icons/fa";
 import {
@@ -13,11 +14,27 @@ const AuthButton = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [email, setEmail] = useState("");
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+  const popupRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        setShowLogoutPopup(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const updateAuth = () => {
     const savedEmail = localStorage.getItem("email");
     setEmail(savedEmail ? savedEmail.split("@")[0] : "");
-
     const token = localStorage.getItem("authToken");
     const loginTime = localStorage.getItem("loginTime");
     const fromAdmin = document.cookie.includes("fromAdmin=true");
@@ -81,34 +98,63 @@ const AuthButton = () => {
     setIsAdmin(false);
 
     window.dispatchEvent(new Event("authChange"));
-    window.location.href = "/login";
+    window.location.href = "/";
   };
 
   return (
     <div className="relative">
-      {showLogoutPopup && (
-        <div className="absolute top-10 left-0 bg-gray-50 shadow-lg p-4 rounded-lg w-48 z-50">
-          <p className="text-sm text-primary">
-            {loginLocalization.wannaLogout}
-          </p>
-          <div className="flex justify-between mt-2">
-            <button
-              onClick={handleLogout}
-              className="text-red-500 text-sm hover:text-red-700"
-            >
-              {loginLocalization.yes}
-            </button>
-            <button
-              onClick={() => setShowLogoutPopup(false)}
-              className="text-green-400 text-sm hover:text-green-600"
-            >
-              {loginLocalization.no}
-            </button>
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {showLogoutPopup && (
+          <motion.div
+            ref={popupRef}
+            className="absolute top-10 left-0 bg-gray-50 shadow-lg p-4 rounded-lg w-56 z-50"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.5 }}
+          >
+            <ul className="space-y-2 text-sm text-primary">
+              <li>
+                <Link
+                  href="/profile"
+                  className="hover:text-secondary block"
+                  onClick={() => setShowLogoutPopup(false)}
+                >
+                  👤 {faLocalization.userProfile}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/orders"
+                  className="hover:text-secondary block"
+                  onClick={() => setShowLogoutPopup(false)}
+                >
+                  📦 {faLocalization.orders}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/favorites"
+                  className="hover:text-secondary block"
+                  onClick={() => setShowLogoutPopup(false)}
+                >
+                  ❤️ {faLocalization.favorites}
+                </Link>
+              </li>
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  🚪 {loginLocalization.wannaLogout}
+                </button>
+              </li>
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <Link href={isAdmin ? "/admin" : "/login"}>
+      <Link href={!email ? "/login" : isAdmin ? "/admin" : "/"}>
         <div className="flex justify-center items-center border border-primary rounded-2xl hover:scale-105 hover:border-primary">
           <FaRegUser
             size={32}
@@ -124,7 +170,7 @@ const AuthButton = () => {
                   setShowLogoutPopup(true);
                 }}
               >
-                {email}
+                {faLocalization.welCome}
               </span>
             ) : (
               faLocalization.loginOrRegister

@@ -16,8 +16,6 @@ import { confirmDelete, successDelete } from "@/app/utils/sweetAlert";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import Swal from "sweetalert2";
-
 const OffProducts = () => {
   const [offProducts, setOffProducts] = useState<ProductsProps[]>([]);
   const [allProducts, setAllProducts] = useState<ProductsProps[]>([]);
@@ -226,7 +224,7 @@ const OffProducts = () => {
                 />
                 <h4 className="font-semibold">{product.productName}</h4>
                 <p className="text-sm text-gray-600 line-through">
-                  {product.productPrice} {faLocalization.rial}
+                  {product.productPrice.toLocaleString()} {faLocalization.rial}
                 </p>
                 <p
                   className="text-sm text-gray-700 cursor-pointer flex gap-2 items-center"
@@ -262,7 +260,7 @@ const OffProducts = () => {
                   {Math.round(
                     +product.productPrice *
                       (1 - (product.discountPercent || 0) / 100)
-                  )}{" "}
+                  ).toLocaleString()}{" "}
                   {faLocalization.rial}
                 </p>
 

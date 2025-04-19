@@ -7,4 +7,5 @@ export const resetForm = {
   productSpecifications: "",
   productExpired: "",
   image: "",
+  createdAt: "",
 };

@@ -30,12 +30,12 @@ export default function AdminHeader({
         second: "2-digit",
       });
 
-      const date = now.toLocaleDateString("fa-IR", {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      });
+      const weekday = now.toLocaleDateString("fa-IR", { weekday: "long" });
+      const day = now.toLocaleDateString("fa-IR", { day: "numeric" });
+      const month = now.toLocaleDateString("fa-IR", { month: "long" });
+      const year = now.toLocaleDateString("fa-IR", { year: "numeric" });
+
+      const date = ` ${day}  ${month}  ${year} - ${weekday}`;
 
       setCurrentTime(`${time} - ${date}`);
     };
@@ -54,7 +54,7 @@ export default function AdminHeader({
           children={"☰"}
           className=" px-4 text-xl mx-4 font-bold md:hidden"
         />
-        <div className="flex justify-between flex-1 px-4">
+        <div className="flex flex-col md:flex-row gap-2 justify-between flex-1 px-4">
           <div className="flex items-center gap-2">
             <Image
               src={admin}
@@ -72,11 +72,11 @@ export default function AdminHeader({
             </span>
           </div>
 
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center justify-between">
             <span className="text-xs text-gray-600 flex gap-2">
               🕒 {currentTime}
             </span>
-            <div className="w-20 h-20 mx-6 border border-primary md:bg-secondary rounded-full hidden md:flex items-center justify-center">
+            <div className="w-20 h-20 mx-6 border border-primary md:bg-secondary rounded-full hidden lg:flex items-center justify-center">
               <Image
                 src={logo}
                 alt={"logo"}

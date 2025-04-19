@@ -1,4 +1,3 @@
-import React from "react";
 import { productsLocalization } from "@/app/constants/localization/fa/localization";
 import { ProductsFilterProps } from "@/app/types/products";
 
@@ -19,9 +18,11 @@ const Filters = ({
         className="border-b-[3px] p-1 text-gray-700 border-secondary outline-none"
         size={1}
       >
-        <option value="all">{productsLocalization.allCategories}</option>
+        <option value="all" className="text-xs">
+          {productsLocalization.allCategories}
+        </option>
         {category?.map((cat) => (
-          <option key={cat.id} value={cat.id}>
+          <option key={cat.id} value={cat.id} className="text-xs">
             {cat.title}
           </option>
         ))}
@@ -33,10 +34,18 @@ const Filters = ({
         className="border-b-[3px] p-1 text-gray-700 border-secondary outline-none"
         size={1}
       >
-        <option value="all">{productsLocalization.all}</option>
-        <option value="unavailable">{productsLocalization.unavailable}</option>
-        <option value="low">{productsLocalization.low}</option>
-        <option value="enough">{productsLocalization.enough}</option>
+        <option value="all" className="text-xs">
+          {productsLocalization.all}
+        </option>
+        <option value="unavailable" className="text-xs">
+          {productsLocalization.unavailable}
+        </option>
+        <option value="low" className="text-xs">
+          {productsLocalization.low}
+        </option>
+        <option value="enough" className="text-xs">
+          {productsLocalization.enough}
+        </option>
       </select>
 
       <select
@@ -45,10 +54,18 @@ const Filters = ({
         className="border-b-[3px] p-1 text-gray-700 border-secondary outline-none"
         size={1}
       >
-        <option value="newest">{productsLocalization.newest}</option>
-        <option value="oldest">{productsLocalization.oldest}</option>
-        <option value="az">{productsLocalization.az}</option>
-        <option value="za">{productsLocalization.za}</option>
+        <option value="newest" className="text-xs">
+          {productsLocalization.newest}
+        </option>
+        <option value="oldest" className="text-xs">
+          {productsLocalization.oldest}
+        </option>
+        <option value="az" className="text-xs">
+          {productsLocalization.az}
+        </option>
+        <option value="za" className="text-xs">
+          {productsLocalization.za}
+        </option>
       </select>
     </div>
   );

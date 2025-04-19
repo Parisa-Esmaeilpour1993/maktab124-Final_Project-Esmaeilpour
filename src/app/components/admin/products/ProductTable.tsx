@@ -1,6 +1,5 @@
 import { BASE_url } from "@/app/constants/api/BASE_URL";
 import { productsLocalization } from "@/app/constants/localization/fa/localization";
-import { Category } from "@/app/types/category";
 import { ProductsProps, ProductTableProps } from "@/app/types/products";
 import React, { useState } from "react";
 import { BiSolidDetail } from "react-icons/bi";
@@ -49,6 +48,18 @@ const ProductTable: React.FC<ProductTableProps> = ({
   const isEditing = (id: string, field: keyof ProductsProps) =>
     editingCell?.id === id && editingCell.field === field;
 
+  function copyToClipboard(text: string) {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        toast.success(productsLocalization.copyId);
+      })
+      .catch((err) => {
+        console.error("Failed to copy text: ", err);
+        toast.error(productsLocalization.notCopyId);
+      });
+  }
+
   return (
     <>
       {/* Desktop View */}
@@ -57,10 +68,10 @@ const ProductTable: React.FC<ProductTableProps> = ({
           <thead className="bg-light text-gray-700 text-center">
             <tr>
               <th className="p-2 border border-accent">
-                {productsLocalization.image}
+                {productsLocalization.id}
               </th>
               <th className="p-2 border border-accent">
-                {productsLocalization.id}
+                {productsLocalization.image}
               </th>
               <th className="p-2 border border-accent">
                 {productsLocalization.name}
@@ -99,7 +110,12 @@ const ProductTable: React.FC<ProductTableProps> = ({
                       : ""
                   }`}
                 >
-                  <td className="p-2 border border-accent">{product.id}</td>
+                  <td
+                    className="p-2 border border-accent"
+                    onClick={() => copyToClipboard(product.id)}
+                  >
+                    {product.id}
+                  </td>
                   <td className="p-2 border border-accent">
                     <img
                       src={`${BASE_url}${product.image}`}
@@ -146,7 +162,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                       className="border px-2 py-1 rounded-md"
                     >
                       {category?.map((cat) => (
-                        <option key={cat.id} value={cat.id}>
+                        <option key={cat.id} value={cat.id} className="text-xs">
                           {cat.title}
                         </option>
                       ))}
@@ -176,7 +192,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                         className="w-full p-1 border rounded"
                       />
                     ) : (
-                      product.productPrice
+                      product.productPrice.toLocaleString()
                     )}
                   </td>
                   <td
@@ -236,21 +252,21 @@ const ProductTable: React.FC<ProductTableProps> = ({
                   <td className="p-2 border border-accent">
                     <div className="flex justify-center gap-2 items-center">
                       <button
-                        onClick={() => handleDelete(product.id)}
+                        onClick={() => handleDelete?.(product.id)}
                         className="text-yellow-500 hover:text-yellow-700"
                         title={productsLocalization.delete}
                       >
                         <FaTrash size={16} />
                       </button>
                       <button
-                        onClick={() => onEditClick(product)}
+                        onClick={() => onEditClick?.(product)}
                         className="text-blue-500 hover:text-blue-700"
                         title={productsLocalization.edit}
                       >
                         <FaEdit size={18} />
                       </button>
                       <button
-                        onClick={() => onDetailClick(product)}
+                        onClick={() => onDetailClick?.(product)}
                         className="text-red-500 hover:text-red-700"
                         title={productsLocalization.detail}
                       >
@@ -277,54 +293,162 @@ const ProductTable: React.FC<ProductTableProps> = ({
           products.map((product) => (
             <div
               key={product.id}
-              className="flex flex-col gap-2 border rounded-lg p-4 shadow-sm bg-white"
+              className="flex flex-col gap-2 border rounded-lg p-4 shadow-sm bg-white border-secondary"
             >
               <div className="flex justify-between items-center mb-2">
-                <strong>{product.productName}</strong>
+                <strong
+                  onClick={() =>
+                    handleCellClick(
+                      product.id,
+                      "productName",
+                      product.productName
+                    )
+                  }
+                  className="cursor-pointer w-4/5"
+                >
+                  {isEditing(product.id, "productName") ? (
+                    <input
+                      autoFocus
+                      value={tempValue}
+                      onChange={(e) => setTempValue(e.target.value)}
+                      onBlur={handleBlur}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleBlur();
+                        if (e.key === "Escape") setEditingCell(null);
+                      }}
+                      className="w-full p-1 border rounded"
+                    />
+                  ) : (
+                    product.productName
+                  )}
+                </strong>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => handleDelete(product.id)}
+                    onClick={() => handleDelete?.(product.id)}
                     className="text-red-500"
                   >
                     <FaTrash />
                   </button>
                   <button
-                    onClick={() => onEditClick(product)}
+                    onClick={() => onEditClick?.(product)}
                     className="text-blue-500"
                   >
                     <FaEdit />
                   </button>
                   <button
-                    onClick={() => onDetailClick(product)}
+                    onClick={() => onDetailClick?.(product)}
                     className="text-yellow-500"
                   >
                     <BiSolidDetail />
                   </button>
                 </div>
               </div>
-              <img
-                src={`${BASE_url}${product.image}`}
-                alt={product.productName}
-                className="w-full h-40 object-cover rounded my-6"
-              />
+              <div className="flex items-center justify-center">
+                <img
+                  src={`${BASE_url}${product.image}`}
+                  alt={product.productName}
+                  className="w-1/2 h-1/2 object-cover rounded"
+                />
+              </div>
               <p>
                 <strong>{productsLocalization.category}:</strong>{" "}
-                {
-                  category?.find((cat) => cat.id === product.productCategory)
-                    ?.title
+                <select
+                  value={product.productCategory}
+                  onChange={(e) =>
+                    onInlineEdit(product.id, "productCategory", e.target.value)
+                  }
+                  className="border px-2 py-1 rounded-md"
+                >
+                  {category?.map((cat) => (
+                    <option key={cat.id} value={cat.id} className="text-xs">
+                      {cat.title}
+                    </option>
+                  ))}
+                </select>
+              </p>
+              <p
+                onClick={() =>
+                  handleCellClick(
+                    product.id,
+                    "productPrice",
+                    String(product.productPrice)
+                  )
                 }
-              </p>
-              <p>
+                className="cursor-pointer"
+              >
                 <strong>{productsLocalization.price}:</strong>{" "}
-                {product.productPrice}
+                {isEditing(product.id, "productPrice") ? (
+                  <input
+                    type="number"
+                    autoFocus
+                    value={tempValue}
+                    onChange={(e) => setTempValue(e.target.value)}
+                    onBlur={handleBlur}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleBlur();
+                      if (e.key === "Escape") setEditingCell(null);
+                    }}
+                    className="w-full p-1 border rounded"
+                  />
+                ) : (
+                  product.productPrice.toLocaleString()
+                )}
               </p>
-              <p>
+              <p
+                onClick={() =>
+                  handleCellClick(
+                    product.id,
+                    "productQuantity",
+                    String(product.productQuantity)
+                  )
+                }
+                className="cursor-pointer"
+              >
                 <strong>{productsLocalization.available}:</strong>{" "}
-                {product.productQuantity}
+                {isEditing(product.id, "productQuantity") ? (
+                  <input
+                    type="number"
+                    autoFocus
+                    value={tempValue}
+                    onChange={(e) => setTempValue(e.target.value)}
+                    onBlur={handleBlur}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleBlur();
+                      if (e.key === "Escape") setEditingCell(null);
+                    }}
+                    className="w-full p-1 border rounded"
+                  />
+                ) : (
+                  product.productQuantity
+                )}
               </p>
-              <p>
-                <strong>{productsLocalization.expireDate} :</strong>{" "}
-                {product.productExpired || "-"}
+              <p
+                onClick={() =>
+                  handleCellClick(
+                    product.id,
+                    "productExpired",
+                    product.productExpired || ""
+                  )
+                }
+                className="cursor-pointer"
+              >
+                <strong>{productsLocalization.expireDate}:</strong>{" "}
+                {isEditing(product.id, "productExpired") ? (
+                  <input
+                    type="date"
+                    autoFocus
+                    value={tempValue}
+                    onChange={(e) => setTempValue(e.target.value)}
+                    onBlur={handleBlur}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleBlur();
+                      if (e.key === "Escape") setEditingCell(null);
+                    }}
+                    className="w-full p-1 border rounded"
+                  />
+                ) : (
+                  product.productExpired || "-"
+                )}
               </p>
             </div>
           ))

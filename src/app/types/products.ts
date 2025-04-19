@@ -40,8 +40,8 @@ export interface ProductsFilterProps {
 export interface ProductTableProps {
   products: ProductsProps[];
   category: Category[];
-  handleDelete: (id: string) => void;
-  onEditClick: (product: ProductsProps) => void;
-  onDetailClick: (product: ProductsProps) => void;
+  handleDelete?: (id: string) => void;
+  onEditClick?: (product: ProductsProps) => void;
+  onDetailClick?: (product: ProductsProps) => void;
   onInlineEdit: (id: string, field: string, value: string) => void;
 }

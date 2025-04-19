@@ -114,7 +114,7 @@ export default function ProductsPage() {
             id: editId,
             productPrice: Number(formData.productPrice),
             productQuantity: Number(formData.productQuantity),
-            createdAt: "",
+            createdAt: formData.createdAt,
           })
         );
         toast.success(sweetAlert.successfullyEdited);
@@ -129,14 +129,10 @@ export default function ProductsPage() {
             ...formData,
             productPrice: Number(formData.productPrice),
             productQuantity: Number(formData.productQuantity),
-            createdAt: "",
+            createdAt: formData.createdAt,
           })
         );
         toast.success(sweetAlert.seccessfullyAdded);
-        const newTotalPages = Math.ceil(
-          (filteredProducts.length + 1) / itemsPerPage
-        );
-        setCurrentPage(newTotalPages);
       }
       setFormData(resetForm);
       setFileName(null);

@@ -22,6 +22,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,8 +46,8 @@ const Login = () => {
 
       const admin = adminEmails.find((admin) => admin.email === email);
       if (admin) {
-        localStorage.setItem("username", admin.username);
         localStorage.setItem("email", email);
+        localStorage.setItem("username", admin.username);
         toast.success(loginLocalization.successLogin);
         router.push("/admin");
       } else {
@@ -80,10 +81,20 @@ const Login = () => {
           <p className="text-secondary hover:text-primary text-sm">
             {loginLocalization.DontHaveAccount}{" "}
             <Button
-              onClick={() => router.push("/signUp")}
-              children={loginLocalization.SignupHere}
+              onClick={() => {
+                setLoading(true);
+                router.push("/signUp");
+              }}
               className="!py-1 !px-2 "
-            />
+            >
+              {loading ? (
+                <div className="flex justify-center items-center h-full w-full">
+                  <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              ) : (
+                loginLocalization.SignupHere
+              )}
+            </Button>
           </p>
 
           <form

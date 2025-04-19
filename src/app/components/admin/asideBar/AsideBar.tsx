@@ -56,13 +56,13 @@ export default function AdminSidebar({
           isOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"
         }`}
       >
-        <div className="flex items-center justify-center mb-4">
+        <div className="flex items-center justify-center mb-2">
           <span className="block text-3xl pt-4 font-extrabold text-light animate-pulse">
             {asideBarLocalization.storeName}
           </span>
         </div>
 
-        <nav className="flex flex-col p-4 gap-4">
+        <nav className="flex flex-col px-4 py-3 gap-3">
           {links.map((link) => {
             const isActiveParent = link.children?.some(
               (child) => child.href === pathname
@@ -130,7 +130,7 @@ export default function AdminSidebar({
                 href={link.href}
                 className={`transition-all duration-150 hover:text-gray-800 hover:-translate-y-1 ${
                   pathname === link.href
-                    ? "text-light bg-primary py-1 px-2 shadow-lg rounded-lg md:text-sm lg:text-[16px]"
+                    ? "text-light bg-accent py-1 px-2 shadow-lg rounded-lg md:text-sm lg:text-[16px]"
                     : ""
                 }`}
                 onClick={handleLinkClick}
@@ -145,7 +145,7 @@ export default function AdminSidebar({
           <Button
             children={asideBarLocalization.exit}
             onClick={handleLogout}
-            className="w-full mx-6 !bg-primary hover:!bg-accent"
+            className="w-full m-6 !bg-primary hover:!bg-accent"
           />
         </div>
       </aside>
