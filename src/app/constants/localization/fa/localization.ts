@@ -34,6 +34,7 @@ export const faLocalization = {
   welCome: "خوش آمدید",
   close: "بستن",
   operation: "عملیات",
+  noPageFound: "صفحه ای یافت نشد",
 };
 
 export const sweetAlert = {
@@ -314,4 +315,6 @@ export const UsersLocalization = {
   adminDetail: "اطلاعات ادمین",
   choose: "انتخاب کنید",
   detail: "جزئیات",
+  search: "یوزرنیم کاربر مورد نظر خود را وارد کنید",
+  noUsersFound: "هیچ کاربری یافت نشد.",
 };

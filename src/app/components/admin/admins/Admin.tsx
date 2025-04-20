@@ -24,6 +24,7 @@ import Modal from "react-modal";
 import { ClipLoader } from "react-spinners";
 import { toast, ToastContainer } from "react-toastify";
 import { resetForm } from "./resetForm";
+import SearchInput from "@/app/shared/SearchInput";
 
 const AdminsTable = () => {
   const [data, setData] = useState<UserProps[]>([]);
@@ -37,7 +38,7 @@ const AdminsTable = () => {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editAdminId, setEditAdminId] = useState<string | null>(null);
-
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [form, setForm] = useState(resetForm);
 
   const fetchUsers = async () => {
@@ -177,6 +178,24 @@ const AdminsTable = () => {
     setForm(resetForm);
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setSearchQuery(searchQuery);
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [searchQuery]);
+
+  const filteredAdmins = useMemo(() => {
+    return data.filter((admin) =>
+      admin.email.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [data, searchQuery]);
+
   useEffect(() => {
     fetchUsers();
     fetchAdmins();
@@ -218,7 +237,7 @@ const AdminsTable = () => {
   );
 
   const table = useReactTable({
-    data,
+    data: filteredAdmins,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -247,6 +266,7 @@ const AdminsTable = () => {
           <h2 className="text-xl font-bold mb-4">
             {UsersLocalization.usersList}
           </h2>
+          <SearchInput value={searchQuery} onChange={handleSearchChange} />
           <Button onClick={() => setIsAddModalOpen(true)}>
             {UsersLocalization.add}
           </Button>
@@ -271,15 +291,29 @@ const AdminsTable = () => {
             ))}
           </thead>
           <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="even:bg-gray-50">
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="p-2 border text-center">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
+            {table.getRowModel().rows.length > 0 ? (
+              table.getRowModel().rows.map((row) => (
+                <tr key={row.id} className="even:bg-gray-50">
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id} className="p-2 border text-center">
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={columns.length}
+                  className="text-center py-2 text-gray-500"
+                >
+                  {UsersLocalization.noUsersFound}
+                </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
 
@@ -411,8 +445,11 @@ const AdminsTable = () => {
             {faLocalization.prev}
           </button>
           <div>
-            {faLocalization.page} {table.getState().pagination.pageIndex + 1}{" "}
-            {faLocalization.from} {table.getPageCount()}
+            {filteredAdmins.length > 0
+              ? `${faLocalization.page} ${
+                  table.getState().pagination.pageIndex + 1
+                } ${faLocalization.from} ${table.getPageCount()}`
+              : `${faLocalization.noPageFound}`}
           </div>
           <button
             className={`px-3 py-1 border rounded ${

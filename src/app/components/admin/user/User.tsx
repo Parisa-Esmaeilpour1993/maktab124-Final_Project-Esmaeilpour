@@ -21,12 +21,14 @@ import { ClipLoader } from "react-spinners";
 import { confirmDelete } from "@/app/utils/sweetAlert";
 import { UserProps } from "@/app/types/users";
 import Button from "@/app/shared/Button";
+import SearchInput from "@/app/shared/SearchInput";
 
 const UsersTable = () => {
   const [data, setData] = useState<UserProps[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedUser, setSelectedUser] = useState<UserProps | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const fetchUsers = async () => {
     try {
@@ -49,6 +51,24 @@ const UsersTable = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setSearchQuery(searchQuery);
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [searchQuery]);
+
+  const filteredUsers = useMemo(() => {
+    return data.filter((user) =>
+      user.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [data, searchQuery]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
 
   const handleDelete = async (userId: string) => {
     const result = await confirmDelete();
@@ -104,7 +124,7 @@ const UsersTable = () => {
   );
 
   const table = useReactTable({
-    data,
+    data: filteredUsers,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -127,7 +147,14 @@ const UsersTable = () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">{UsersLocalization.usersList}</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-bold">{UsersLocalization.usersList}</h2>
+        <SearchInput
+          value={searchQuery}
+          onChange={handleSearchChange}
+          placeholder={UsersLocalization.search}
+        />
+      </div>
       <table className="w-full border border-gray-200 rounded-md text-sm">
         <thead className="bg-gray-100">
           {table.getHeaderGroups().map((headerGroup) => (
@@ -146,15 +173,26 @@ const UsersTable = () => {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="even:bg-gray-50">
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="p-2 border text-center">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
+          {table.getRowModel().rows.length > 0 ? (
+            table.getRowModel().rows.map((row) => (
+              <tr key={row.id} className="even:bg-gray-50">
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id} className="p-2 border text-center">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td
+                colSpan={columns.length}
+                className="text-center py-2 text-gray-500"
+              >
+                {UsersLocalization.noUsersFound}
+              </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
 
@@ -205,9 +243,13 @@ const UsersTable = () => {
           {faLocalization.prev}
         </button>
         <div>
-          {faLocalization.page} {table.getState().pagination.pageIndex + 1}{" "}
-          {faLocalization.from} {table.getPageCount()}
+          {filteredUsers.length > 0
+            ? `${faLocalization.page} ${
+                table.getState().pagination.pageIndex + 1
+              } ${faLocalization.from} ${table.getPageCount()}`
+            : `${faLocalization.noPageFound}`}
         </div>
+
         <button
           className={`px-3 py-1 border rounded ${
             !table.getCanNextPage()
