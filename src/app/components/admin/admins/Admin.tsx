@@ -216,7 +216,7 @@ const AdminsTable = () => {
       {
         header: faLocalization.operation,
         cell: ({ row }) => (
-          <div className="flex gap-2 items-center justify-center">
+          <div className="flex flex-col md:flex-row gap-2 items-center justify-center">
             <button
               className="text-secondary hover:text-primary"
               onClick={() => handleView(row.original.email)}
@@ -262,10 +262,8 @@ const AdminsTable = () => {
     <div>
       <ToastContainer />
       <div className="p-4">
-        <div className="flex justify-between items-center mb-2">
-          <h2 className="text-xl font-bold mb-4">
-            {UsersLocalization.usersList}
-          </h2>
+        <div className="flex flex-col gap-2 lg:flex-row justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">{UsersLocalization.usersList}</h2>
           <SearchInput value={searchQuery} onChange={handleSearchChange} />
           <Button onClick={() => setIsAddModalOpen(true)}>
             {UsersLocalization.add}
@@ -323,7 +321,7 @@ const AdminsTable = () => {
           ariaHideApp={false}
           onRequestClose={closeAddModal}
           contentLabel="Add Admin"
-          className="bg-white p-6 mx-auto rounded-lg shadow-lg outline-none w-1/2"
+          className="bg-white p-6 mx-auto rounded-lg shadow-lg outline-none w-5/6 md:w-1/2"
           overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
         >
           <div className="flex flex-col gap-3">
@@ -339,9 +337,15 @@ const AdminsTable = () => {
                 value={form.email}
                 onChange={(e) => handleEmailChange(e.target.value)}
               >
-                <option value="">--{UsersLocalization.choose}--</option>
+                <option value="" disabled className="text-xs lg:text-[16px]">
+                  --{UsersLocalization.choose}--
+                </option>
                 {data.map((user) => (
-                  <option key={user._id} value={user.email}>
+                  <option
+                    key={user._id}
+                    value={user.email}
+                    className="text-xs lg:text-[16px]"
+                  >
                     {user.email}
                   </option>
                 ))}
@@ -378,7 +382,7 @@ const AdminsTable = () => {
             setSelectedAdmin(null);
           }}
           ariaHideApp={false}
-          className="bg-white p-6 mx-auto rounded-lg shadow-lg outline-none w-1/2"
+          className="bg-white p-6 mx-auto rounded-lg shadow-lg outline-none w-2/3 lg:w-1/2"
           overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
         >
           <div className="flex flex-col gap-3">

@@ -103,7 +103,7 @@ const UsersTable = () => {
       {
         header: faLocalization.operation,
         cell: ({ row }) => (
-          <div className="flex gap-2 items-center justify-center">
+          <div className="flex flex-col md:flex-row gap-2 items-center justify-center">
             <button
               onClick={() => setSelectedUser(row.original)}
               className="text-secondary hover:text-primary"
@@ -147,7 +147,7 @@ const UsersTable = () => {
 
   return (
     <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col gap-2 md:flex-row justify-between items-center mb-4">
         <h2 className="text-xl font-bold">{UsersLocalization.usersList}</h2>
         <SearchInput
           value={searchQuery}
