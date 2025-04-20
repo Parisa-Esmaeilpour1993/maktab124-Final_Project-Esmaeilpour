@@ -25,12 +25,21 @@ export default function AdminSidebar({
     setIsLoading(false);
   }, [pathname]);
 
-  const handleLogout = () => {
-    document.cookie =
-      "fromAdmin=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("email");
-    router.push("/login");
+  const handleLogout = async () => {
+    setIsLoad(true);
+
+    try {
+      await fetch("/api/logout");
+
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("email");
+
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      setIsLoad(false);
+    }
   };
 
   const handleLinkClick = () => {

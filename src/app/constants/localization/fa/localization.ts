@@ -35,6 +35,7 @@ export const faLocalization = {
   close: "بستن",
   operation: "عملیات",
   noPageFound: "صفحه ای یافت نشد",
+  logo: "داروفارم",
 };
 
 export const sweetAlert = {

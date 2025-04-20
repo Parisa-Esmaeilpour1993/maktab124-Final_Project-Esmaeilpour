@@ -25,6 +25,8 @@ export const useAuthRedirect = (redirectPath: string = "/login") => {
         localStorage.removeItem("loginTime");
         localStorage.removeItem("email");
         localStorage.removeItem("username");
+        document.cookie =
+          "fromAdmin=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";
         router.push(redirectPath);
       }
     }, 2000);

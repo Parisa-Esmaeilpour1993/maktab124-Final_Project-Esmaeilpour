@@ -1,18 +1,19 @@
 "use client";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
-import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { FaRegUser } from "react-icons/fa";
 import {
   faLocalization,
   loginLocalization,
 } from "@/app/constants/localization/fa/localization";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { FaRegUser } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 const AuthButton = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
 

@@ -6,6 +6,7 @@ import { loginLocalization } from "@/app/constants/localization/fa/localization"
 import Button from "@/app/shared/Button";
 import { Input } from "@/app/shared/Input";
 import { adminEmails } from "@/app/utils/adminsEmail";
+import SocialLinks from "@/app/utils/SocialLinks";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -71,7 +72,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center border-t-2 mx-4 py-2 border-secondary">
       <ToastContainer />
       <div className="bg-light p-4 rounded-2xl shadow-xl w-full max-w-md md:max-w-2xl flex flex-col md:flex-row my-4">
         <div className="flex-1 flex flex-col gap-4">
@@ -85,7 +86,7 @@ const Login = () => {
                 setLoading(true);
                 router.push("/signUp");
               }}
-              className="!py-1 !px-2 "
+              className="text-xs !px-1"
             >
               {loading ? (
                 <div className="flex justify-center items-center h-full w-full">
@@ -190,8 +191,11 @@ const Login = () => {
           </form>
         </div>
 
-        <div className="flex-1 flex items-center justify-center mt-8 md:mt-0">
-          <Image src={loginPage} alt="loginPage" className="w-4/5 max-w-sm" />
+        <div className="flex flex-col items-center justify-center gap-8 mt-12">
+          <div className="flex items-center justify-center mt-8 md:mt-0">
+            <Image src={loginPage} alt="loginPage" className="w-4/5 max-w-sm" />
+          </div>
+          <SocialLinks />
         </div>
       </div>
     </div>

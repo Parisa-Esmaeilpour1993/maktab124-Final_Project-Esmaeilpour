@@ -1,5 +1,4 @@
 "use client";
-import signUpPage from "@/app/assets/images/signUp.jpg";
 import { getAuthToken } from "@/app/base/getAuthToken";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
 import { signUpLocalization } from "@/app/constants/localization/fa/localization";
@@ -7,12 +6,13 @@ import Button from "@/app/shared/Button";
 import { Input } from "@/app/shared/Input";
 import ValidateInput from "@/app/utils/ValidateInput";
 import axios from "axios";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { IoEyeOffSharp } from "react-icons/io5";
 import { MdRemoveRedEye } from "react-icons/md";
 import { toast, ToastContainer } from "react-toastify";
+import Card from "./uiverse";
+import Buttons from "./SocialButtons";
 
 const SignUp = () => {
   const router = useRouter();
@@ -84,9 +84,9 @@ const SignUp = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-center">
-        <div className="bg-light px-8 py-6 rounded-2xl shadow-md my-3 w-full max-w-md md:max-w-2xl flex flex-col md:flex-row ">
-          <div className="flex-1  flex flex-col gap-4">
+      <div className="flex items-center justify-center border-t-2 mx-4 py-2 border-secondary">
+        <div className="bg-light px-4 py-6 rounded-2xl shadow-md my-3 w-5/6 lg:w-3/5 flex flex-col md:flex-row ">
+          <div className="flex-1 flex flex-col gap-4 px-4">
             <h1 className="text-xl font-bold text-primary">
               {signUpLocalization.Signup}
             </h1>
@@ -219,12 +219,9 @@ const SignUp = () => {
             </form>
           </div>
 
-          <div className="flex-1 flex items-center justify-center mt-8 md:mt-0">
-            <Image
-              src={signUpPage}
-              alt="loginPage"
-              className="w-4/5 max-w-sm"
-            />
+          <div className="flex-1 flex flex-col items-center gap-8 justify-center mt-8 md:mt-0">
+            <Card />
+            <Buttons />
           </div>
         </div>
       </div>
