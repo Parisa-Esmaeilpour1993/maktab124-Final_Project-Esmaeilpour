@@ -23,6 +23,7 @@ export const useAuthRedirect = (redirectPath: string = "/login") => {
       if (!checkTokenValidity()) {
         localStorage.removeItem("authToken");
         localStorage.removeItem("loginTime");
+        localStorage.removeItem("email");
         localStorage.removeItem("username");
         router.push(redirectPath);
       }

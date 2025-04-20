@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import Image from "next/image";
-import logo from "@/app/assets/images/logo.png";
 import { links } from "@/app/utils/adminLinks";
 import { asideBarLocalization } from "@/app/constants/localization/fa/localization";
 import Button from "@/app/shared/Button";
@@ -18,6 +16,8 @@ export default function AdminSidebar({
 }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [load, setLoad] = useState<boolean>(false);
+  const [isLoad, setIsLoad] = useState<boolean>(false);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -111,6 +111,7 @@ export default function AdminSidebar({
                   key={link.id}
                   href={link.href}
                   onClick={(e) => {
+                    setLoad(true);
                     document.cookie = "fromAdmin=true; path=/";
                   }}
                   className={`transition-all duration-150 hover:text-primary hover:font-semibold hover:-translate-y-1 ${
@@ -119,7 +120,13 @@ export default function AdminSidebar({
                       : ""
                   }`}
                 >
-                  {link.label}
+                  {load ? (
+                    <div className="flex justify-center items-center h-full w-full">
+                      <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                  ) : (
+                    link.label
+                  )}
                 </Link>
               );
             }
@@ -143,10 +150,20 @@ export default function AdminSidebar({
 
         <div className="flex items-center justify-center bottom-2">
           <Button
-            children={asideBarLocalization.exit}
-            onClick={handleLogout}
+            onClick={() => {
+              setIsLoad(true);
+              handleLogout();
+            }}
             className="w-full m-6 !bg-primary hover:!bg-accent"
-          />
+          >
+            {isLoad ? (
+              <div className="flex justify-center items-center h-full w-full">
+                <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            ) : (
+              asideBarLocalization.exit
+            )}
+          </Button>
         </div>
       </aside>
     </>

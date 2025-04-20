@@ -3,8 +3,14 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import logo from "@/app/assets/images/logo.png";
 import admin from "@/app/assets/images/admin.jpg";
-import { adminHeaderLocalization } from "@/app/constants/localization/fa/localization";
+import {
+  adminHeaderLocalization,
+  faLocalization,
+} from "@/app/constants/localization/fa/localization";
 import Button from "@/app/shared/Button";
+import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
+import axios from "axios";
+import { getAuthToken } from "@/app/base/getAuthToken";
 
 export default function AdminHeader({
   toggleSidebar,
@@ -13,12 +19,37 @@ export default function AdminHeader({
 }) {
   const [adminUserName, setAdminUserName] = useState<string>("");
   const [currentTime, setCurrentTime] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const username = localStorage.getItem("username");
-    if (username) {
-      setAdminUserName(username);
-    }
+    const token = getAuthToken();
+    const userEmail = localStorage.getItem("email");
+
+    const fetchAdminName = async () => {
+      try {
+        const res = await axios(`${BASE_url}/api/records/admins`, {
+          headers: { api_key: API_KEY, Authorization: `Bearer ${token}` },
+        });
+        const admins = res.data.records;
+        if (!userEmail) throw new Error("No user email found in localStorage");
+        const currentAdmin = admins.find(
+          (admin: any) => admin.email === userEmail
+        );
+        if (currentAdmin) {
+          const fullName = `${currentAdmin.firstName} ${currentAdmin.lastName}`;
+          setAdminUserName(fullName);
+        } else {
+          console.warn("Admin with email not found");
+          setAdminUserName(adminHeaderLocalization.dearAdmin);
+        }
+      } catch (error) {
+        console.error("Error fetching admin data:", error);
+        setAdminUserName(adminHeaderLocalization.dearAdmin);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAdminName();
   }, []);
 
   useEffect(() => {
@@ -64,9 +95,13 @@ export default function AdminHeader({
             <span>
               {adminHeaderLocalization.hi}{" "}
               <span className="text-primary font-semibold">
-                {adminUserName
-                  ? adminUserName
-                  : adminHeaderLocalization.dearAdmin}
+                {loading ? (
+                  <span>...</span>
+                ) : adminUserName ? (
+                  adminUserName
+                ) : (
+                  adminHeaderLocalization.dearAdmin
+                )}
               </span>{" "}
               {adminHeaderLocalization.dear}
             </span>

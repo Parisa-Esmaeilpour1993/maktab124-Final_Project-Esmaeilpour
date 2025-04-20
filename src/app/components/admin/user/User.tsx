@@ -42,7 +42,7 @@ const UsersTable = () => {
       setData(response.data.filter((user: UserProps) => user.name));
     } catch (err) {
       console.error("Error:", err);
-      setError(sweetAlert.errorInReceiveData);
+      setError(sweetAlert.adminError);
     } finally {
       setLoading(false);
     }

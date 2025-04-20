@@ -14,16 +14,23 @@ export default function AdminLayout({
   useAuthRedirect();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
   const closeSidebar = () => setSidebarOpen(false);
   const router = useRouter();
 
   useEffect(() => {
     const email = localStorage.getItem("email");
-    if (!isAdmin(email)) {
+    if (!email || !isAdmin(email)) {
       router.replace("/unauthorized");
+    } else {
+      setLoading(false);
     }
   }, []);
+
+  if (loading) {
+    return null;
+  }
   return (
     <div className="flex relative overflow-hidden">
       <AdminSidebar isOpen={sidebarOpen} closeSidebar={closeSidebar} />

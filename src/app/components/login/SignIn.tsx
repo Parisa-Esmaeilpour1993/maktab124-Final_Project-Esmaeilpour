@@ -43,11 +43,11 @@ const Login = () => {
 
       localStorage.setItem("authToken", accessToken);
       localStorage.setItem("loginTime", Date.now().toString());
+      document.cookie = "loginAuthToken=some-token; path=/";
 
       const admin = adminEmails.find((admin) => admin.email === email);
       if (admin) {
         localStorage.setItem("email", email);
-        localStorage.setItem("username", admin.username);
         toast.success(loginLocalization.successLogin);
         router.push("/admin");
       } else {

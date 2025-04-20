@@ -64,6 +64,7 @@ export const sweetAlert = {
   successfulEdit: "محصول با موفقیت ویرایش شد.",
   noAdminFound:
     "اطلاعات ادمین موردنظر ثبت نیست. لطفا از دکمه افزودن اطلاعات ادمین استفاده کنید.",
+  adminError: "شما به اطلاعات این قسمت دسترسی ندارید. ",
 };
 
 export const adminCategories = {
@@ -123,7 +124,7 @@ export const validateLocalization = {
 };
 
 export const adminHeaderLocalization = {
-  dearAdmin: "ادمین عزیز",
+  dearAdmin: "ادمین جدید",
   hi: "سلام",
   dear: "عزیز!",
 };

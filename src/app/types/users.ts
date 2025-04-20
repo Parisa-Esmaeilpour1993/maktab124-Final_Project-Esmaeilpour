@@ -21,6 +21,7 @@ export interface AdminDataProps {
   phone: string;
   address: string;
   email: string;
+  id: string;
 }
 
 export const placeholders: Record<string, string> = {

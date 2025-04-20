@@ -15,6 +15,7 @@ import {
   YAxis,
 } from "recharts";
 import { dashboardLocalization } from "../constants/localization/fa/localization";
+import useUsersLength from "../components/admin/user/useUsersLength";
 
 function generateColor(index: number) {
   const hue = (index * 137.508) % 360;
@@ -69,6 +70,8 @@ export default function AdminDashboard() {
   const [isMobile, setIsMobile] = useState(false);
   const [rotateLabels, setRotateLabels] = useState(false);
 
+  const usersLength = useUsersLength();
+
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
@@ -102,7 +105,7 @@ export default function AdminDashboard() {
             <CardTitle className="text-gray-700">
               👤 {dashboardLocalization.users}
             </CardTitle>
-            <p className="text-xl font-bold text-blue-600">{users.length}</p>
+            <p className="text-xl font-bold text-blue-600">{usersLength}</p>
           </CardContent>
         </Card>
 
