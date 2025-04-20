@@ -12,13 +12,22 @@ export interface UserProps {
 }
 
 export interface AdminDataProps {
-  name: string;
+  firstName: string;
   lastName: string;
   username: string;
-  age: number;
+  age: string;
   education: string;
   nationalId: number;
   phone: string;
   address: string;
-  userID: string;
+  email: string;
 }
+
+export const placeholders: Record<string, string> = {
+  firstName: "نام",
+  lastName: "نام خانوادگی",
+  phone: "شماره تماس",
+  address: "آدرس",
+  age: "تاریخ تولد",
+  education: "تحصیلات",
+};

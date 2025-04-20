@@ -18,6 +18,7 @@ export const faLocalization = {
   add: "افزودن",
   adding: "در حال افزودن...",
   rial: "ریال",
+  noData: "اطلاعاتی برای نمایش وجود ندارد.",
   noProductFound: "محصولی برای نمایش وجود ندارد.",
   saving: "در حال ذخیره...",
   save: "ذخیره",
@@ -60,6 +61,8 @@ export const sweetAlert = {
   errorInDeleteData: "خطا در حذف محصولات",
   successful: "محصول با موفقیت ادد شد.",
   successfulEdit: "محصول با موفقیت ویرایش شد.",
+  noAdminFound:
+    "اطلاعات ادمین موردنظر ثبت نیست. لطفا از دکمه افزودن اطلاعات ادمین استفاده کنید.",
 };
 
 export const adminCategories = {
@@ -275,7 +278,7 @@ export const adminLocalization = {
   adminsList: "لیست ادمین ها",
   username: "نام کاربری",
   email: "ایمیل",
-  age: "سن",
+  age: "تاریخ تولد",
   education: "تحصیلات",
   phone: "شماره تلفن",
   fullName: "نام و نام خانوادگی",
@@ -284,6 +287,9 @@ export const adminLocalization = {
   editAdmin: "ویرایش اطلاعات ادمین",
   saveChanges: "ذخیره تغییرات",
   close: "بستن",
+  firstName: "نام",
+  lastName: "نام خانوادگی",
+  address: "آدرس",
 };
 
 export const pageLocalization = {
@@ -305,4 +311,7 @@ export const UsersLocalization = {
   usersDetail: "اطلاعات کاربر",
   loginDate: "تاریخ عضویت",
   add: "افزودن اطلاعات ادمین",
+  adminDetail: "اطلاعات ادمین",
+  choose: "انتخاب کنید",
+  detail: "جزئیات",
 };
