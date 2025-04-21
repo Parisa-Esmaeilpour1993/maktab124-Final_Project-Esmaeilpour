@@ -320,3 +320,23 @@ export const UsersLocalization = {
   search: "یوزرنیم کاربر مورد نظر خود را وارد کنید",
   noUsersFound: "هیچ کاربری یافت نشد.",
 };
+
+export const FooterLocalization = {
+  description:
+    "ما در داروخانه آنلاین تلاش می‌کنیم تا با ارائه خدمات سریع و امن، داروها و مکمل‌های موردنیاز شما را در کمترین زمان به دستتان برسانیم.",
+  withDaroopharm: " با داروفارم ",
+  customerServices: " خدمات مشتریان",
+  profile: " پروفایل کاربری ",
+  login: " ورود کاربران ",
+  signUp: " ثبت نام ",
+  memberShip: "عضویت در خبرنامه ",
+  sendEmailForNews:
+    "برای دریافت تخفیف‌ها و اطلاع از محصولات جدید، ایمیل خود را وارد کنید.",
+  withUs: "همراه ما باشید!",
+  copyRight:
+    "برای استفاده از مطالب داروفارم، داشتن «هدف غیرتجاری» و ذکر «منبع» کافیست.",
+  successEmail: "ایمیل شما با موفقیت ثبت شد!",
+  errorInEmail: "خطا در ثبت ایمیل",
+  emailPlaceholder: "ایمیل شما",
+  memberShipButton: "عضویت",
+};

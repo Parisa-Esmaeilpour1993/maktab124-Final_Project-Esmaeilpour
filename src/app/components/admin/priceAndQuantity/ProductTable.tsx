@@ -43,7 +43,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
         <div className="mt-4 text-center">
           <button
             onClick={handleApplyChanges}
-            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+            className="px-4 py-2 bg-green-600 mb-4 text-white rounded hover:bg-green-700"
           >
             {ordersLocalization.saveChanges}
           </button>
