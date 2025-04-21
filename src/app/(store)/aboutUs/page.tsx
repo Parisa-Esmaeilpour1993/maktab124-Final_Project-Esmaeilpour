@@ -1,7 +1,8 @@
+import AboutUs from "@/app/components/store/home/aboutUs/AboutUs";
 import React from "react";
 
 function AboutUsPage() {
-  return <div>about us</div>;
+  return <AboutUs />;
 }
 
 export default AboutUsPage;

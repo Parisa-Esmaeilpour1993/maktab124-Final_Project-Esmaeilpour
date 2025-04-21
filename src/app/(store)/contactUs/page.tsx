@@ -1,7 +1,8 @@
+import ContactUs from "@/app/components/store/home/contactUs/ContactUs";
 import React from "react";
 
 function ContactUsPage() {
-  return <div>contact us</div>;
+  return <ContactUs />;
 }
 
 export default ContactUsPage;

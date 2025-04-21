@@ -307,6 +307,13 @@ export const pageLocalization = {
   resumeEmail: "ارسال رزومه",
   privacy: "قوانین و مقررات",
   guide: "راهنمای خرید",
+  description:
+    "کارشناسان ما در اسرع وقت به پیام شما رسیدگی نموده و پاسخ خواهند داد.",
+  textarea: "متن پیام خود را در این بخش یادداشت فرمایید.",
+  send: "ثبت",
+  required: "فیلد مربوط به نام و شماره تماس نباید خالی باشد.",
+  phoneRegex: "شماره موبایل باید با ۰۹ شروع شود و دقیقاً ۱۱ رقم باشد",
+  successfullMessage: "پیام شما با موفقیت ارسال شد!",
 };
 
 export const UsersLocalization = {

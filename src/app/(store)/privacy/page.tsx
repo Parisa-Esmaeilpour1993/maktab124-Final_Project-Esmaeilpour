@@ -1,7 +1,8 @@
+import Privacy from "@/app/components/store/home/privacy/Privacy";
 import React from "react";
 
 function PrivacyPage() {
-  return <div>privacy</div>;
+  return <Privacy />;
 }
 
 export default PrivacyPage;

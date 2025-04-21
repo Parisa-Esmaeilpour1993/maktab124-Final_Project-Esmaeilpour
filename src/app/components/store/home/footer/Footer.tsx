@@ -12,7 +12,7 @@ export default function Footer() {
   return (
     <div>
       <footer className="bg-secondary text-light pt-10 px-6 md:px-16 lg:px-24">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 border-b border-gray-500 pb-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 border-b border-gray-500 pb-6">
           <div className="flex flex-col gap-4">
             <h1 className="text-2xl font-bold text-red-800">
               {faLocalization.logo}
@@ -28,12 +28,12 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="/about" className="hover:text-primary transition">
+                <a href="/aboutUs" className="hover:text-primary transition">
                   {pageLocalization.aboutUs}
                 </a>
               </li>
               <li>
-                <a href="/contact" className="hover:text-primary transition">
+                <a href="/contactUs" className="hover:text-primary transition">
                   {pageLocalization.contactUs}
                 </a>
               </li>
@@ -59,17 +59,17 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="/privacy" className="hover:text-primary transition">
+                <a href="/" className="hover:text-primary transition">
                   {FooterLocalization.profile}
                 </a>
               </li>
               <li>
-                <a href="/contact" className="hover:text-primary transition">
+                <a href="/login" className="hover:text-primary transition">
                   {FooterLocalization.login}
                 </a>
               </li>
               <li>
-                <a href="/about" className="hover:text-primary transition">
+                <a href="/signUp" className="hover:text-primary transition">
                   {FooterLocalization.signUp}
                 </a>
               </li>
@@ -77,7 +77,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <div className="flex flex-col gap-6 justify-between lg:flex-row items-center lg:items-end mb-4">
+            <div className="flex flex-col gap-6 justify-between lg:flex-row items-center mb-5">
               <h3 className="text-lg font-semibold text-primary">
                 {FooterLocalization.memberShip}
               </h3>
@@ -85,7 +85,7 @@ export default function Footer() {
                 <Tooltip />
               </div>
             </div>
-            <p className="text-sm my-3 text-light">
+            <p className="text-sm my-4 text-light">
               {FooterLocalization.sendEmailForNews}
             </p>
             <NewsletterForm />

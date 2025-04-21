@@ -1,7 +1,8 @@
+import ShoppingGuide from "@/app/components/store/home/shoppingGuide/ShoppingGuide";
 import React from "react";
 
 function ShoppingGuidePage() {
-  return <div>shopping guide</div>;
+  return <ShoppingGuide />;
 }
 
 export default ShoppingGuidePage;
