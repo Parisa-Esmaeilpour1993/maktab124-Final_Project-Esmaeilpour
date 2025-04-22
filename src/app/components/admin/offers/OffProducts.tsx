@@ -215,14 +215,16 @@ const OffProducts = () => {
             {offProducts.map((product) => (
               <div
                 key={product.id}
-                className="border border-primary rounded p-2 flex flex-col gap-2 items-center shadow"
+                className=" border border-primary rounded p-2 flex flex-col gap-2 items-center shadow"
               >
                 <img
                   src={`${BASE_url}${product.image}`}
                   alt={product.productName}
                   className="object-contain p-8 md:p-6 rounded"
                 />
-                <h4 className="font-semibold">{product.productName}</h4>
+                <h4 className="font-semibold h-12 line-clamp-2">
+                  {product.productName}
+                </h4>
                 <p className="text-sm text-gray-600 line-through">
                   {product.productPrice.toLocaleString()} {faLocalization.rial}
                 </p>

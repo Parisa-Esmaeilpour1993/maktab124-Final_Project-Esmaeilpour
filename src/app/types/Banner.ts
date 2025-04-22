@@ -20,6 +20,12 @@ export interface HeroBannerProps {
   title: string;
   description: string;
 }
+
+export interface BannerItem {
+  title: string;
+  description: string;
+  image: string;
+}
 export interface AddBannerModalProps {
   isOpen: boolean;
   onClose: () => void;

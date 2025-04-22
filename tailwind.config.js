@@ -21,6 +21,15 @@ module.exports = {
       fontFamily: {
         vazir: ["Vazir", "sans-serif"],
       },
+      keyframes: {
+        pulseGlow: {
+          "0%, 100%": { boxShadow: "0 0 0px rgba(255, 200, 0, 0.6)" },
+          "50%": { boxShadow: "0 0 10px 5px rgba(255, 200, 0, 0.8)" },
+        },
+      },
+      animation: {
+        pulseGlow: "pulseGlow 1.5s infinite ease-in-out",
+      },
     },
   },
   plugins: [],

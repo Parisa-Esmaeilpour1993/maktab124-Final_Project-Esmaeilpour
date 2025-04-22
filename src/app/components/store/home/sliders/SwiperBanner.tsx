@@ -14,7 +14,7 @@ interface Props {
 
 export default function SwiperBanner({ banners }: Props) {
   return (
-    <section className="w-full py-6 px-4 md:px-12 lg:px-20">
+    <section className="w-full py-6 px-4 md:px-16 lg:px-24">
       <div className="max-w-[1400px] mx-auto rounded-xl overflow-hidden relative">
         <Swiper
           modules={[Autoplay, Pagination, Navigation]}
@@ -34,17 +34,21 @@ export default function SwiperBanner({ banners }: Props) {
                   backgroundImage: `url(${BASE_url}${banner.background})`,
                 }}
               >
-                <div className="absolute inset-0 flex px-32">
-                  <div className="text-white text-right mt-16 max-w-[50%]">
-                    <h2 className="text-3xl font-bold mb-2">{banner.title}</h2>
-                    <p className="text-lg">{banner.description}</p>
+                <div className="absolute inset-0 px-10 flex items-center lg:items-start md:px-24">
+                  <div className="text-white text-right lg:mt-16 max-w-[50%]">
+                    <h2 className=" text-lg font-semibold md:text-2xl lg:text-3xl md:font-bold mb-2">
+                      {banner.title}
+                    </h2>
+                    <p className=" text-[16px] md:text-lg">
+                      {banner.description}
+                    </p>
                   </div>
                 </div>
-                <div className="absolute bottom-4 left-8 px-12">
+                <div className="absolute px-6 bottom-8 lg:bottom-4 left-0 lg:left-4 md:px-12">
                   <img
                     src={`${BASE_url}${banner.image}`}
                     alt=""
-                    className="w-[200px] md:w-[320px]"
+                    className="w-[180px] md:w-[260px] lg:w-[320px]"
                   />
                 </div>
               </div>
