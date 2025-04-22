@@ -1,7 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { asideBarLocalization } from "@/app/constants/localization/fa/localization";
+import {
+  asideBarLocalization,
+  faLocalization,
+} from "@/app/constants/localization/fa/localization";
 import { features } from "@/app/utils/features";
 
 const cardVariants = {
@@ -22,9 +25,9 @@ export default function WhyDaroopharm() {
     <section className="mx-16 rounded-md mb-4 shadow-accent py-20 bg-gradient-to-br from-accent to-white">
       <div className="container mx-auto px-4 text-center">
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-12">
-          چرا{" "}
+          {faLocalization.why}{" "}
           <span className="text-red-600">{asideBarLocalization.storeName}</span>{" "}
-          را انتخاب کنیم؟
+          {faLocalization.chooseThis}
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">

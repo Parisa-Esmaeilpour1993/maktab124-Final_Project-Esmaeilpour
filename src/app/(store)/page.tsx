@@ -1,3 +1,4 @@
+import ArticlesSection from "../components/store/home/articles/Articles";
 import BestSellerDrugs from "../components/store/home/best-seller/BestSeller";
 import HeroBanner from "../components/store/home/heroBanner/HeroBanner";
 import Navbar from "../components/store/home/navbar/Navbar";
@@ -16,6 +17,7 @@ export default function Home() {
       <BestSellerDrugs />
       <NewestDrugs />
       <WhyDaroopharm />
+      <ArticlesSection />
     </div>
   );
 }

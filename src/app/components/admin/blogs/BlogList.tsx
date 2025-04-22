@@ -121,11 +121,13 @@ export default function BlogList() {
         >
           <div>
             {" "}
-            <img
-              src={`${BASE_url}${blog.image}`}
-              alt={blog.title}
-              className="w-full h-44 object-cover rounded-md mb-3 cursor-pointer"
-            />
+            <div className="flex items-center justify-center">
+              <img
+                src={`${BASE_url}${blog.image}`}
+                alt={blog.title}
+                className="h-44 rounded-md mb-3 cursor-pointer"
+              />
+            </div>
             <h3 className="font-bold mb-2 cursor-pointer">{blog.title}</h3>
             <p className="text-sm text-gray-600 line-clamp-3">{blog.summary}</p>
           </div>

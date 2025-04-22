@@ -36,6 +36,9 @@ export const faLocalization = {
   operation: "عملیات",
   noPageFound: "صفحه ای یافت نشد",
   logo: "داروفارم",
+  why: "چرا",
+  chooseThis: "را انتخاب کنیم؟",
+  articles: "خواندنی های",
 };
 
 export const sweetAlert = {
