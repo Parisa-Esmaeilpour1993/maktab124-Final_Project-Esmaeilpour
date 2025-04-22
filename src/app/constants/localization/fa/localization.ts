@@ -39,6 +39,8 @@ export const faLocalization = {
   why: "چرا",
   chooseThis: "را انتخاب کنیم؟",
   articles: "خواندنی های",
+  readMore: " بیشتر بخوانید ",
+  noDrugInCategory: "هیچ دارویی برای این دسته‌بندی وجود ندارد",
 };
 
 export const sweetAlert = {
