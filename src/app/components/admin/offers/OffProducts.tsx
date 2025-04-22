@@ -76,6 +76,11 @@ const OffProducts = () => {
       toast.error(newestProduct.duplicate);
       return;
     }
+
+    if (discount <= 0) {
+      toast.error(offerProducts.discountZeroError);
+    }
+
     setIsAdding(true);
     try {
       await axios.post(
@@ -129,6 +134,12 @@ const OffProducts = () => {
   const handleDiscountSave = async (id: string) => {
     const product = offProducts.find((p) => p.id === id);
     if (!product) return;
+
+    if (editableDiscount <= 0) {
+      toast.error(offerProducts.discountZeroError);
+      return;
+    }
+
     try {
       await axios.put(
         `${BASE_url}/api/records/offProducts/${id}`,

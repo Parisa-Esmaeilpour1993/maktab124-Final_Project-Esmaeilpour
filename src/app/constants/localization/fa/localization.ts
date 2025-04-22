@@ -254,6 +254,7 @@ export const bannerLocalization = {
 export const offerProducts = {
   offProducts: "محصولات تخفیف دار",
   discountPercent: "درصد تخفیف",
+  discountZeroError: "درصد تخفیف باید بیشتر از صفر باشد",
 };
 
 export const ordersLocalization = {

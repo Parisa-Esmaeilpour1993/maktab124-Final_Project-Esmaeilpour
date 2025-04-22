@@ -10,7 +10,7 @@ const Header = async () => {
     <header className="flex flex-col gap-6 md:flex-row justify-between items-center px-12 py-4">
       <div className="flex flex-col gap-2 items-center justify-between lg:gap-6 md:flex-row">
         <Link href="/">
-          <Image src={logo} alt="logo" height={72} className="cursor-pointer" />
+          <Image src={logo} alt="logo" height={80} className="cursor-pointer" />
         </Link>
         <SearchInput />
       </div>
