@@ -9,17 +9,13 @@ import Button from "./CTA";
 interface BannerItem {
   title: string;
   description: string;
-  link: string;
   image: string;
-  background: string;
-  isActive?: boolean;
-  order: number;
 }
 
 export default async function Banner() {
   const token = getAuthToken();
 
-  const res = await fetch(`${BASE_url}/api/records/banners`, {
+  const res = await fetch(`${BASE_url}/api/records/heroBanner`, {
     headers: {
       "Content-Type": "application/json",
       api_key: API_KEY,
@@ -29,19 +25,22 @@ export default async function Banner() {
   const data = await res.json();
   const banner: BannerItem = data.records?.[0];
 
-  if (!banner?.isActive) return null;
-
   return (
-    <section className="w-full flex items-center justify-center">
-      <div className="p-8 flex items-center justify-center w-2/3 gap-24">
+    <section className="flex items-center justify-center mb-8">
+      <div className="flex items-center justify-center px-28 py-8 rounded-2xl bg-light shadow-accent ">
         <div className="flex flex-col gap-3">
           <h1 className="text-2xl font-bold">{banner.title}</h1>
-          <p className="text-lg mb-8">{banner.description}</p>
-          <a href={banner.link}>
+          <p className="text-lg mb-8 w-2/3">{banner.description}</p>
+          <a href="/">
             <Button />
           </a>
         </div>
-        <Image src={heroBanner} alt="heroBanner" width={400} />
+        <Image
+          src={heroBanner}
+          alt="heroBanner"
+          width={400}
+          className="rounded-2xl shadow-primary"
+        />
       </div>
     </section>
   );

@@ -15,6 +15,8 @@ module.exports = {
       },
       boxShadow: {
         accent: "0px 3px 10px 1px rgba(10,50,10,0.4)",
+        secondary: "0px 3px 10px 1px rgba(10,60,10,0.4)",
+        primary: "0px 3px 10px 1px rgba(10,70,10,0.4)",
       },
       fontFamily: {
         vazir: ["Vazir", "sans-serif"],

@@ -1,10 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @import "swiper/css";
 @import "swiper/css/navigation";
 @import "swiper/css/pagination";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @font-face {
   font-family: "Vazir";
@@ -64,10 +64,39 @@ body {
 .custom-scrollbar::-webkit-scrollbar-track {
   background: #e1eebc;
   border-radius: 999px;
-  margin: 0 8px;
+  margin: 0 12px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: #67ae6e;
   border-radius: 999px;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: white;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 24px;
+  border-radius: 999px;
+  transition: background-color 0.3s ease;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+  font-weight: 700;
+}
+
+.swiper-pagination-bullet {
+  background-color: white;
+  opacity: 0.7;
+}
+
+.swiper-pagination-bullet:hover {
+  background-color: black;
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+  font-size: 14px;
 }

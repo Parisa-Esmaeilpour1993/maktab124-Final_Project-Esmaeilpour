@@ -16,6 +16,10 @@ export interface BannerFormDataProps {
   order: number;
   link: string;
 }
+export interface HeroBannerProps {
+  title: string;
+  description: string;
+}
 export interface AddBannerModalProps {
   isOpen: boolean;
   onClose: () => void;

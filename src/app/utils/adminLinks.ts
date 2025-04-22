@@ -47,6 +47,7 @@ export const links = [
       },
     ],
   },
+  { href: "/admin/banner", label: "🖼 بنر اصلی", id: "banner" },
   { href: "/admin/sliders", label: "🖼️ بنرهای نمایشی", id: "sliders" },
   { href: "/admin/blogs", label: "📝 مجله داروفارم", id: "blogs" },
   {

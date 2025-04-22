@@ -66,7 +66,7 @@ export default function AdminSidebar({
         }`}
       >
         <div className="flex items-center justify-center mb-2">
-          <span className="block text-3xl pt-4 font-extrabold text-light animate-pulse">
+          <span className="block text-3xl pt-3 font-extrabold text-light animate-pulse">
             {asideBarLocalization.storeName}
           </span>
         </div>
@@ -157,13 +157,13 @@ export default function AdminSidebar({
           })}
         </nav>
 
-        <div className="flex items-center justify-center bottom-2">
+        <div className="flex items-center justify-center bottom-1">
           <Button
             onClick={() => {
               setIsLoad(true);
               handleLogout();
             }}
-            className="w-full m-6 !bg-primary hover:!bg-accent"
+            className="w-full mx-6 my-2 !bg-primary hover:!bg-accent"
           >
             {isLoad ? (
               <div className="flex justify-center items-center h-full w-full">
