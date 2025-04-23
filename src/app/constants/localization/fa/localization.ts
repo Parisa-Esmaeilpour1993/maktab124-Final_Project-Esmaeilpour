@@ -41,6 +41,7 @@ export const faLocalization = {
   articles: "خواندنی های",
   readMore: " بیشتر بخوانید ",
   noDrugInCategory: "هیچ دارویی برای این دسته‌بندی وجود ندارد",
+  products: "محصولات",
 };
 
 export const sweetAlert = {
@@ -228,6 +229,7 @@ export const productsLocalization = {
   canNotBeNegative: "تعداد محصول نمی تواند منفی باشد",
   copyId: "شناسه محصول کپی شد",
   notCopyId: "شناسه محصول کپی نشد",
+  discount: "تخفیف",
 };
 
 export const newestProduct = {

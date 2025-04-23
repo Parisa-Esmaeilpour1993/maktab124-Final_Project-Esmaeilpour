@@ -1,6 +1,9 @@
 "use client";
 
-import { faLocalization } from "@/app/constants/localization/fa/localization";
+import {
+  asideBarLocalization,
+  faLocalization,
+} from "@/app/constants/localization/fa/localization";
 import { useAppDispatch, useAppSelector } from "@/app/redux/store/hooks";
 import { fetchCategories } from "@/app/services/fetchCategory";
 import { useEffect, useRef, useState } from "react";
@@ -74,6 +77,11 @@ export default function Navbar() {
           hasScroll ? "pb-4" : ""
         }`}
       >
+        <Link href="/products">
+          <div className="cursor-pointer hover:text-secondary">
+            {faLocalization.products}
+          </div>
+        </Link>
         {categories.map((cat) => (
           <div
             key={cat.id}

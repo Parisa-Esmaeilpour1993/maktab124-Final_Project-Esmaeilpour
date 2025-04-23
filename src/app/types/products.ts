@@ -45,3 +45,35 @@ export interface ProductTableProps {
   onDetailClick?: (product: ProductsProps) => void;
   onInlineEdit: (id: string, field: string, value: string) => void;
 }
+
+export interface HeaderSortProps {
+  sort: string;
+  setSort: (value: string) => void;
+}
+
+export interface Filters {
+  availableOnly: boolean;
+  discountOnly: boolean;
+  categories: string[];
+}
+
+export interface SidebarProps {
+  filter: Filters;
+  setFilters: React.Dispatch<React.SetStateAction<Filters>>;
+}
+
+export interface Discount {
+  id: string;
+  productName: string;
+  discountPercent: number;
+}
+
+export interface IProducts {
+  products: ProductsProps[];
+  discountedProducts?: {
+    id: string;
+    discountPercent: number;
+    productName: string;
+  }[];
+  favoriteProductIds: string[];
+}
