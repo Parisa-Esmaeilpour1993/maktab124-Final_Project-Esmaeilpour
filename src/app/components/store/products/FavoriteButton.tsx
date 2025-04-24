@@ -2,6 +2,7 @@
 
 import { getAuthToken } from "@/app/base/getAuthToken";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
+import { favoriteProductsProps } from "@/app/types/products";
 import axios from "axios";
 import { useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
@@ -11,11 +12,7 @@ export default function FavoriteButton({
   productId,
   isFavorite,
   favoriteRecords,
-}: {
-  productId: string;
-  isFavorite: boolean;
-  favoriteRecords: { id: string; productId: string }[];
-}) {
+}: favoriteProductsProps) {
   const [isFav, setIsFav] = useState(isFavorite);
   const [loading, setLoading] = useState(false);
   const [favoriteId, setFavoriteId] = useState(

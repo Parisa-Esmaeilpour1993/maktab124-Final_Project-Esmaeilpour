@@ -26,12 +26,14 @@ export default function ProductsPage() {
   const [favoriteRecords, setFavoriteRecords] = useState<
     { id: string; productId: string }[]
   >([]);
+  // const [isLoading, setIsLoading] = useState(true);
 
   const [Discounts, setDiscounts] = useState<Discount[]>([]);
   const dispatch = useAppDispatch();
 
   const searchParams = useSearchParams();
   const categoryId = searchParams.get("category");
+  const search = searchParams.get("search")?.trim().toLowerCase() || "";
 
   useEffect(() => {
     if (categoryId) {
@@ -49,6 +51,7 @@ export default function ProductsPage() {
   }, []);
 
   useEffect(() => {
+    // setIsLoading(true);
     dispatch(
       fetchProducts(
         categoryId
@@ -67,6 +70,12 @@ export default function ProductsPage() {
         if (filter.categories.length) {
           data = data.filter((p) =>
             filter.categories.includes(p.productCategory)
+          );
+        }
+
+        if (search) {
+          data = data.filter((p) =>
+            p.productName.toLowerCase().includes(search)
           );
         }
 
@@ -130,7 +139,8 @@ export default function ProductsPage() {
 
         setProducts(applySort(data));
       });
-  }, [filter, sort, Discounts]);
+    // .finally(() => setIsLoading(false));
+  }, [filter, sort, Discounts, search]);
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -154,6 +164,7 @@ export default function ProductsPage() {
             discountedProducts={discountedProducts}
             favoriteProductIds={favoriteProductIds}
             favoriteRecords={favoriteRecords}
+            // isLoading={isLoading}
           />
         </main>
       </div>

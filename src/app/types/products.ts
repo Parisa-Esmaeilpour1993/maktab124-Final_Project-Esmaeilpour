@@ -76,4 +76,12 @@ export interface IProducts {
     productName: string;
   }[];
   favoriteProductIds: string[];
+  favoriteRecords: { id: string; productId: string }[];
+  isLoading?: boolean;
+}
+
+export interface favoriteProductsProps {
+  productId: string;
+  isFavorite: boolean;
+  favoriteRecords: { id: string; productId: string }[];
 }

@@ -4,10 +4,12 @@ import { faLocalization } from "../constants/localization/fa/localization";
 interface SearchInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  // isLoading?: boolean;
 }
 export default function SearchInput({
   value,
   onChange,
+  // isLoading = false,
   ...rest
 }: SearchInputProps) {
   return (
@@ -21,6 +23,13 @@ export default function SearchInput({
         {...rest}
       />
       <button className="cursor-pointer">
+        {/* {isLoading ? (
+          <div className="animate-spin">
+            <FaArrowLeft className="text-secondary" size={13} />
+          </div>
+        ) : (
+          <FaArrowLeft className="text-secondary" size={13} />
+        )} */}
         <FaArrowLeft className="text-secondary" size={13} />
       </button>
     </div>

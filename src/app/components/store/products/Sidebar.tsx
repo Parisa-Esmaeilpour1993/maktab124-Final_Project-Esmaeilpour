@@ -58,6 +58,7 @@ export default function Sidebar({ filter, setFilters }: SidebarProps) {
                       : f.categories.filter((id) => id !== cat.id),
                   }))
                 }
+                className="accent-secondary"
               />
               {cat.title}
             </label>

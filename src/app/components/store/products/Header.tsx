@@ -10,12 +10,13 @@ const sortOptions = [
 
 export default function Header({ sort, setSort }: HeaderSortProps) {
   return (
-    <div className="flex flex-wrap mb-6 gap-2 border-b pb-4">
+    <div className="flex flex-wrap items-center mb-6 gap-2 border-b pb-4">
+      <p className="font-semibold">مرتب سازی براساس: </p>
       {sortOptions.map((option) => (
         <button
           key={option.value}
           onClick={() => setSort(option.value)}
-          className={`px-4 py-2 rounded-lg shadow-accent transition ${
+          className={`px-2 py-1 rounded-lg shadow-accent transition ${
             sort === option.value
               ? "bg-secondary text-white "
               : "bg-white text-gray-700  hover:bg-gray-100"

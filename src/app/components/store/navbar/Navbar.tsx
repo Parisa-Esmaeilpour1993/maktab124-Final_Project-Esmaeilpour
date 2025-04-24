@@ -80,7 +80,6 @@ export default function Navbar() {
         }
       )
       .then((response) => {
-        console.log("Response data:", response.data);
         const filteredDrugs: ProductsProps[] = response.data.records;
         setDrugs(filteredDrugs);
         setLoading(false);
@@ -110,7 +109,7 @@ export default function Navbar() {
             href={`/products?category=${cat.id}`}
             className="cursor-pointer hover:text-secondary"
             onMouseEnter={() => handleCategoryMouseEnter(cat.id)}
-            onClick={(e) => {
+            onClick={() => {
               handleCategoryClick(cat.id);
             }}
           >
