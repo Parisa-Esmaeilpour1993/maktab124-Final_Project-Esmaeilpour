@@ -6,20 +6,33 @@ import { getAuthToken } from "../base/getAuthToken";
 
 export const token = getAuthToken();
 
-export const fetchProducts = createAsyncThunk<ProductsProps[]>(
-  "products/fetch",
-  async (_, thunkAPI) => {
-    try {
-      const response = await axios.get(`${BASE_url}/api/records/drugs`, {
-        headers: {
-          "Content-Type": "application/json",
-          api_key: API_KEY,
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return response.data.records;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
+interface FetchProductsArgs {
+  filterKey?: string;
+  filterValue?: string;
+}
+
+export const fetchProducts = createAsyncThunk<
+  ProductsProps[],
+  FetchProductsArgs | undefined
+>("products/fetch", async (params, thunkAPI) => {
+  try {
+    const { filterKey, filterValue } = params || {};
+
+    const url =
+      filterKey && filterValue
+        ? `${BASE_url}/api/records/drugs?filterKey=${filterKey}&filterValue=${filterValue}`
+        : `${BASE_url}/api/records/drugs`;
+
+    const response = await axios.get(url, {
+      headers: {
+        "Content-Type": "application/json",
+        api_key: API_KEY,
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data.records;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
   }
-);
+});

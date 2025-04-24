@@ -1,17 +1,14 @@
 "use client";
 
-import {
-  asideBarLocalization,
-  faLocalization,
-} from "@/app/constants/localization/fa/localization";
+import { faLocalization } from "@/app/constants/localization/fa/localization";
 import { useAppDispatch, useAppSelector } from "@/app/redux/store/hooks";
 import { fetchCategories } from "@/app/services/fetchCategory";
-import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { useEffect, useRef, useState } from "react";
 
-import Link from "next/link";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
 import { ProductsProps } from "@/app/types/products";
+import Link from "next/link";
 
 export default function Navbar() {
   const dispatch = useAppDispatch();
@@ -69,6 +66,31 @@ export default function Navbar() {
     setHoveredCategoryId(null);
   };
 
+  const handleCategoryClick = (categoryId: string) => {
+    setHoveredCategoryId(categoryId);
+    setLoading(true);
+
+    axios
+      .get(
+        `${BASE_url}/api/records/drugs?filterValue=${categoryId}&filterKey=productCategory`,
+        {
+          headers: {
+            api_key: API_KEY,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Response data:", response.data);
+        const filteredDrugs: ProductsProps[] = response.data.records;
+        setDrugs(filteredDrugs);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching drugs:", error);
+        setLoading(false);
+      });
+  };
+
   return (
     <nav className="relative z-40 font-medium text-gray-800 mx-4 mb-4 px-4 py-3 border-b border-accent rounded-2xl shadow-accent">
       <div
@@ -83,13 +105,17 @@ export default function Navbar() {
           </div>
         </Link>
         {categories.map((cat) => (
-          <div
+          <Link
             key={cat.id}
-            onMouseEnter={() => handleCategoryMouseEnter(cat.id)}
+            href={`/products?category=${cat.id}`}
             className="cursor-pointer hover:text-secondary"
+            onMouseEnter={() => handleCategoryMouseEnter(cat.id)}
+            onClick={(e) => {
+              handleCategoryClick(cat.id);
+            }}
           >
             {cat.title} {">"}
-          </div>
+          </Link>
         ))}
         <Link href="/blogs">
           <div className="cursor-pointer hover:text-secondary">

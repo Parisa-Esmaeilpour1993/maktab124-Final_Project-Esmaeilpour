@@ -1,11 +1,18 @@
 import { IoCloseCircleSharp } from "react-icons/io5";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   faLocalization,
   sweetAlert,
 } from "@/app/constants/localization/fa/localization";
-import { Textarea } from "@/app/shared/TextArea";
 import { Input } from "@/app/shared/Input";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import TextStyle from "@tiptap/extension-text-style";
+import FontSize from "@tiptap/extension-font-size";
+import Underline from "@tiptap/extension-underline";
+import TextAlign from "@tiptap/extension-text-align";
+import Color from "@tiptap/extension-color"; // اضافه کردن این خط
+import { FaBold, FaItalic, FaUnderline } from "react-icons/fa";
 
 interface EditModalProps {
   isOpen: boolean;
@@ -32,6 +39,56 @@ export default function EditModal({
   loading,
 }: EditModalProps) {
   if (!isOpen) return null;
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      TextStyle,
+      FontSize.configure({
+        types: ["textStyle"],
+      }),
+      Underline,
+      TextAlign.configure({ types: ["paragraph"] }),
+      Color, // اضافه کردن این خط
+    ],
+    content: formData.description,
+    onUpdate: ({ editor }) => {
+      onChange({
+        target: {
+          name: "description",
+          value: editor.getHTML(),
+        },
+      });
+    },
+  });
+
+  const toggleBold = () => editor?.chain().focus().toggleBold().run();
+  const toggleItalic = () => editor?.chain().focus().toggleItalic().run();
+  const toggleUnderline = () => editor?.chain().focus().toggleUnderline().run();
+
+  const toggleAlignLeft = () =>
+    editor?.chain().focus().setTextAlign("left").run();
+  const toggleAlignCenter = () =>
+    editor?.chain().focus().setTextAlign("center").run();
+  const toggleAlignRight = () =>
+    editor?.chain().focus().setTextAlign("right").run();
+
+  const setFontSize = (size: string) =>
+    editor?.chain().focus().setFontSize(size).run();
+
+  const toggleBulletList = () =>
+    editor?.chain().focus().toggleBulletList().run();
+  const toggleOrderedList = () =>
+    editor?.chain().focus().toggleOrderedList().run();
+
+  const setColor = (color: string) =>
+    editor?.chain().focus().setColor(color).run(); // تابع برای تغییر رنگ متن
+
+  useEffect(() => {
+    if (editor) {
+      editor.commands.setContent(formData.description);
+    }
+  }, [formData.description, editor]);
 
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
@@ -66,14 +123,82 @@ export default function EditModal({
             <label className="block font-medium text-gray-700 mb-1">
               توضیحات
             </label>
-            <Textarea
-              name="description"
-              value={formData.description}
-              onChange={onChange}
-              rows={5}
-              className="w-full border rounded-lg p-2 text-sm text-gray-700 resize-y"
-              required
-            />
+            <div className="mb-2 flex gap-2">
+              <button
+                type="button"
+                onClick={toggleBold}
+                className="text-lg p-2 border rounded hover:bg-gray-200"
+              >
+                <FaBold />
+              </button>
+              <button
+                type="button"
+                onClick={toggleItalic}
+                className="text-lg p-2 border rounded hover:bg-gray-200"
+              >
+                <FaItalic />
+              </button>
+              <button
+                type="button"
+                onClick={toggleUnderline}
+                className="text-lg p-2 border rounded hover:bg-gray-200"
+              >
+                <FaUnderline />
+              </button>
+              <button
+                type="button"
+                onClick={toggleAlignLeft}
+                className="text-lg p-2 border rounded hover:bg-gray-200"
+              >
+                چپ چین
+              </button>
+              <button
+                type="button"
+                onClick={toggleAlignCenter}
+                className="text-lg p-2 border rounded hover:bg-gray-200"
+              >
+                وسط چین
+              </button>
+              <button
+                type="button"
+                onClick={toggleAlignRight}
+                className="text-lg p-2 border rounded hover:bg-gray-200"
+              >
+                راست چین
+              </button>
+              <button
+                type="button"
+                onClick={() => setFontSize("18px")}
+                className="text-lg p-2 border rounded hover:bg-gray-200"
+              >
+                سایز فونت
+              </button>
+              <button
+                type="button"
+                onClick={toggleBulletList}
+                className="text-lg p-2 border rounded hover:bg-gray-200"
+              >
+                لیست گلوله‌ای
+              </button>
+              <button
+                type="button"
+                onClick={toggleOrderedList}
+                className="text-lg p-2 border rounded hover:bg-gray-200"
+              >
+                لیست عددی
+              </button>
+
+              {/* دکمه برای انتخاب رنگ متن */}
+              <input
+                type="color"
+                onChange={(e) => setColor(e.target.value)}
+                title="رنگ متن"
+                className="w-10 h-10 p-0 border rounded cursor-pointer"
+              />
+            </div>
+            <div className="w-full border rounded-lg p-2 text-sm text-gray-700">
+              <EditorContent editor={editor} />
+            </div>
           </div>
 
           <div className="flex justify-end gap-2">

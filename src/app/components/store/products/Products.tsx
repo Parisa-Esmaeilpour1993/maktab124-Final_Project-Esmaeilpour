@@ -9,6 +9,7 @@ import Sidebar from "./Sidebar";
 import { fetchDiscountedProducts } from "@/app/services/fetchDiscountedProducts";
 import { favorites } from "@/app/services/getFavorites";
 import { ToastContainer } from "react-toastify";
+import { useSearchParams } from "next/navigation";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<ProductsProps[]>([]);
@@ -29,6 +30,18 @@ export default function ProductsPage() {
   const [Discounts, setDiscounts] = useState<Discount[]>([]);
   const dispatch = useAppDispatch();
 
+  const searchParams = useSearchParams();
+  const categoryId = searchParams.get("category");
+
+  useEffect(() => {
+    if (categoryId) {
+      setFilters((prev) => ({
+        ...prev,
+        categories: [categoryId],
+      }));
+    }
+  }, [categoryId]);
+
   useEffect(() => {
     fetchDiscountedProducts().then((discountData) => {
       setDiscounts(discountData);
@@ -36,7 +49,13 @@ export default function ProductsPage() {
   }, []);
 
   useEffect(() => {
-    dispatch(fetchProducts())
+    dispatch(
+      fetchProducts(
+        categoryId
+          ? { filterKey: "productCategory", filterValue: categoryId }
+          : undefined
+      )
+    )
       .unwrap()
       .then((res) => {
         let data = res;

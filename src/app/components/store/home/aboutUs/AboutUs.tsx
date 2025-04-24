@@ -46,9 +46,10 @@ function AboutUs() {
       </h1>
       <h1 className="text-xl font-semibold mb-4">{aboutData?.title}</h1>
       {aboutData ? (
-        <div className="text-sm text-gray-700 whitespace-pre-line leading-7">
-          {aboutData.description}
-        </div>
+        <div
+          className="text-sm text-gray-700 whitespace-pre-line leading-7"
+          dangerouslySetInnerHTML={{ __html: aboutData.description }}
+        />
       ) : (
         <p>{faLocalization.noData}</p>
       )}
