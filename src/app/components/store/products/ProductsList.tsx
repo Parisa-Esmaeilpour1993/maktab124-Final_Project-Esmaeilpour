@@ -8,6 +8,7 @@ import { IProducts } from "@/app/types/products";
 import { BiCartAdd } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import FavoriteButton from "./FavoriteButton";
+import Link from "next/link";
 
 export default function ProductsList({
   products,
@@ -48,11 +49,12 @@ IProducts) {
           : originalPrice;
 
         return (
-          <div
+          <Link
             key={product.id}
             className={`border border-secondary rounded-lg flex flex-col justify-between p-4 shadow relative text-center transition-opacity ${
               isOutOfStock ? "opacity-50 grayscale pointer-events-none" : ""
             }`}
+            href={`/singleProduct/${product.id}`}
           >
             {hasDiscount && (
               <div className="absolute top-4 left-4 bg-amber-600 text-white text-xs px-2 py-1 rounded animate-pulseGlow">
@@ -122,7 +124,7 @@ IProducts) {
                 }}
               />
             </div>
-          </div>
+          </Link>
         );
       })}
     </div>

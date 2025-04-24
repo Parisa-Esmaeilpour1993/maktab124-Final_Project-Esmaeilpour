@@ -1,5 +1,5 @@
 export const faLocalization = {
-  loginOrRegister: "ثبت نام/ ورود",
+  loginOrRegister: "ثبت نام | ورود",
   search: "محصول مورد نظر خود را جستجو کنید...",
   cart: "سبد خرید",
   edit: "ویرایش",
@@ -230,6 +230,7 @@ export const productsLocalization = {
   copyId: "شناسه محصول کپی شد",
   notCopyId: "شناسه محصول کپی نشد",
   discount: "تخفیف",
+  information: "اطلاعات محصول",
 };
 
 export const newestProduct = {

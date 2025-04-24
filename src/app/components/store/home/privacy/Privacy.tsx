@@ -46,9 +46,10 @@ function Privacy() {
       </h1>
       <h1 className="text-xl font-semibold mb-4">{privacy?.title}</h1>
       {privacy ? (
-        <div className="text-sm text-gray-700 whitespace-pre-line leading-7">
-          {privacy.description}
-        </div>
+        <div
+          className="text-sm text-gray-700 whitespace-pre-line leading-7"
+          dangerouslySetInnerHTML={{ __html: privacy.description }}
+        />
       ) : (
         <p>{faLocalization.noData}</p>
       )}

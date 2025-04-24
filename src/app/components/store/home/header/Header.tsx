@@ -49,7 +49,7 @@ const Header = () => {
         </form>
       </div>
 
-      <div className="flex gap-3 justify-center items-center">
+      <div className="flex gap-2 justify-center items-center">
         <div className="flex justify-center items-center border border-primary rounded-2xl hover:scale-105 hover:border-primary">
           <AiOutlineShoppingCart
             size={32}

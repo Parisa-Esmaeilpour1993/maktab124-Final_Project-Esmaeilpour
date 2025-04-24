@@ -46,9 +46,10 @@ function ShoppingGuide() {
       </h1>
       <h1 className="text-xl font-semibold mb-4">{shoppingGuide?.title}</h1>
       {shoppingGuide ? (
-        <div className="text-sm text-gray-700 whitespace-pre-line leading-7">
-          {shoppingGuide.description}
-        </div>
+        <div
+          className="text-sm text-gray-700 whitespace-pre-line leading-7"
+          dangerouslySetInnerHTML={{ __html: shoppingGuide.description }}
+        />
       ) : (
         <p>{faLocalization.noData}</p>
       )}
