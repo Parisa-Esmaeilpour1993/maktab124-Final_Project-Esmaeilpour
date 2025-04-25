@@ -1,4 +1,3 @@
-// components/Offer.tsx
 import Image from "next/image";
 import offer from "@/app/assets/images/offer.jpg";
 import OfferSlider from "./Swipper";

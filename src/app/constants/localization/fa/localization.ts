@@ -42,6 +42,8 @@ export const faLocalization = {
   readMore: " بیشتر بخوانید ",
   noDrugInCategory: "هیچ دارویی برای این دسته‌بندی وجود ندارد",
   products: "محصولات",
+  just: "فقط",
+  isAvailable: "عدد در انبار موجود است.",
 };
 
 export const sweetAlert = {
@@ -231,6 +233,15 @@ export const productsLocalization = {
   notCopyId: "شناسه محصول کپی نشد",
   discount: "تخفیف",
   information: "اطلاعات محصول",
+  addToCart: "افزودن به سبد خرید",
+  filters: "فیلترها",
+  justAvailable: "فقط کالاهای موجود",
+  justOffer: "فقط کالاهای تخفیف‌دار",
+  categories: "دسته‌بندی‌ها",
+  sortBy: "مرتب سازی براساس:",
+  removeFav: "از علاقه‌مندی‌ها حذف شد",
+  addFav: "به علاقه‌مندی‌ها اضافه شد",
+  loginError: "ابتدا عضو سایت شوید.",
 };
 
 export const newestProduct = {

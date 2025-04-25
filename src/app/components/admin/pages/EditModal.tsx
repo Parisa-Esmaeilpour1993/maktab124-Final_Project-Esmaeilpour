@@ -11,7 +11,7 @@ import TextStyle from "@tiptap/extension-text-style";
 import FontSize from "@tiptap/extension-font-size";
 import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
-import Color from "@tiptap/extension-color"; // اضافه کردن این خط
+import Color from "@tiptap/extension-color";
 import { FaBold, FaItalic, FaUnderline } from "react-icons/fa";
 
 interface EditModalProps {
@@ -49,7 +49,7 @@ export default function EditModal({
       }),
       Underline,
       TextAlign.configure({ types: ["paragraph"] }),
-      Color, // اضافه کردن این خط
+      Color,
     ],
     content: formData.description,
     onUpdate: ({ editor }) => {
@@ -82,7 +82,7 @@ export default function EditModal({
     editor?.chain().focus().toggleOrderedList().run();
 
   const setColor = (color: string) =>
-    editor?.chain().focus().setColor(color).run(); // تابع برای تغییر رنگ متن
+    editor?.chain().focus().setColor(color).run();
 
   useEffect(() => {
     if (editor) {
@@ -188,7 +188,6 @@ export default function EditModal({
                 لیست عددی
               </button>
 
-              {/* دکمه برای انتخاب رنگ متن */}
               <input
                 type="color"
                 onChange={(e) => setColor(e.target.value)}

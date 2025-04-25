@@ -1,17 +1,11 @@
+import { productsLocalization } from "@/app/constants/localization/fa/localization";
 import { HeaderSortProps } from "@/app/types/products";
-
-const sortOptions = [
-  { label: "جدیدترین", value: "newest" },
-  { label: "قدیمی‌ترین", value: "oldest" },
-  { label: "حروف الفبا", value: "alphabetical" },
-  { label: "گران‌ترین", value: "expensive" },
-  { label: "ارزان‌ترین", value: "cheap" },
-];
+import { sortOptions } from "@/app/utils/sortOption";
 
 export default function Header({ sort, setSort }: HeaderSortProps) {
   return (
-    <div className="flex flex-wrap items-center mb-6 gap-2 border-b pb-4">
-      <p className="font-semibold">مرتب سازی براساس: </p>
+    <div className="flex flex-wrap items-center mb-6 gap-2 border-b pb-4 text-[15px]">
+      <p className="font-semibold">{productsLocalization.sortBy} </p>
       {sortOptions.map((option) => (
         <button
           key={option.value}

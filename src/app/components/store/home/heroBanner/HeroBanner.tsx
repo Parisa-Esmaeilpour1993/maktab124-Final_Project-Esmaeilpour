@@ -22,9 +22,9 @@ export default async function Banner() {
 
   return (
     <div className="w-full flex items-center justify-center">
-      <div className="flex items-center justify-center px-10 lg:px-20 py-8 w-5/6 rounded-2xl shadow-accent bg-light">
+      <div className="flex items-center justify-center gap-6 px-10 lg:px-20 py-8 w-5/6 rounded-2xl shadow-accent bg-light">
         <div className="flex flex-col gap-3">
-          <h1 className="text-lg md:text-xl lg:text-2xl font-bold">
+          <h1 className="text-lg md:text-xl lg:text-[22px] font-bold">
             {banner.title}
           </h1>
           <p className="text-[16px] md:text-lg mb-8 w-full lg:w-2/3">

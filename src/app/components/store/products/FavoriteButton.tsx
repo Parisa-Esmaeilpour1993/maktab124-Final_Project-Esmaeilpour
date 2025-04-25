@@ -2,8 +2,13 @@
 
 import { getAuthToken } from "@/app/base/getAuthToken";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
+import {
+  productsLocalization,
+  sweetAlert,
+} from "@/app/constants/localization/fa/localization";
 import { favoriteProductsProps } from "@/app/types/products";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { toast } from "react-toastify";
@@ -20,8 +25,17 @@ export default function FavoriteButton({
   );
 
   const token = getAuthToken();
+  const router = useRouter();
 
   const handleToggle = async () => {
+    if (!token) {
+      toast.info(productsLocalization.loginError);
+      setTimeout(() => {
+        router.push("/login");
+      }, 500);
+      return;
+    }
+
     setLoading(true);
     try {
       if (isFav) {
@@ -32,7 +46,7 @@ export default function FavoriteButton({
             Authorization: `Bearer ${token}`,
           },
         });
-        toast.success("از علاقه‌مندی‌ها حذف شد");
+        toast.success(productsLocalization.removeFav);
         setIsFav(false);
         setFavoriteId(undefined);
       } else {
@@ -47,13 +61,13 @@ export default function FavoriteButton({
             },
           }
         );
-        toast.success("به علاقه‌مندی‌ها اضافه شد");
+        toast.success(productsLocalization.addFav);
         setIsFav(true);
         setFavoriteId(res.data.id);
       }
     } catch (err) {
       console.error("Error updating favorite:", err);
-      toast.error("خطایی رخ داد");
+      toast.error(sweetAlert.error);
     } finally {
       setLoading(false);
     }
@@ -62,7 +76,11 @@ export default function FavoriteButton({
   return (
     <div>
       <button
-        onClick={handleToggle}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleToggle();
+        }}
         disabled={loading}
         className="absolute top-0 right-0 text-red-500 text-xl hover:scale-110 transition-transform"
       >

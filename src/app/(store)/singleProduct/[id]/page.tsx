@@ -40,9 +40,9 @@ export default async function SingleProductPage({
     const isOutOfStock = quantity === 0;
 
     return (
-      <div className="grid grid-cols-4 border-t border-secondary mx-4 px-4 py-8 gap-6 relative">
+      <div className=" flex flex-col-reverse md:grid md:grid-cols-4 border-t border-secondary mx-4 px-4 py-8 gap-6 relative">
         {/* Right: Sticky Summary Box */}
-        <div className="col-span-1">
+        <div className=" col-span-2 lg:col-span-1">
           <div className="sticky top-20 bg-white border border-gray-200 shadow-md rounded-2xl p-6 space-y-6">
             <div className="flex justify-center items-center gap-2">
               <TbTruckDelivery size={24} className="text-primary" />
@@ -73,15 +73,15 @@ export default async function SingleProductPage({
               <div className="text-xl font-bold text-secondary text-center">
                 {discountPercent > 0 ? (
                   <div className="space-y-2">
-                    <div className="flex items-center justify-center gap-2">
+                    <div className="flex flex-col xl:flex-row items-center justify-center gap-2">
                       <span className="text-base line-through text-gray-500">
                         {price.toLocaleString()} تومان
                       </span>
-                      <span className="bg-red-500 text-white text-sm px-2 py-1 rounded-full">
+                      <span className="bg-red-500 my-2 xl:my-0 text-white text-sm px-2 py-1 rounded-full">
                         {discountPercent}% تخفیف
                       </span>
                     </div>
-                    <span className="text-2xl block">
+                    <span className=" text-xl xl:text-2xl block">
                       {finalPrice.toLocaleString()} تومان
                     </span>
                   </div>
@@ -124,11 +124,11 @@ export default async function SingleProductPage({
 
         {/* Left: Product Description and Image */}
         <div
-          className={`col-span-3 grid grid-cols-3 space-y-8 bg-white border border-gray-200 shadow-md rounded-2xl p-6 ${
+          className={`col-span-2 lg:col-span-3 grid lg:grid-cols-3 space-y-8 bg-white border border-gray-200 shadow-md rounded-2xl p-6 ${
             isOutOfStock ? "pointer-events-none select-none opacity-60" : ""
           }`}
         >
-          <div className="col-span-1 p-4">
+          <div className=" hidden lg:block lg:col-span-1 p-4">
             <img
               src={`${BASE_url}${product.image}`}
               alt={product.productName}
@@ -137,16 +137,25 @@ export default async function SingleProductPage({
           </div>
 
           <div className="col-span-2 flex flex-col gap-6">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between lg:gap-4 items-center">
               <div className="flex flex-col gap-2">
-                <h1 className="text-2xl font-bold">{product.productName}</h1>
+                <h1 className=" text-xl lg:text-2xl font-semibold lg:font-bold">
+                  {product.productName}
+                </h1>
+                <div className=" block lg:hidden p-4">
+                  <img
+                    src={`${BASE_url}${product.image}`}
+                    alt={product.productName}
+                    className="rounded-xl w-full h-80 lg:h-96 object-contain bg-white"
+                  />
+                </div>
                 <p className="text-gray-700">
                   <strong>{productsLocalization.expireDate}:</strong>{" "}
                   {product.productExpired || "—"}
                 </p>
               </div>
               {discountPercent !== 0 && (
-                <span className=" animate-pulseGlow text-amber-600 px-2 py-1 rounded-full">
+                <span className="text-center animate-pulseGlow text-amber-600 px-2 py-1 rounded-full">
                   {discountPercent}% تخفیف
                 </span>
               )}

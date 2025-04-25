@@ -1,4 +1,3 @@
-// components/Offer.tsx
 import Image from "next/image";
 import newestSeller from "@/app/assets/images/newest.jpg";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
