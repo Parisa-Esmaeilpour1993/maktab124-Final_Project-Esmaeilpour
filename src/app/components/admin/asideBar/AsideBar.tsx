@@ -25,12 +25,10 @@ export default function AdminSidebar({
     setIsLoading(false);
   }, [pathname]);
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     setIsLoad(true);
 
     try {
-      await fetch("/api/logout");
-
       localStorage.removeItem("authToken");
       localStorage.removeItem("email");
 

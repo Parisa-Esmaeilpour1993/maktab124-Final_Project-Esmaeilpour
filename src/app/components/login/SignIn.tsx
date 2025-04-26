@@ -40,6 +40,7 @@ const Login = () => {
         { headers: { api_key: API_KEY } }
       );
 
+      console.log(response.data);
       const { accessToken } = response.data;
 
       localStorage.setItem("authToken", accessToken);

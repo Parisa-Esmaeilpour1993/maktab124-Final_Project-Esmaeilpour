@@ -58,7 +58,7 @@ const SignUp = () => {
     }
 
     try {
-      await axios.post(
+      const res = await axios.post(
         `${BASE_url}/api/users/register`,
         { ...formData },
         {
@@ -68,6 +68,7 @@ const SignUp = () => {
           },
         }
       );
+      console.log(res.data);
 
       router.push("/login");
     } catch (err: any) {
