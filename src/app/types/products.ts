@@ -17,6 +17,13 @@ export interface ProductsProps {
   image: string;
   discountPercent?: number;
   createdAt: string;
+  productType: string;
+  productCompany: string;
+  productNumber: number;
+  productCapsule: string;
+  productCountry: string;
+  productAge: number;
+  productProcess: string;
 }
 
 export interface ProductsState {

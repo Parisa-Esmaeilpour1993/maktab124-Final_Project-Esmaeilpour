@@ -43,13 +43,13 @@ const AddProductModal: React.FC<Props> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white py-4 px-6 w-full h-full flex flex-col gap-3">
+      <div className="bg-white py-4 px-6 w-full h-full flex flex-col gap-3 overflow-y-auto">
         <h2 className="text-xl font-bold text-center text-primary">
           {editId ? productsLocalization.edit : productsLocalization.addProduct}
         </h2>
 
         <form onSubmit={onSubmit} className="space-y-4">
-          <div className="flex flex-col lg:flex-row gap-2 items-center justify-between">
+          <div className="flex flex-col lg:flex-row gap-4 items-center justify-center">
             <Input
               name="productName"
               value={formData.productName}
@@ -59,11 +59,53 @@ const AddProductModal: React.FC<Props> = ({
               title={productsLocalization.productName}
               className="w-60 !text-gray-700"
             />
+
+            <Input
+              type="number"
+              name="productPrice"
+              value={formData.productPrice}
+              onChange={onChange}
+              placeholder={productsLocalization.price}
+              required
+              title={productsLocalization.price}
+              className="w-60 !text-gray-700"
+            />
+
+            <Input
+              type="number"
+              name="productQuantity"
+              value={formData.productQuantity}
+              onChange={onChange}
+              placeholder={productsLocalization.available}
+              required
+              title={productsLocalization.available}
+              className="!text-gray-700 w-60"
+            />
+            <Input
+              type="number"
+              name="productAge"
+              value={formData.productAge}
+              onChange={onChange}
+              placeholder={productsLocalization.age}
+              required
+              title={productsLocalization.age}
+              className="!text-gray-700 w-60"
+            />
+
+            <Input
+              name="productProcess"
+              value={formData.productProcess}
+              onChange={onChange}
+              placeholder={productsLocalization.process}
+              required
+              title={productsLocalization.process}
+              className="!text-gray-700 w-60"
+            />
             <select
               name="productCategory"
               value={formData.productCategory}
               onChange={onChange}
-              className=" border border-secondary text-gray-700 px-3 py-2 rounded outline-none focus:ring-1 focus:ring-secondary"
+              className=" border border-secondary text-gray-700 px-3 py-2 rounded outline-none focus:ring-1 focus:ring-secondary w-[264px] text-sm"
               required
               title={productsLocalization.productCategory}
             >
@@ -76,27 +118,56 @@ const AddProductModal: React.FC<Props> = ({
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="flex flex-col lg:flex-row gap-4 items-center justify-center">
+            <Input
+              name="productType"
+              value={formData.productType}
+              onChange={onChange}
+              placeholder={productsLocalization.productType}
+              required
+              title={productsLocalization.productType}
+              className="w-60 !text-gray-700"
+            />
 
             <Input
-              type="number"
-              name="productPrice"
-              value={formData.productPrice}
+              name="productCompany"
+              value={formData.productCompany}
               onChange={onChange}
-              placeholder={productsLocalization.price}
+              placeholder={productsLocalization.company}
               required
-              title={productsLocalization.price}
-              className="!text-gray-700"
+              title={productsLocalization.company}
+              className="!text-gray-700 w-60"
             />
 
             <Input
               type="number"
-              name="productQuantity"
-              value={formData.productQuantity}
+              name="productNumber"
+              value={formData.productNumber}
               onChange={onChange}
-              placeholder={productsLocalization.available}
+              placeholder={productsLocalization.number}
               required
-              title={productsLocalization.available}
-              className="!text-gray-700"
+              title={productsLocalization.number}
+              className="!text-gray-700 w-60"
+            />
+            <Input
+              name="productCapsule"
+              value={formData.productCapsule}
+              onChange={onChange}
+              placeholder={productsLocalization.capsule}
+              required
+              title={productsLocalization.capsule}
+              className="!text-gray-700 w-60"
+            />
+            <Input
+              name="productCountry"
+              value={formData.productCountry}
+              onChange={onChange}
+              placeholder={productsLocalization.country}
+              required
+              title={productsLocalization.country}
+              className="!text-gray-700 w-60"
             />
             <Input
               type="date"
@@ -104,7 +175,7 @@ const AddProductModal: React.FC<Props> = ({
               value={formData.productExpired}
               onChange={onChange}
               placeholder={productsLocalization.productExpired}
-              className="w-full border px-3 py-2 rounded !text-gray-700"
+              className="w-[250px] border px-3 py-2 rounded !text-gray-700"
               required
               title={productsLocalization.expireDate}
             />
@@ -128,7 +199,7 @@ const AddProductModal: React.FC<Props> = ({
             title={productsLocalization.specification}
           />
 
-          <div className="flex flex-col gap-2 md:flex-row justify-between items-center">
+          <div className="flex flex-col gap-2 md:flex-row justify-between items-center pb-10">
             <div>
               <label
                 htmlFor="fileInp"

@@ -13,7 +13,6 @@ import { toast } from "react-toastify";
 const AuthButton = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
 

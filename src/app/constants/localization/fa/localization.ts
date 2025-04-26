@@ -242,6 +242,13 @@ export const productsLocalization = {
   removeFav: "از علاقه‌مندی‌ها حذف شد",
   addFav: "به علاقه‌مندی‌ها اضافه شد",
   loginError: "ابتدا عضو سایت شوید.",
+  productType: "نوع محصول",
+  company: "شرکت سازنده",
+  number: "تعداد محصول",
+  capsule: "نوع محفظه",
+  country: "کشور سازنده",
+  process: "گروه",
+  age: "سن مصرف",
 };
 
 export const newestProduct = {

@@ -1,14 +1,4 @@
-import { BASE_url } from "@/app/constants/api/BASE_URL";
-import {
-  faLocalization,
-  productsLocalization,
-} from "@/app/constants/localization/fa/localization";
-import Button from "@/app/shared/Button";
 import { IProducts } from "@/app/types/products";
-import { BiCartAdd } from "react-icons/bi";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import FavoriteButton from "./FavoriteButton";
-import Link from "next/link";
 import ProductCard from "./productCard";
 
 export default function ProductsList({

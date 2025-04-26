@@ -60,7 +60,7 @@ export default function ProductsPage() {
   );
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
+  const itemsPerPage = 3;
   const { categories } = useFetchCategories();
 
   useEffect(() => {
@@ -114,6 +114,8 @@ export default function ProductsPage() {
             id: editId,
             productPrice: Number(formData.productPrice),
             productQuantity: Number(formData.productQuantity),
+            productNumber: Number(formData.productNumber),
+            productAge: Number(formData.productAge),
             createdAt: formData.createdAt,
           })
         );
@@ -129,6 +131,8 @@ export default function ProductsPage() {
             ...formData,
             productPrice: Number(formData.productPrice),
             productQuantity: Number(formData.productQuantity),
+            productNumber: Number(formData.productNumber),
+            productAge: Number(formData.productAge),
             createdAt: formData.createdAt,
           })
         );
@@ -224,9 +228,12 @@ export default function ProductsPage() {
               ...product,
               productPrice: product.productPrice.toString(),
               productQuantity: product.productQuantity.toString(),
+              productNumber: product.productNumber.toString(),
+              productAge: product.productAge.toString(),
             });
             setFileName(product.image.split("/").pop() ?? null);
             setIsModalOpen(true);
+
             setEditId(product.id);
           }}
           onDetailClick={(product) => {
@@ -248,7 +255,9 @@ export default function ProductsPage() {
       {isModalOpen && (
         <AddProductModal
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => {
+            setIsModalOpen(false);
+          }}
           formData={formData}
           onChange={handleChange}
           onSubmit={handleSubmit}

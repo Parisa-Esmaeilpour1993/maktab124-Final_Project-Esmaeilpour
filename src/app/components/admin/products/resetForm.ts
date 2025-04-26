@@ -8,4 +8,11 @@ export const resetForm = {
   productExpired: "",
   image: "",
   createdAt: "",
+  productType: "",
+  productCompany: "",
+  productNumber: "",
+  productCapsule: "",
+  productCountry: "",
+  productAge: "",
+  productProcess: "",
 };

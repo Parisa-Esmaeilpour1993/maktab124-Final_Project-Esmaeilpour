@@ -71,7 +71,7 @@ export default function AdminSidebar({
           </span>
         </div>
 
-        <nav className="flex flex-col px-4 py-3 gap-3">
+        <nav className="flex flex-col px-4 py-2 gap-3 text-sm">
           {links.map((link) => {
             const isActiveParent = link.children?.some(
               (child) => child.href === pathname
@@ -119,7 +119,7 @@ export default function AdminSidebar({
                 <Link
                   key={link.id}
                   href={link.href}
-                  onClick={(e) => {
+                  onClick={() => {
                     setLoad(true);
                     document.cookie = "fromAdmin=true; path=/";
                   }}
@@ -157,7 +157,7 @@ export default function AdminSidebar({
           })}
         </nav>
 
-        <div className="flex items-center justify-center bottom-1">
+        <div className="fixed bottom-1 flex items-center justify-center w-full">
           <Button
             onClick={() => {
               setIsLoad(true);

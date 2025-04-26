@@ -107,7 +107,7 @@ export default function Navbar() {
           <Link
             key={cat.id}
             href={`/products?category=${cat.id}`}
-            className="cursor-pointer hover:text-secondary"
+            className="cursor-pointer text-sm hover:text-secondary"
             onMouseEnter={() => handleCategoryMouseEnter(cat.id)}
             onClick={() => {
               handleCategoryClick(cat.id);

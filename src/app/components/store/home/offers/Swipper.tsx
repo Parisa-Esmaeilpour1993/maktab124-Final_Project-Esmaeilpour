@@ -72,11 +72,13 @@ export default function OfferSlider({
                   <span className="pt-[2px]">{product.discountPercent}٪</span>
                 </div>
 
-                <img
-                  src={`${BASE_url}${product.image}`}
-                  alt={product.productName}
-                  className="rounded-lg object-contain w-full h-[100px] md:h-36 lg:h-40 mb-4"
-                />
+                <div className="p-4">
+                  <img
+                    src={`${BASE_url}${product.image}`}
+                    alt={product.productName}
+                    className="rounded-lg object-contain w-full h-[100px] md:h-36 lg:h-40 mb-4"
+                  />
+                </div>
 
                 <h3 className="text-base font-bold h-12 line-clamp-2 text-gray-800 mb-2">
                   {product.productName}
@@ -104,7 +106,7 @@ export default function OfferSlider({
                   >
                     {" "}
                     <FaShoppingCart className="block lg:hidden xl:block" />
-                    <span className="hidden lg:inline lg:text-[12px] xl:text-[16px]">
+                    <span className="hidden lg:inline lg:text-[12px] xl:text-sm">
                       {productsLocalization.addToCart}
                     </span>
                   </Button>

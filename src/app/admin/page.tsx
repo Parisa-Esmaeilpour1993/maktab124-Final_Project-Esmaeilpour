@@ -94,38 +94,36 @@ export default function AdminDashboard() {
   }, [barData.length]);
 
   return (
-    <div className="px-6 space-y-6">
-      <h1 className="text-2xl font-bold mt-2 text-primary">
+    <div className="px-6 space-y-2">
+      <h1 className="text-[22px] font-semibold mt-2 text-primary">
         {dashboardLocalization.managementDashboard}
       </h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card>
-          <CardContent className="flex flex-col gap-4 md:flex-row md:items-center lg:flex-col">
-            <CardTitle className="text-gray-700">
+          <CardContent className="flex flex-col gap-3 md:flex-row md:items-center lg:flex-col">
+            <CardTitle className="text-gray-700 text-[15px]">
               👤 {dashboardLocalization.users}
             </CardTitle>
-            <p className="text-xl font-bold text-blue-600">{usersLength}</p>
+            <p className="font-bold text-blue-600">{usersLength}</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="flex flex-col gap-4 md:flex-row md:items-center lg:flex-col">
-            <CardTitle className="text-gray-700">
+          <CardContent className="flex flex-col gap-3 md:flex-row md:items-center lg:flex-col">
+            <CardTitle className="text-gray-700 text-[15px]">
               📦 {dashboardLocalization.orders}
             </CardTitle>
-            <p className="text-xl font-bold text-green-600">
-              {usersOrders.length}
-            </p>
+            <p className="font-bold text-green-600">{usersOrders.length}</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="flex flex-col gap-4 md:flex-row md:items-center lg:flex-col">
-            <CardTitle className="text-gray-700">
+          <CardContent className="flex flex-col gap-3 md:flex-row md:items-center lg:flex-col">
+            <CardTitle className="text-gray-700 text-[15px]">
               💰 {dashboardLocalization.totalIncome}
             </CardTitle>
-            <p className="text-xl font-bold text-red-600">
+            <p className="font-bold text-red-600">
               {totalIncome.toLocaleString()} {dashboardLocalization.rial}
             </p>
           </CardContent>
@@ -135,7 +133,7 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
         <Card className="shadow-md">
           <CardContent className="p-4">
-            <h2 className="text-lg font-semibold mb-4 text-gray-700">
+            <h2 className="text-lg font-semibold text-gray-700">
               {dashboardLocalization.categoriesNumber}
             </h2>
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
@@ -182,7 +180,7 @@ export default function AdminDashboard() {
 
         <Card className="shadow-md">
           <CardContent className="p-4">
-            <h2 className="text-lg font-semibold mb-4 text-gray-700 text-center">
+            <h2 className="text-lg font-semibold text-gray-700 text-center">
               {dashboardLocalization.categoriesOrder}
             </h2>
             <div className="flex justify-center items-center">

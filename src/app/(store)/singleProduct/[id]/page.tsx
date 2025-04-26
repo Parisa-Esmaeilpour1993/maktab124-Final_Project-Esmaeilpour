@@ -8,6 +8,7 @@ import { GiHealthPotion } from "react-icons/gi";
 import { TbTruckDelivery } from "react-icons/tb";
 import { MdOutlineLocalPharmacy } from "react-icons/md";
 import { FaUserDoctor } from "react-icons/fa6";
+import FavoriteButton from "@/app/components/store/products/FavoriteButton";
 
 export default async function SingleProductPage({
   params,
@@ -128,12 +129,13 @@ export default async function SingleProductPage({
             isOutOfStock ? "pointer-events-none select-none opacity-60" : ""
           }`}
         >
-          <div className=" hidden lg:block lg:col-span-1 p-4">
+          <div className="relative hidden lg:block lg:col-span-1 p-4">
             <img
               src={`${BASE_url}${product.image}`}
               alt={product.productName}
               className="rounded-xl w-full h-96 object-contain bg-white"
             />
+            <FavoriteButton productId={product.id} />
           </div>
 
           <div className="col-span-2 flex flex-col gap-6">
@@ -142,12 +144,13 @@ export default async function SingleProductPage({
                 <h1 className=" text-xl lg:text-2xl font-semibold lg:font-bold">
                   {product.productName}
                 </h1>
-                <div className=" block lg:hidden p-4">
+                <div className="relative block lg:hidden p-4">
                   <img
                     src={`${BASE_url}${product.image}`}
                     alt={product.productName}
                     className="rounded-xl w-full h-80 lg:h-96 object-contain bg-white"
                   />
+                  <FavoriteButton productId={product.id} />
                 </div>
                 <p className="text-gray-700">
                   <strong>{productsLocalization.expireDate}:</strong>{" "}
@@ -167,6 +170,56 @@ export default async function SingleProductPage({
               <p className="text-gray-700 text-sm leading-relaxed">
                 {product.productDescription || "—"}
               </p>
+            </div>
+
+            <div className="text-sm border rounded-md shadow p-2">
+              <div className="bg-accent mb-2 text-center font-semibold py-1">
+                مشخصات
+              </div>
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 text-sm border p-4 rounded">
+                <div className="flex justify-between mx-3 px-3 border-b pb-1">
+                  <span className="font-semibold">
+                    {productsLocalization.productType}
+                  </span>
+                  <span>{product.productType}</span>
+                </div>
+                <div className="flex justify-between mx-3 px-3 border-b pb-1">
+                  <span className="font-semibold">
+                    {productsLocalization.number}
+                  </span>
+                  <span>{product.productNumber}</span>
+                </div>
+                <div className="flex justify-between mx-3 px-3 border-b pb-1">
+                  <span className="font-semibold">
+                    {productsLocalization.process}
+                  </span>
+                  <span>{product.productProcess}</span>
+                </div>
+                <div className="flex justify-between mx-3 px-3 border-b pb-1">
+                  <span className="font-semibold">
+                    {productsLocalization.capsule}
+                  </span>
+                  <span>{product.productCapsule}</span>
+                </div>
+                <div className="flex justify-between mx-3 px-3 border-b pb-1">
+                  <span className="font-semibold">
+                    {productsLocalization.age}
+                  </span>
+                  <span>{product.productAge}</span>
+                </div>
+                <div className="flex justify-between mx-3 px-3 border-b pb-1">
+                  <span className="font-semibold">
+                    {productsLocalization.country}
+                  </span>
+                  <span>{product.productCountry}</span>
+                </div>
+                <div className="flex justify-between mx-3 px-3 pb-1">
+                  <span className="font-semibold">
+                    {productsLocalization.company}
+                  </span>
+                  <span>{product.productCompany}</span>
+                </div>
+              </div>
             </div>
 
             <div>
