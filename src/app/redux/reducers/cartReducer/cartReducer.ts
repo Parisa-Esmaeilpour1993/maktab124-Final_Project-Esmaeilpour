@@ -1,5 +1,6 @@
 import { getAuthToken } from "@/app/base/getAuthToken";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
+import { cartLocalization } from "@/app/constants/localization/fa/localization";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -25,7 +26,6 @@ const initialState: CartState = {
   status: "idle",
 };
 
-// Get Cart Items
 export const getCartItems = createAsyncThunk(
   "cart/getCartItems",
   async (_, thunkAPI) => {
@@ -40,7 +40,7 @@ export const getCartItems = createAsyncThunk(
       });
       return res.data.records as CartItem[];
     } catch (error) {
-      return thunkAPI.rejectWithValue("خطا در دریافت اطلاعات سبد خرید");
+      return thunkAPI.rejectWithValue(cartLocalization.errorInRecieve);
     }
   }
 );
@@ -123,7 +123,7 @@ export const addToCart = createAsyncThunk(
         discountPercent,
       } as CartItem;
     } catch (error) {
-      return thunkAPI.rejectWithValue("خطا در افزودن محصول به سبد خرید");
+      return thunkAPI.rejectWithValue(cartLocalization.errorInAdd);
     }
   }
 );
@@ -142,7 +142,7 @@ export const removeFromCart = createAsyncThunk(
       });
       return cartItemId;
     } catch (error) {
-      return thunkAPI.rejectWithValue("خطا در حذف محصول از سبد خرید");
+      return thunkAPI.rejectWithValue(cartLocalization.errorInDelete);
     }
   }
 );
@@ -168,7 +168,7 @@ export const updateCartItem = createAsyncThunk(
       );
       return { cartItemId, quantity };
     } catch (error) {
-      return thunkAPI.rejectWithValue("خطا در بروزرسانی محصول در سبد خرید");
+      return thunkAPI.rejectWithValue(cartLocalization.errorInEdit);
     }
   }
 );

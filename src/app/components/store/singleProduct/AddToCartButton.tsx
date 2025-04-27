@@ -1,6 +1,11 @@
 "use client";
 
 import {
+  cartLocalization,
+  faLocalization,
+  sweetAlert,
+} from "@/app/constants/localization/fa/localization";
+import {
   addToCart,
   getCartItems,
   removeFromCart,
@@ -32,10 +37,10 @@ export default function AddToCartButton({ productId }: AddToCartButtonProps) {
     setLoading(true);
     try {
       await dispatch(addToCart({ productId, quantity: 1 })).unwrap();
-      toast.success("محصول به سبد خرید اضافه شد");
+      toast.success(cartLocalization.addedSuccessfully);
     } catch (error) {
       console.error(error);
-      toast.error("خطا در افزودن محصول به سبد خرید");
+      toast.error(sweetAlert.error);
     } finally {
       setLoading(false);
     }
@@ -44,7 +49,7 @@ export default function AddToCartButton({ productId }: AddToCartButtonProps) {
   const handleIncrease = async () => {
     if (!existingItem) return;
     if (existingItem.quantity >= existingItem.productQuantity) {
-      toast.error("موجودی کافی نیست");
+      toast.error(cartLocalization.notEnough);
       return;
     }
     try {
@@ -53,7 +58,7 @@ export default function AddToCartButton({ productId }: AddToCartButtonProps) {
       ).unwrap();
     } catch (error) {
       console.error(error);
-      toast.error("خطا در افزایش تعداد");
+      toast.error(sweetAlert.error);
     }
   };
 
@@ -72,7 +77,7 @@ export default function AddToCartButton({ productId }: AddToCartButtonProps) {
       }
     } catch (error) {
       console.error(error);
-      toast.error("خطا در کاهش تعداد");
+      toast.error(sweetAlert.error);
     }
   };
 
@@ -109,11 +114,11 @@ export default function AddToCartButton({ productId }: AddToCartButtonProps) {
       className="w-full py-3 bg-primary rounded-xl font-semibold text-white hover:bg-primary/90 transition disabled:opacity-50"
     >
       {loading ? (
-        "در حال افزودن..."
+        faLocalization.adding
       ) : (
         <div className="flex items-center justify-center gap-2">
           <FaCartPlus size={20} />
-          <span>افزودن به سبد خرید</span>
+          <span>{cartLocalization.addToCart}</span>
         </div>
       )}
     </button>

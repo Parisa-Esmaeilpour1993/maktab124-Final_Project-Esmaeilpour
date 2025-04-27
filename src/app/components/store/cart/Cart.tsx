@@ -8,6 +8,15 @@ import {
   updateCartItem,
 } from "@/app/redux/reducers/cartReducer/cartReducer";
 import { toast } from "react-toastify";
+import { BASE_url } from "@/app/constants/api/BASE_URL";
+import { ImBin } from "react-icons/im";
+import Button from "@/app/shared/Button";
+import { confirmDelete } from "@/app/utils/sweetAlert";
+import {
+  cartLocalization,
+  faLocalization,
+  productsLocalization,
+} from "@/app/constants/localization/fa/localization";
 
 export default function CartPage() {
   const dispatch = useAppDispatch();
@@ -25,7 +34,7 @@ export default function CartPage() {
     maxQuantity: number
   ) => {
     if (currentQuantity >= maxQuantity) {
-      toast.error("موجودی کافی نیست");
+      toast.error(cartLocalization.notEnough);
       return;
     }
     try {
@@ -33,7 +42,7 @@ export default function CartPage() {
         updateCartItem({ cartItemId, quantity: currentQuantity + 1 })
       ).unwrap();
     } catch {
-      toast.error("خطا در افزایش تعداد محصول");
+      toast.error(cartLocalization.errorInIncrease);
     }
   };
 
@@ -50,15 +59,18 @@ export default function CartPage() {
         ).unwrap();
       }
     } catch {
-      toast.error("خطا در کاهش تعداد محصول");
+      toast.error(cartLocalization.errorInDecrease);
     }
   };
 
   const handleRemove = async (cartItemId: string) => {
-    try {
-      await dispatch(removeFromCart(cartItemId)).unwrap();
-    } catch {
-      toast.error("خطا در حذف محصول");
+    const result = await confirmDelete();
+    if (result.isConfirmed) {
+      try {
+        await dispatch(removeFromCart(cartItemId)).unwrap();
+      } catch {
+        toast.error(cartLocalization.errorInDelete);
+      }
     }
   };
 
@@ -78,59 +90,62 @@ export default function CartPage() {
 
   if (status === "loading") {
     return (
-      <div className="flex justify-center py-10 text-xl font-semibold">
-        در حال بارگذاری...
+      <div className="flex justify-center py-10 text-xl font-semibold border-t mx-4 border-primary p-6">
+        {faLocalization.loading}
       </div>
     );
   }
 
   if (items.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 gap-6">
-        <h2 className="text-2xl font-bold">سبد خرید شما خالی است</h2>
-        <p className="text-gray-500">محصولی به سبد خرید اضافه نکرده‌اید.</p>
+      <div className="flex flex-col items-center justify-center py-20 gap-6 border-t mx-4 border-primary p-6">
+        <h2 className="text-2xl font-bold">{cartLocalization.emptyCart}</h2>
+        <p className="text-gray-500">{cartLocalization.notAddedYet}</p>
       </div>
     );
   }
 
   return (
-    <div className="border-t border-primary mx-4 p-4 ">
-      <h1 className="text-3xl font-bold mb-8">سبد خرید</h1>
+    <div className="border-t mx-4 border-primary p-6">
+      <h1 className="text-2xl font-bold mb-6">{cartLocalization.cart}</h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* سبد خرید (آیتم ها) */}
-        <div className="lg:col-span-2 flex flex-col gap-6">
+      <div className="flex flex-col lg:flex-row gap-8">
+        {/* لیست آیتم‌های سبد خرید */}
+        <div className="flex-1 space-y-6">
           {items.map((item) => (
             <div
               key={item.id}
-              className="flex items-center gap-4 p-4 bg-white rounded-xl shadow"
+              className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-light/40 rounded-xl shadow-accent"
             >
               <img
-                src={item.image}
+                src={`${BASE_url}${item.image}`}
                 alt={item.productName}
-                className="w-24 h-24 rounded-lg object-cover"
+                className="w-20 h-20 rounded-lg object-cover"
               />
-              <div className="flex-1">
-                <h2 className="text-lg font-bold">{item.productName}</h2>
+
+              <div className="flex-1 flex flex-col gap-2 text-center md:text-right">
+                <h2 className="text-lg font-semibold">{item.productName}</h2>
                 <p className="text-gray-500 text-sm">
-                  تاریخ انقضا: {item.productExpired}
+                  {productsLocalization.expireDate} : {item.productExpired}
                 </p>
                 <p className="text-gray-500 text-sm">
-                  قیمت واحد: {item.productPrice.toLocaleString()} ریال
+                  {cartLocalization.pricePerProduct}:{" "}
+                  {item.productPrice.toLocaleString()} {faLocalization.rial}
                 </p>
                 {item.discountPercent > 0 && (
-                  <div className="text-green-500 font-bold mt-2">
-                    {item.discountPercent}% تخفیف
+                  <div className="text-accent flex gap-2 items-center font-semibold mt-2">
+                    %{item.discountPercent}{" "}
+                    <div className="">{productsLocalization.discount}</div>
                   </div>
                 )}
-                <div className="flex items-center gap-3 mt-2">
+                <div className="flex items-center justify-center sm:justify-start gap-3 mt-3">
                   <button
                     onClick={() => handleDecrease(item.id, item.quantity)}
-                    className="w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center text-xl"
+                    className="w-6 h-6 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center active:scale-95"
                   >
                     -
                   </button>
-                  <span className="text-lg font-bold">{item.quantity}</span>
+                  <span className="text-lg font-semibold">{item.quantity}</span>
                   <button
                     onClick={() =>
                       handleIncrease(
@@ -140,54 +155,59 @@ export default function CartPage() {
                       )
                     }
                     disabled={item.quantity >= item.productQuantity}
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-2xl transition 
-                    ${
+                    className={`w-6 h-6 rounded-full flex items-center justify-center transition ${
                       item.quantity >= item.productQuantity
-                        ? "bg-gray-400 text-white cursor-not-allowed"
-                        : "bg-green-500 text-white hover:bg-green-600"
+                        ? "bg-gray-400 text-white cursor-not-allowed pt-[2px] "
+                        : "bg-secondary text-white hover:bg-primary pt-[2px] active:scale-95"
                     }`}
                   >
                     +
                   </button>
                 </div>
               </div>
-              <div className="text-center">
-                {item.discountPercent > 0 && (
-                  <p className="text-sm line-through text-gray-400">
+              <div>
+                {item.discountPercent ? (
+                  <p className="text-lg font-semibold line-through text-gray-400">
                     {(item.productPrice * item.quantity).toLocaleString()} ریال
                   </p>
+                ) : (
+                  ""
                 )}
-                <p className="text-lg font-bold">
+                <p className="text-lg font-bold text-primary">
                   {(
                     item.productPrice *
                     (1 - item.discountPercent / 100) *
                     item.quantity
                   ).toLocaleString()}{" "}
-                  ریال
+                  {faLocalization.rial}
                 </p>
-                <button
-                  onClick={() => handleRemove(item.id)}
-                  className="text-red-500 mt-2 text-sm underline"
-                >
-                  حذف
-                </button>
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => handleRemove(item.id)}
+                    className="text-red-500 hover:text-red-600 mt-2 text-sm underline"
+                  >
+                    <ImBin size={20} />
+                  </button>
+                </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* خلاصه پرداخت */}
-        <div className="relative">
-          <div className="sticky top-28 p-6 bg-white rounded-xl shadow flex flex-col gap-6">
-            <h2 className="text-xl font-bold">خلاصه سبد خرید</h2>
+        {/* خلاصه سفارش */}
+        <div className="w-full lg:w-1/3">
+          <div className="sticky top-24 p-8 text-gray-700 rounded-xl border border-accent shadow-accent flex flex-col gap-6">
+            <h2 className="text-xl font-semibold">
+              {cartLocalization.orderDetail}
+            </h2>
 
-            <div className="flex justify-between text-base">
-              <span>قیمت کل:</span>
+            <div className="flex justify-between font-semibold">
+              <span>{cartLocalization.totalPrice} :</span>
               <span>{calculateOriginPrice().toLocaleString()} ریال</span>
             </div>
 
-            <div className="flex justify-between text-base text-green-600">
-              <span>سود شما:</span>
+            <div className="flex justify-between text-secondary font-semibold">
+              <span>{cartLocalization.benefit}</span>
               <span>
                 {(
                   calculateOriginPrice() - calculateTotalPrice()
@@ -196,14 +216,18 @@ export default function CartPage() {
               </span>
             </div>
 
-            <div className="flex justify-between text-lg font-bold">
-              <span>مبلغ قابل پرداخت:</span>
+            <div className="flex justify-between font-semibold border-t pt-4">
+              <span>{cartLocalization.payableAmount}</span>
               <span>{calculateTotalPrice().toLocaleString()} ریال</span>
             </div>
 
-            <button className="w-full py-3 bg-primary hover:bg-primary/90 text-white rounded-xl text-lg font-semibold transition">
-              ادامه فرآیند خرید
-            </button>
+            <Button
+              children={cartLocalization.continue}
+              className="!bg-primary hover:!bg-secondary"
+              onClick={function (): void {
+                throw new Error("Function not implemented.");
+              }}
+            />
           </div>
         </div>
       </div>

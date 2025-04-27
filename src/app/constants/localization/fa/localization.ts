@@ -374,3 +374,24 @@ export const FooterLocalization = {
   emailPlaceholder: "ایمیل شما",
   memberShipButton: "عضویت",
 };
+
+export const cartLocalization = {
+  errorInRecieve: "خطا در دریافت اطلاعات",
+  errorInAdd: "خطا در افزودن محصول",
+  errorInDelete: "خطا در حذف محصول",
+  errorInEdit: "خطا در بروزرسانی محصول",
+  notEnough: "موجودی کافی نیست",
+  errorInIncrease: "خطا در افزایش تعداد محصول",
+  errorInDecrease: "خطا در کاهش تعداد محصول",
+  emptyCart: "سبد خرید شما خالی است",
+  notAddedYet: "محصولی به سبد خرید اضافه نکرده‌اید.",
+  cart: "سبد خرید",
+  pricePerProduct: "قیمت واحد",
+  orderDetail: "جزئیات سفارش",
+  totalPrice: "قیمت کل",
+  benefit: "سود شما از خرید:",
+  payableAmount: "مبلغ قابل پرداخت:",
+  continue: "ادامه فرآیند خرید",
+  addedSuccessfully: "محصول به سبد خرید اضافه شد",
+  addToCart: "افزودن به سبد خرید",
+};
