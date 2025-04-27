@@ -13,6 +13,9 @@ import { MdRemoveRedEye } from "react-icons/md";
 import { toast, ToastContainer } from "react-toastify";
 import Card from "./uiverse";
 import Buttons from "./SocialButtons";
+import { jwtDecode } from "jwt-decode";
+import { DecodedTokenProps } from "@/app/types/token";
+import { setCookie } from "cookies-next";
 
 const SignUp = () => {
   const router = useRouter();
@@ -69,6 +72,14 @@ const SignUp = () => {
         }
       );
       console.log(res.data);
+      const { accessToken } = res.data;
+      const decoded = jwtDecode<DecodedTokenProps>(accessToken);
+      setCookie("userId", decoded.id, {
+        maxAge: 60 * 60 * 24 * 3650,
+        path: "/",
+      });
+
+      localStorage.setItem("userId", decoded.id);
 
       router.push("/login");
     } catch (err: any) {

@@ -1,7 +1,8 @@
+import Cart from "@/app/components/store/cart/Cart";
 import React from "react";
 
 function CartPage() {
-  return <div>cart</div>;
+  return <Cart />;
 }
 
 export default CartPage;

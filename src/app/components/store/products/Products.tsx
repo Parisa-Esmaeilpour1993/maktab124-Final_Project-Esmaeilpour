@@ -1,4 +1,5 @@
 "use client";
+
 import { useAppDispatch } from "@/app/redux/store/hooks";
 import { fetchProducts } from "@/app/services/fetchProducts";
 import { Discount, Filters, ProductsProps } from "@/app/types/products";
@@ -12,23 +13,28 @@ import { ToastContainer } from "react-toastify";
 import { useSearchParams } from "next/navigation";
 
 export default function ProductsPage() {
+  const [allProducts, setAllProducts] = useState<ProductsProps[]>([]);
   const [products, setProducts] = useState<ProductsProps[]>([]);
+
   const [filter, setFilters] = useState<Filters>({
     availableOnly: false,
     categories: [],
     discountOnly: false,
   });
   const [sort, setSort] = useState("newest");
+
   const [discountedProducts, setDiscountedProducts] = useState<
     { id: string; discountPercent: number; productName: string }[]
   >([]);
+
   const [favoriteProductIds, setFavoriteProductIds] = useState<string[]>([]);
   const [favoriteRecords, setFavoriteRecords] = useState<
     { id: string; productId: string }[]
   >([]);
-  // const [isLoading, setIsLoading] = useState(true);
 
-  const [Discounts, setDiscounts] = useState<Discount[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [discounts, setDiscounts] = useState<Discount[]>([]);
+
   const dispatch = useAppDispatch();
 
   const searchParams = useSearchParams();
@@ -51,7 +57,8 @@ export default function ProductsPage() {
   }, []);
 
   useEffect(() => {
-    // setIsLoading(true);
+    setIsLoading(true);
+
     dispatch(
       fetchProducts(
         categoryId
@@ -61,86 +68,83 @@ export default function ProductsPage() {
     )
       .unwrap()
       .then((res) => {
-        let data = res;
+        setAllProducts(res);
+      })
+      .finally(() => setIsLoading(false));
+  }, [categoryId, dispatch]);
 
-        if (filter.availableOnly) {
-          data = data.filter((p) => +p.productQuantity > 0);
-        }
+  useEffect(() => {
+    let data = [...allProducts];
 
-        if (filter.categories.length) {
-          data = data.filter((p) =>
-            filter.categories.includes(p.productCategory)
+    if (filter.availableOnly) {
+      data = data.filter((p) => +p.productQuantity > 0);
+    }
+
+    if (filter.categories.length) {
+      data = data.filter((p) => filter.categories.includes(p.productCategory));
+    }
+
+    if (search) {
+      data = data.filter((p) => p.productName.toLowerCase().includes(search));
+    }
+
+    const matchedDiscounts = discounts
+      .map((offProduct) => {
+        const match = data.find(
+          (product) => product.productName === offProduct.productName
+        );
+        return match
+          ? {
+              id: match.id,
+              productName: match.productName,
+              discountPercent: offProduct.discountPercent,
+            }
+          : null;
+      })
+      .filter(Boolean) as {
+      id: string;
+      productName: string;
+      discountPercent: number;
+    }[];
+
+    setDiscountedProducts(matchedDiscounts);
+
+    if (filter.discountOnly) {
+      const discountNames = matchedDiscounts.map((d) => d.productName);
+      data = data.filter((p) => discountNames.includes(p.productName));
+    }
+
+    const applySort = (dataToSort: ProductsProps[]) => {
+      switch (sort) {
+        case "newest":
+          return [...dataToSort].sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           );
-        }
-
-        if (search) {
-          data = data.filter((p) =>
-            p.productName.toLowerCase().includes(search)
+        case "oldest":
+          return [...dataToSort].sort(
+            (a, b) =>
+              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
           );
-        }
-
-        const applySort = (dataToSort: ProductsProps[]) => {
-          switch (sort) {
-            case "newest":
-              return [...dataToSort].sort(
-                (a, b) =>
-                  new Date(b.createdAt).getTime() -
-                  new Date(a.createdAt).getTime()
-              );
-            case "oldest":
-              return [...dataToSort].sort(
-                (a, b) =>
-                  new Date(a.createdAt).getTime() -
-                  new Date(b.createdAt).getTime()
-              );
-            case "alphabetical":
-              return [...dataToSort].sort((a, b) =>
-                a.productName.localeCompare(b.productName)
-              );
-            case "expensive":
-              return [...dataToSort].sort(
-                (a, b) => +b.productPrice - +a.productPrice
-              );
-            case "cheap":
-              return [...dataToSort].sort(
-                (a, b) => +a.productPrice - +b.productPrice
-              );
-            default:
-              return dataToSort;
-          }
-        };
-
-        const matchedDiscounts = Discounts.map((offProduct) => {
-          const match = data.find(
-            (product) => product.productName === offProduct.productName
+        case "alphabetical":
+          return [...dataToSort].sort((a, b) =>
+            a.productName.localeCompare(b.productName)
           );
-          return match
-            ? {
-                productName: match.productName,
-                discountPercent: offProduct.discountPercent,
-              }
-            : null;
-        }).filter(Boolean) as {
-          id: string;
-          productName: string;
-          discountPercent: number;
-        }[];
-
-        setDiscountedProducts(matchedDiscounts);
-
-        if (filter.discountOnly) {
-          const discountIds = matchedDiscounts.map((d) => d.productName);
-          const discounted = data.filter((p) =>
-            discountIds.includes(p.productName)
+        case "expensive":
+          return [...dataToSort].sort(
+            (a, b) => +b.productPrice - +a.productPrice
           );
-          setProducts(applySort(discounted));
-          return;
-        }
+        case "cheap":
+          return [...dataToSort].sort(
+            (a, b) => +a.productPrice - +b.productPrice
+          );
+        default:
+          return dataToSort;
+      }
+    };
 
-        setProducts(applySort(data));
-      });
-    // .finally(() => setIsLoading(false));
-  }, [filter, sort, Discounts, search]);
+    setProducts(applySort(data));
+  }, [filter, sort, search, discounts, allProducts]);
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -164,7 +168,7 @@ export default function ProductsPage() {
             discountedProducts={discountedProducts}
             favoriteProductIds={favoriteProductIds}
             favoriteRecords={favoriteRecords}
-            // isLoading={isLoading}
+            isLoading={isLoading}
           />
         </main>
       </div>

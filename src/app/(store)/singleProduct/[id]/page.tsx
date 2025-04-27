@@ -9,6 +9,7 @@ import { TbTruckDelivery } from "react-icons/tb";
 import { MdOutlineLocalPharmacy } from "react-icons/md";
 import { FaUserDoctor } from "react-icons/fa6";
 import FavoriteButton from "@/app/components/store/products/FavoriteButton";
+import AddToCartButton from "@/app/components/store/singleProduct/AddToCartButton";
 
 export default async function SingleProductPage({
   params,
@@ -116,9 +117,7 @@ export default async function SingleProductPage({
                 اگر موجود شد، خبر بده
               </button>
             ) : (
-              <button className="w-full py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 transition">
-                افزودن به سبد خرید
-              </button>
+              <AddToCartButton productId={product.id} />
             )}
           </div>
         </div>

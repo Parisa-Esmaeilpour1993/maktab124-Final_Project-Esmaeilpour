@@ -14,7 +14,6 @@ const Header = () => {
   const [inputValue, setInputValue] = useState(
     searchParams.get("search") || ""
   );
-  // const [isSearching, setIsSearching] = useState(false);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -22,7 +21,6 @@ const Header = () => {
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // setIsSearching(true);
 
     const params = new URLSearchParams(searchParams.toString());
     if (inputValue.trim()) {
@@ -31,7 +29,6 @@ const Header = () => {
       params.delete("search");
     }
     router.push(`/products?${params.toString()}`);
-    // setTimeout(() => setIsSearching(false), 1000);
   };
 
   return (
@@ -41,11 +38,7 @@ const Header = () => {
           <Image src={logo} alt="logo" height={80} className="cursor-pointer" />
         </Link>
         <form onSubmit={handleSearchSubmit}>
-          <SearchInput
-            value={inputValue}
-            onChange={handleSearchChange}
-            // isLoading={isSearching}
-          />
+          <SearchInput value={inputValue} onChange={handleSearchChange} />
         </form>
       </div>
 
