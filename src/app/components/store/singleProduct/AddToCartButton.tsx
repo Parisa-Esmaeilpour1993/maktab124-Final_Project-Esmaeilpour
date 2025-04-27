@@ -86,7 +86,7 @@ export default function AddToCartButton({ productId }: AddToCartButtonProps) {
       <div className="flex items-center justify-center gap-4">
         <button
           onClick={handleDecrease}
-          className="w-10 h-10 bg-red-500 text-white rounded-full flex items-center justify-center text-2xl"
+          className="w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xl"
         >
           -
         </button>
@@ -94,11 +94,11 @@ export default function AddToCartButton({ productId }: AddToCartButtonProps) {
         <button
           onClick={handleIncrease}
           disabled={quantity >= maxQuantity}
-          className={`w-10 h-10 rounded-full flex items-center justify-center text-2xl transition 
+          className={`w-8 h-8 rounded-full flex items-center justify-center text-xl transition 
           ${
             quantity >= maxQuantity
-              ? "bg-gray-400 text-white cursor-not-allowed"
-              : "bg-green-500 text-white hover:bg-green-600"
+              ? "bg-gray-400 text-white cursor-not-allowed pt-1"
+              : "bg-secondary text-white hover:bg-primary pt-1"
           }`}
         >
           +

@@ -395,3 +395,9 @@ export const cartLocalization = {
   addedSuccessfully: "محصول به سبد خرید اضافه شد",
   addToCart: "افزودن به سبد خرید",
 };
+
+export const favoriteLocalization = {
+  noProduct: "هیچ محصولی در لیست علاقه‌مندی‌ها نیست.",
+  favPage: "صفحه علاقه مندی ها",
+  seeProduct: "مشاهده محصول",
+};

@@ -107,7 +107,7 @@ export default function CartPage() {
 
   return (
     <div className="border-t mx-4 border-primary p-6">
-      <h1 className="text-2xl font-bold mb-6">{cartLocalization.cart}</h1>
+      <h1 className="text-xl font-bold mb-6">{cartLocalization.cart}</h1>
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* لیست آیتم‌های سبد خرید */}
@@ -124,7 +124,7 @@ export default function CartPage() {
               />
 
               <div className="flex-1 flex flex-col gap-2 text-center md:text-right">
-                <h2 className="text-lg font-semibold">{item.productName}</h2>
+                <h2 className=" font-semibold">{item.productName}</h2>
                 <p className="text-gray-500 text-sm">
                   {productsLocalization.expireDate} : {item.productExpired}
                 </p>
@@ -168,7 +168,8 @@ export default function CartPage() {
               <div>
                 {item.discountPercent ? (
                   <p className="text-lg font-semibold line-through text-gray-400">
-                    {(item.productPrice * item.quantity).toLocaleString()} ریال
+                    {(item.productPrice * item.quantity).toLocaleString()}{" "}
+                    {faLocalization.rial}
                   </p>
                 ) : (
                   ""
@@ -181,7 +182,7 @@ export default function CartPage() {
                   ).toLocaleString()}{" "}
                   {faLocalization.rial}
                 </p>
-                <div className="flex justify-end">
+                <div className="flex justify-center md:justify-end">
                   <button
                     onClick={() => handleRemove(item.id)}
                     className="text-red-500 hover:text-red-600 mt-2 text-sm underline"
@@ -197,7 +198,7 @@ export default function CartPage() {
         {/* خلاصه سفارش */}
         <div className="w-full lg:w-1/3">
           <div className="sticky top-24 p-8 text-gray-700 rounded-xl border border-accent shadow-accent flex flex-col gap-6">
-            <h2 className="text-xl font-semibold">
+            <h2 className="text-lg font-semibold">
               {cartLocalization.orderDetail}
             </h2>
 

@@ -43,12 +43,15 @@ const Header = () => {
       </div>
 
       <div className="flex gap-2 justify-center items-center">
-        <div className="flex justify-center items-center border border-primary rounded-2xl hover:scale-105 hover:border-primary">
+        <Link
+          className="flex justify-center items-center border border-primary rounded-2xl hover:scale-105 hover:border-primary"
+          href={"/cart"}
+        >
           <AiOutlineShoppingCart
             size={32}
             className="bg-light p-[6px] rounded-2xl text-primary"
           />
-        </div>
+        </Link>
         <AuthButton />
       </div>
     </header>
