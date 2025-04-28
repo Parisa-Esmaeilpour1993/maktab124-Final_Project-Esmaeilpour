@@ -4,11 +4,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   faLocalization,
   loginLocalization,
+  logoutLocalization,
+  sweetAlert,
 } from "@/app/constants/localization/fa/localization";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const AuthButton = () => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -145,7 +148,22 @@ const AuthButton = () => {
               </li>
               <li>
                 <button
-                  onClick={handleLogout}
+                  onClick={() => {
+                    Swal.fire({
+                      title: logoutLocalization.areYouSure,
+                      icon: "warning",
+                      iconColor: "#67ae6e",
+                      showCancelButton: true,
+                      confirmButtonColor: "#67ae6e",
+                      cancelButtonColor: "gray",
+                      confirmButtonText: logoutLocalization.yesExit,
+                      cancelButtonText: sweetAlert.cancel,
+                    }).then((result) => {
+                      if (result.isConfirmed) {
+                        handleLogout();
+                      }
+                    });
+                  }}
                   className="text-red-500 hover:text-red-700"
                 >
                   🚪 {loginLocalization.wannaLogout}

@@ -402,3 +402,28 @@ export const favoriteLocalization = {
   seeProduct: "مشاهده محصول",
   loginError: "شما هنوز عضو سایت نشده اید.",
 };
+
+export const logoutLocalization = {
+  areYouSure: "آیا مطمئنی می‌خواهی خارج شوی؟",
+  yesExit: "بله، خارج شو",
+};
+
+export const checkOutLocalization = {
+  applyDiscount: "کد تخفیف اعمال شد",
+  invalidDiscount: "کد تخفیف معتبر نیست",
+  allRequired: "تمام اطلاعات کاربر باید وارد شود",
+  chooseDelivery: "لطفا روش ارسال را انتخاب کنید",
+  userInformation: "اطلاعات کاربر",
+  name: "نام محصول",
+  pricePerItem: "قیمت واحد",
+  count: "تعداد",
+  discountPercent: "درصد تخفیف",
+  finalPrice: "قیمت نهایی",
+  payablePrice: "قیمت پرداختی",
+  discountCode: "کد تخفیف",
+  deliveryMethod: "روش ارسال",
+  apply: "اعمال",
+  deliveryCost: "هزینه ارسال",
+  freeDelivery: "ارسال رایگان",
+  continue: "تایید و ادامه به پرداخت",
+};
