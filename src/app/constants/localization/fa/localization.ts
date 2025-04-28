@@ -394,6 +394,7 @@ export const cartLocalization = {
   continue: "ادامه فرآیند خرید",
   addedSuccessfully: "محصول به سبد خرید اضافه شد",
   addToCart: "افزودن به سبد خرید",
+  loginError: "ابتدا وارد حساب کاربری خود شوید.",
 };
 
 export const favoriteLocalization = {
@@ -422,10 +423,14 @@ export const checkOutLocalization = {
   payablePrice: "قیمت پرداختی",
   discountCode: "کد تخفیف",
   deliveryMethod: "روش ارسال",
-  apply: "اعمال",
+  apply: "اعمال تخفیف",
+  delete: "حذف تخفیف",
+  discountRemoved: "کد تخفیف حذف شد",
+  time: "زمان ارسال",
   deliveryCost: "هزینه ارسال",
   freeDelivery: "ارسال رایگان",
   continue: "تایید و ادامه به پرداخت",
+  minOrderAmount: "حداقل مبلغ سفارشی برای اعمال تخفیف:",
 };
 
 export const discountLocalization = {

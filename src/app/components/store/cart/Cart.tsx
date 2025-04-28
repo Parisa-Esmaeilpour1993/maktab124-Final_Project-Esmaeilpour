@@ -16,13 +16,20 @@ import {
   cartLocalization,
   faLocalization,
   productsLocalization,
+  sweetAlert,
 } from "@/app/constants/localization/fa/localization";
 import { useRouter } from "next/navigation";
+import moment from "jalali-moment";
+import Link from "next/link";
 
 export default function CartPage() {
   const dispatch = useAppDispatch();
   const { items, status } = useAppSelector((state) => state.cart);
   const router = useRouter();
+
+  const formatShamsiDate = (date: moment.MomentInput) => {
+    return moment(date).format("jYYYY/jMM/jDD");
+  };
 
   useEffect(() => {
     if (items.length === 0) {
@@ -103,7 +110,7 @@ export default function CartPage() {
       typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
 
     if (!token) {
-      toast.error("ابتدا وارد حساب کاربری شوید");
+      toast.error(cartLocalization.loginError);
       router.push("/login");
       return;
     }
@@ -129,9 +136,10 @@ export default function CartPage() {
           {/* لیست آیتم‌های سبد خرید */}
           <div className="flex-1 space-y-6">
             {items.map((item) => (
-              <div
+              <Link
                 key={item.id}
                 className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-light/40 rounded-xl shadow-accent"
+                href={`/singleProduct/${item.productId}`}
               >
                 <img
                   src={`${BASE_url}${item.image}`}
@@ -142,7 +150,8 @@ export default function CartPage() {
                 <div className="flex-1 flex flex-col gap-2 text-center md:text-right">
                   <h2 className=" font-semibold">{item.productName}</h2>
                   <p className="text-gray-500 text-sm">
-                    {productsLocalization.expireDate} : {item.productExpired}
+                    {productsLocalization.expireDate} : :{" "}
+                    {formatShamsiDate(item.productExpired)}
                   </p>
                   <p className="text-gray-500 text-sm">
                     {cartLocalization.pricePerProduct}:{" "}
@@ -209,7 +218,7 @@ export default function CartPage() {
                     </button>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 

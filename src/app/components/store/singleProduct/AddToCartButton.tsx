@@ -108,19 +108,21 @@ export default function AddToCartButton({ productId }: AddToCartButtonProps) {
   }
 
   return (
-    <button
-      onClick={handleAddToCart}
-      disabled={loading}
-      className="w-full py-3 bg-primary rounded-xl font-semibold text-white hover:bg-primary/90 transition disabled:opacity-50"
-    >
-      {loading ? (
-        faLocalization.adding
-      ) : (
-        <div className="flex items-center justify-center gap-2">
-          <FaCartPlus size={20} />
-          <span>{cartLocalization.addToCart}</span>
-        </div>
-      )}
-    </button>
+    <div className="flex items-center justify-center">
+      <button
+        onClick={handleAddToCart}
+        disabled={loading}
+        className="w-5/6 py-2 bg-primary rounded-xl font-semibold text-white hover:bg-primary/90 transition disabled:opacity-50"
+      >
+        {loading ? (
+          faLocalization.adding
+        ) : (
+          <div className="flex items-center justify-center gap-2">
+            <FaCartPlus size={20} />
+            <span>{cartLocalization.addToCart}</span>
+          </div>
+        )}
+      </button>
+    </div>
   );
 }

@@ -1,6 +1,7 @@
 import { IProducts } from "@/app/types/products";
 import ProductCard from "./productCard";
 import { faLocalization } from "@/app/constants/localization/fa/localization";
+import moment from "jalali-moment";
 
 export default function ProductsList({
   products,

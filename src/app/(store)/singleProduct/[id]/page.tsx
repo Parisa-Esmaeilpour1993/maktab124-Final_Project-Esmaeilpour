@@ -10,12 +10,17 @@ import { MdOutlineLocalPharmacy } from "react-icons/md";
 import { FaUserDoctor } from "react-icons/fa6";
 import FavoriteButton from "@/app/components/store/products/FavoriteButton";
 import AddToCartButton from "@/app/components/store/singleProduct/AddToCartButton";
+import moment from "jalali-moment";
 
 export default async function SingleProductPage({
   params,
 }: {
   params: { id: string };
 }) {
+  const formatShamsiDate = (date: moment.MomentInput) => {
+    return moment(date).format("jYYYY/jMM/jDD");
+  };
+
   try {
     const productResponse = await axios.get(
       `${BASE_url}/api/records/drugs/${params.id}`,
@@ -153,7 +158,7 @@ export default async function SingleProductPage({
                 </div>
                 <p className="text-gray-700">
                   <strong>{productsLocalization.expireDate}:</strong>{" "}
-                  {product.productExpired || "—"}
+                  {formatShamsiDate(product.productExpired) || "—"}
                 </p>
               </div>
               {discountPercent !== 0 && (

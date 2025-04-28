@@ -15,7 +15,15 @@ import { DeliveryMethod } from "@/app/types/deliveryMethods";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import moment from "jalali-moment";
+
+export interface OffTicket {
+  id: string;
+  name: string;
+  discount: number;
+  discountMinOrder: number;
+}
 
 export default function CheckOut() {
   const { items } = useAppSelector((state) => state.cart);
@@ -27,13 +35,30 @@ export default function CheckOut() {
     phone: "",
     address: "",
   });
-
   const [offTickets, setOffTickets] = useState([]);
   const [deliveryMethods, setDeliveryMethods] = useState([]);
   const [discountCode, setDiscountCode] = useState("");
   const [validDiscount, setValidDiscount] = useState<number>(0);
+  const [selectedDate, setSelectedDate] = useState("");
   const [selectedDelivery, setSelectedDelivery] =
     useState<DeliveryMethod | null>(null);
+
+  const [shamsiDate, setShamsiDate] = useState("");
+  const [dayOfWeek, setDayOfWeek] = useState("");
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const date = e.target.value;
+    setDiscountCode(date);
+
+    if (date) {
+      const m = moment(date, "YYYY-MM-DD").locale("fa");
+      setShamsiDate(m.format("YYYY/MM/DD"));
+      setDayOfWeek(m.format("dddd"));
+    } else {
+      setShamsiDate("");
+      setDayOfWeek("");
+    }
+  };
 
   useEffect(() => {
     fetchOffTickets();
@@ -47,7 +72,7 @@ export default function CheckOut() {
           api_key: API_KEY,
         },
       });
-      setOffTickets(data);
+      setOffTickets(data.records);
     } catch (error) {
       console.error(error);
     }
@@ -70,15 +95,27 @@ export default function CheckOut() {
   };
 
   const handleDiscountCheck = () => {
-    const ticket = offTickets.find(
-      (ticket: any) => ticket.title === discountCode.trim()
+    const ticket = (offTickets as OffTicket[]).find(
+      (ticket) => ticket.name === discountCode.trim()
     );
-    if (ticket) {
-      setValidDiscount(ticket.discountAmount || 0);
+    if (!ticket) {
+      setValidDiscount(0);
+      toast.error(checkOutLocalization.invalidDiscount);
+      return;
+    }
+
+    const totalPrice = calculateTotalPrice();
+
+    if (totalPrice >= ticket.discountMinOrder) {
+      setValidDiscount(ticket.discount || 0);
       toast.success(checkOutLocalization.applyDiscount);
     } else {
       setValidDiscount(0);
-      toast.error(checkOutLocalization.invalidDiscount);
+      toast.error(
+        `${
+          checkOutLocalization.minOrderAmount
+        } ${ticket.discountMinOrder.toLocaleString()} ${faLocalization.rial}`
+      );
     }
   };
 
@@ -104,7 +141,12 @@ export default function CheckOut() {
       : selectedDelivery?.minCost || 0;
 
   const handleSubmit = () => {
-    if (!userInfo) {
+    if (
+      !userInfo.firstName ||
+      !userInfo.lastName ||
+      !userInfo.address ||
+      !userInfo.phone
+    ) {
       toast.error(checkOutLocalization.allRequired);
       return;
     }
@@ -116,232 +158,269 @@ export default function CheckOut() {
   };
 
   return (
-    <div className="border-t border-primary mx-4 p-6 space-y-10">
-      {/* اطلاعات کاربر */}
-      <div className="p-6 border rounded-xl shadow-accent space-y-4">
-        <h2 className="text-lg font-semibold mb-4">
-          {checkOutLocalization.userInformation}
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Input
-            type="text"
-            placeholder={adminLocalization.firstName}
-            value={userInfo.firstName}
-            onChange={(e) =>
-              setUserInfo({ ...userInfo, firstName: e.target.value })
-            }
-            title={adminLocalization.firstName}
-          />
-          <Input
-            type="text"
-            placeholder={adminLocalization.lastName}
-            value={userInfo.lastName}
-            onChange={(e) =>
-              setUserInfo({ ...userInfo, lastName: e.target.value })
-            }
-            title={adminLocalization.lastName}
-          />
-          <Input
-            type="text"
-            placeholder={adminLocalization.phone}
-            value={userInfo.phone}
-            onChange={(e) =>
-              setUserInfo({ ...userInfo, phone: e.target.value })
-            }
-            title={adminLocalization.phone}
-          />
-        </div>
-        <Textarea
-          placeholder={adminLocalization.address}
-          value={userInfo.address}
-          onChange={(e) =>
-            setUserInfo({ ...userInfo, address: e.target.value })
-          }
-          title={adminLocalization.address}
-        />
-      </div>
-
-      {/* خلاصه سبد خرید */}
-      <div className="p-6 border rounded-xl shadow-accent space-y-6">
-        <h2 className="text-lg font-semibold mb-4">
-          {cartLocalization.orderDetail}
-        </h2>
-
-        <div className="hidden md:block overflow-y-auto max-h-64">
-          <table className="w-full text-center rounded-xl">
-            <thead className="bg-primary text-white text-xs lg:text-[16px]">
-              <tr>
-                <th className="p-2">{checkOutLocalization.name}</th>
-                <th className="p-2">{checkOutLocalization.pricePerItem}</th>
-                <th className="p-2">{checkOutLocalization.count}</th>
-                <th className="p-2">{checkOutLocalization.discountPercent}</th>
-                <th className="p-2">{checkOutLocalization.finalPrice}</th>
-                <th className="p-2">{checkOutLocalization.payablePrice}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => {
-                const originalPrice = item.productPrice * item.quantity;
-                const discountedPrice =
-                  item.productPrice *
-                  (1 - item.discountPercent / 100) *
-                  item.quantity;
-                return (
-                  <tr
-                    key={item.id}
-                    className="border-t md:text-xs lg:text-[15px]"
-                  >
-                    <td className="p-2">{item.productName}</td>
-                    <td className="p-2">
-                      {item.productPrice.toLocaleString()} {faLocalization.rial}
-                    </td>
-                    <td className="p-2">{item.quantity}</td>
-                    <td className="p-2">{item.discountPercent}%</td>
-                    <td className="p-2 text-gray-600">
-                      {originalPrice.toLocaleString()} {faLocalization.rial}
-                    </td>
-                    <td className="p-2 font-bold text-primary">
-                      {discountedPrice.toLocaleString()} {faLocalization.rial}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        {items.map((item) => (
-          <div
-            key={item.id}
-            className="flex flex-col gap-2 border-b pb-2 items-center justify-between md:hidden"
-          >
-            <div>
-              {item.productName} × {item.quantity}
-            </div>
-            <div>
-              {item.discountPercent > 0 ? (
-                <div className="flex items-center justify-center gap-4">
-                  <span className="line-through text-gray-400 text-sm">
-                    {(item.productPrice * item.quantity).toLocaleString()} ریال
-                  </span>
-                  <span className="font-semibold text-primary">
-                    {(
-                      item.productPrice *
-                      (1 - item.discountPercent / 100) *
-                      item.quantity
-                    ).toLocaleString()}{" "}
-                    ریال
-                  </span>
-                </div>
-              ) : (
-                <span className="font-semibold text-primary">
-                  {(item.productPrice * item.quantity).toLocaleString()}{" "}
-                  {faLocalization.rial}
-                </span>
-              )}
-            </div>
+    <div>
+      <div className="border-t border-primary mx-4 p-6 space-y-10">
+        {/* اطلاعات کاربر */}
+        <div className="p-6 border rounded-xl shadow-accent space-y-4">
+          <h2 className="text-lg font-semibold mb-4">
+            {checkOutLocalization.userInformation}
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Input
+              type="text"
+              placeholder={adminLocalization.firstName}
+              value={userInfo.firstName}
+              onChange={(e) =>
+                setUserInfo({ ...userInfo, firstName: e.target.value })
+              }
+              title={adminLocalization.firstName}
+            />
+            <Input
+              type="text"
+              placeholder={adminLocalization.lastName}
+              value={userInfo.lastName}
+              onChange={(e) =>
+                setUserInfo({ ...userInfo, lastName: e.target.value })
+              }
+              title={adminLocalization.lastName}
+            />
+            <Input
+              type="text"
+              placeholder={adminLocalization.phone}
+              value={userInfo.phone}
+              onChange={(e) =>
+                setUserInfo({ ...userInfo, phone: e.target.value })
+              }
+              title={adminLocalization.phone}
+            />
           </div>
-        ))}
-      </div>
-
-      {/* کد تخفیف */}
-      <div className="p-6 border rounded-xl shadow-accent space-y-4">
-        <h2 className="text-lg font-semibold mb-4">
-          {checkOutLocalization.discountCode}
-        </h2>
-        <div className="flex gap-4">
-          <Input
-            type="text"
-            placeholder={checkOutLocalization.discountCode}
-            value={discountCode}
-            onChange={(e) => setDiscountCode(e.target.value)}
-          />
-          <Button
-            children={checkOutLocalization.apply}
-            onClick={handleDiscountCheck}
+          <Textarea
+            placeholder={adminLocalization.address}
+            value={userInfo.address}
+            onChange={(e) =>
+              setUserInfo({ ...userInfo, address: e.target.value })
+            }
+            title={adminLocalization.address}
           />
         </div>
-      </div>
 
-      {/* روش ارسال */}
-      <div className="p-6 border rounded-xl shadow-accent space-y-4">
-        <h2 className="text-lg font-semibold mb-4">
-          {checkOutLocalization.deliveryMethod}
-        </h2>
-        <div className="space-y-4">
-          {deliveryMethods.map((method: any) => (
-            <div key={method.id} className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="delivery"
-                value={method.id}
-                onChange={() => setSelectedDelivery(method)}
-                className="accent-primary"
-              />
-              <span>
-                {method.name} - {method.minCost?.toLocaleString()} ریال
-              </span>
+        {/* خلاصه سبد خرید */}
+        <div className="p-6 border rounded-xl shadow-accent space-y-6">
+          <h2 className="text-lg font-semibold mb-4">
+            {cartLocalization.orderDetail}
+          </h2>
+
+          <div className="hidden md:block overflow-y-auto max-h-64">
+            <table className="w-full text-center rounded-xl">
+              <thead className="bg-primary text-white text-xs lg:text-[16px]">
+                <tr>
+                  <th className="p-2">{checkOutLocalization.name}</th>
+                  <th className="p-2">{checkOutLocalization.pricePerItem}</th>
+                  <th className="p-2">{checkOutLocalization.count}</th>
+                  <th className="p-2">
+                    {checkOutLocalization.discountPercent}
+                  </th>
+                  <th className="p-2">{checkOutLocalization.finalPrice}</th>
+                  <th className="p-2">{checkOutLocalization.payablePrice}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((item) => {
+                  const originalPrice = item.productPrice * item.quantity;
+                  const discountedPrice =
+                    item.productPrice *
+                    (1 - item.discountPercent / 100) *
+                    item.quantity;
+                  return (
+                    <tr
+                      key={item.id}
+                      className="border-t md:text-xs lg:text-[15px]"
+                    >
+                      <td className="p-2">{item.productName}</td>
+                      <td className="p-2">
+                        {item.productPrice.toLocaleString()}{" "}
+                        {faLocalization.rial}
+                      </td>
+                      <td className="p-2">{item.quantity}</td>
+                      <td className="p-2">{item.discountPercent}%</td>
+                      <td className="p-2 text-gray-600">
+                        {originalPrice.toLocaleString()} {faLocalization.rial}
+                      </td>
+                      <td className="p-2 font-bold text-primary">
+                        {discountedPrice.toLocaleString()} {faLocalization.rial}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {items.map((item) => (
+            <div
+              key={item.id}
+              className="flex flex-col gap-2 border-b pb-2 items-center justify-between md:hidden"
+            >
+              <div>
+                {item.productName} × {item.quantity}
+              </div>
+              <div>
+                {item.discountPercent > 0 ? (
+                  <div className="flex items-center justify-center gap-4">
+                    <span className="line-through text-gray-400 text-sm">
+                      {(item.productPrice * item.quantity).toLocaleString()}{" "}
+                      ریال
+                    </span>
+                    <span className="font-semibold text-primary">
+                      {(
+                        item.productPrice *
+                        (1 - item.discountPercent / 100) *
+                        item.quantity
+                      ).toLocaleString()}{" "}
+                      ریال
+                    </span>
+                  </div>
+                ) : (
+                  <span className="font-semibold text-primary">
+                    {(item.productPrice * item.quantity).toLocaleString()}{" "}
+                    {faLocalization.rial}
+                  </span>
+                )}
+              </div>
             </div>
           ))}
         </div>
-      </div>
 
-      {/* قیمت نهایی */}
-      <div className="flex flex-col gap-3 font-bold p-6 border rounded-xl shadow-accent">
-        <div className="flex justify-between items-center">
-          <span className=" font-semibold">
-            {checkOutLocalization.finalPrice} :
-          </span>
-          <span className="text-primary">
-            {calculateTotalPrice().toLocaleString()} {faLocalization.rial}
-          </span>
+        {/* کد تخفیف */}
+        <div className="p-6 border rounded-xl shadow-accent space-y-4">
+          <h2 className="text-lg font-semibold mb-4">
+            {checkOutLocalization.discountCode}
+          </h2>
+          <div className="flex gap-4">
+            <Input
+              type="text"
+              placeholder={checkOutLocalization.discountCode}
+              value={discountCode}
+              onChange={(e) => setDiscountCode(e.target.value)}
+            />
+            <Button
+              children={checkOutLocalization.apply}
+              onClick={handleDiscountCheck}
+            />
+            <Button
+              children={checkOutLocalization.delete}
+              className="!bg-gray-400 hover:!bg-gray-500"
+              onClick={() => {
+                setDiscountCode("");
+                setValidDiscount(0);
+                toast.info(checkOutLocalization.discountRemoved);
+              }}
+            />
+          </div>
         </div>
-        <div className="flex justify-between items-center">
-          <span className=" font-semibold">
-            {checkOutLocalization.deliveryCost} :
-          </span>
-          <span className="text-primary">
-            {selectedDelivery &&
-            isFreeShipping(calculateTotalPrice(), selectedDelivery)
-              ? checkOutLocalization.freeDelivery
-              : (selectedDelivery?.minCost || 0).toLocaleString() +
-                " " +
-                faLocalization.rial}
-          </span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className=" font-semibold">
-            {" "}
-            {checkOutLocalization.discountCode} :
-          </span>
-          <span className="text-primary">
-            {validDiscount.toLocaleString()} {faLocalization.rial}
-          </span>
-        </div>
-        <div className="flex justify-between items-center border-t mt-2 pt-3">
-          <span className=" font-semibold">
-            {" "}
-            {checkOutLocalization.payablePrice} :
-          </span>
-          <span className="text-primary">
-            {(
-              calculateTotalPrice() +
-              finalShippingCost -
-              validDiscount
-            ).toLocaleString()}{" "}
-            {faLocalization.rial}
-          </span>
-        </div>
-      </div>
 
-      {/* دکمه تایید */}
-      <div className="text-center">
-        <Button
-          children={checkOutLocalization.continue}
-          onClick={handleSubmit}
-          className="!bg-primary hover:!bg-secondary w-1/2"
-        />
+        {/* زمان ارسال  */}
+        <div className="p-6 border rounded-xl shadow-accent space-y-4">
+          <h2 className="text-lg font-semibold mb-4">
+            {checkOutLocalization.time}
+          </h2>
+          <div className="flex items-center gap-8">
+            <div className="flex gap-4">
+              <Input
+                type="date"
+                value={selectedDate}
+                onChange={handleDateChange}
+              />
+            </div>
+            {shamsiDate && (
+              <div className="text-sm text-gray-600">
+                {dayOfWeek} - {shamsiDate}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* روش ارسال */}
+        <div className="p-6 border rounded-xl shadow-accent space-y-4">
+          <h2 className="text-lg font-semibold mb-4">
+            {checkOutLocalization.deliveryMethod}
+          </h2>
+          <div className="space-y-4">
+            {deliveryMethods.map((method: any) => (
+              <div key={method.id} className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="delivery"
+                  value={method.id}
+                  onChange={() => setSelectedDelivery(method)}
+                  className="accent-primary"
+                />
+                <span>
+                  {method.name} - {method.minCost?.toLocaleString()} ریال
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* قیمت نهایی */}
+        <div className="flex flex-col gap-3 font-bold p-6 border rounded-xl shadow-accent">
+          <div className="flex justify-between items-center">
+            <span className=" font-semibold">
+              {checkOutLocalization.finalPrice} :
+            </span>
+            <span className="text-primary">
+              {calculateTotalPrice().toLocaleString()} {faLocalization.rial}
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className=" font-semibold">
+              {checkOutLocalization.deliveryCost} :
+            </span>
+            <span className="text-primary">
+              {selectedDelivery &&
+              isFreeShipping(calculateTotalPrice(), selectedDelivery)
+                ? checkOutLocalization.freeDelivery
+                : (selectedDelivery?.minCost || 0).toLocaleString() +
+                  " " +
+                  faLocalization.rial}
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className=" font-semibold">
+              {" "}
+              {checkOutLocalization.discountCode} :
+            </span>
+            <span className="text-primary">
+              {validDiscount.toLocaleString()} {faLocalization.rial}
+            </span>
+          </div>
+          <div className="flex justify-between items-center border-t mt-2 pt-3">
+            <span className=" font-semibold">
+              {" "}
+              {checkOutLocalization.payablePrice} :
+            </span>
+            <span className="text-primary">
+              {(
+                calculateTotalPrice() +
+                finalShippingCost -
+                validDiscount
+              ).toLocaleString()}{" "}
+              {faLocalization.rial}
+            </span>
+          </div>
+        </div>
+
+        {/* دکمه تایید */}
+        <div className="text-center">
+          <Button
+            children={checkOutLocalization.continue}
+            onClick={handleSubmit}
+            className="!bg-primary hover:!bg-secondary w-1/2"
+          />
+        </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

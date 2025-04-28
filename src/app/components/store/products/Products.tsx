@@ -159,7 +159,7 @@ export default function ProductsPage() {
   return (
     <div>
       <ToastContainer />
-      <div className="flex border-t border-secondary">
+      <div className="flex border-t border-secondary mx-4">
         <Sidebar filter={filter} setFilters={setFilters} />
         <main className="flex-1 p-6">
           <Header sort={sort} setSort={setSort} />
