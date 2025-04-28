@@ -69,7 +69,7 @@ export default function AdminSidebar({
           </span>
         </div>
 
-        <nav className="flex flex-col px-4 py-2 gap-3 text-sm">
+        <nav className="flex flex-col px-4 py-2 gap-[10px] text-sm">
           {links.map((link) => {
             const isActiveParent = link.children?.some(
               (child) => child.href === pathname

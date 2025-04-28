@@ -68,7 +68,7 @@ export const sweetAlert = {
   errorInSendingData: "خطا در ارسال اطلاعات",
   error: "خطا",
   del: "حذف",
-  errorInDeleteData: "خطا در حذف محصولات",
+  errorInDeleteData: "خطا در حذف",
   successful: "محصول با موفقیت ادد شد.",
   successfulEdit: "محصول با موفقیت ویرایش شد.",
   noAdminFound:
@@ -426,4 +426,16 @@ export const checkOutLocalization = {
   deliveryCost: "هزینه ارسال",
   freeDelivery: "ارسال رایگان",
   continue: "تایید و ادامه به پرداخت",
+};
+
+export const discountLocalization = {
+  discountManage: "مدیریت تخفیف‌ها",
+  name: "نام تخفیف",
+  discount: "مقدار تخفیف",
+  edit: "ویرایش تخفیف",
+  add: "افزودن تخفیف",
+  num: "ردیف",
+  operation: "عملیات",
+  minOrder: "حداقل خرید",
+  required: "لطفا همه فیلدها را پر کنید",
 };
