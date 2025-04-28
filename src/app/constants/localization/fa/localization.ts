@@ -400,4 +400,5 @@ export const favoriteLocalization = {
   noProduct: "هیچ محصولی در لیست علاقه‌مندی‌ها نیست.",
   favPage: "صفحه علاقه مندی ها",
   seeProduct: "مشاهده محصول",
+  loginError: "شما هنوز عضو سایت نشده اید.",
 };
