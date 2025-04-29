@@ -1,20 +1,9 @@
 import { getAuthToken } from "@/app/base/getAuthToken";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
 import { cartLocalization } from "@/app/constants/localization/fa/localization";
+import { CartItem } from "@/app/types/cart";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-
-type CartItem = {
-  id: string;
-  productId: string;
-  quantity: number;
-  productName: string;
-  productPrice: number;
-  productQuantity: number;
-  productExpired: string;
-  image: string;
-  discountPercent: number;
-};
 
 interface CartState {
   items: CartItem[];

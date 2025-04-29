@@ -2,32 +2,32 @@
 
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
 import {
-  adminLocalization,
-  cartLocalization,
   checkOutLocalization,
   faLocalization,
 } from "@/app/constants/localization/fa/localization";
 import { useAppSelector } from "@/app/redux/store/hooks";
 import Button from "@/app/shared/Button";
 import { Input } from "@/app/shared/Input";
-import { Textarea } from "@/app/shared/TextArea";
 import { DeliveryMethod } from "@/app/types/deliveryMethods";
+import { OffTicket } from "@/app/types/offTickets";
+import { UserInfoData } from "@/app/types/UserInfo";
 import axios from "axios";
+import moment from "jalali-moment";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import moment from "jalali-moment";
-import { OffTicket } from "@/app/types/offTickets";
+import CartSummary from "./CartSummary";
+import UserInfo from "./UserInfo";
 
 export default function CheckOut() {
   const { items } = useAppSelector((state) => state.cart);
   const router = useRouter();
 
-  const [userInfo, setUserInfo] = useState({
+  const [userInfo, setUserInfo] = useState<UserInfoData>({
     firstName: "",
     lastName: "",
     phone: "",
-    address: "",
+    addresses: [],
   });
   const [offTickets, setOffTickets] = useState([]);
   const [deliveryMethods, setDeliveryMethods] = useState([]);
@@ -40,9 +40,45 @@ export default function CheckOut() {
   const [shamsiDate, setShamsiDate] = useState("");
   const [dayOfWeek, setDayOfWeek] = useState("");
 
+  const user =
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("user") || "{}")
+      : {};
+  const userIdi = user?.userIdi;
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      if (!userIdi) return;
+      try {
+        const res = await axios.get(`${BASE_url}/api/records/users`, {
+          headers: { api_key: API_KEY },
+        });
+        console.log(res.data.records);
+        const users = res?.data.records;
+        const user = users.find(
+          (user: UserInfoData) => user.userIdi === userIdi
+        );
+        console.log(user);
+
+        if (user) {
+          setUserInfo({
+            firstName: user.firstName || "",
+            lastName: user.lastName || "",
+            phone: user.phoneNumber || "",
+            addresses: user.addresses || "",
+          });
+        }
+      } catch (error) {
+        console.error("خطا در دریافت اطلاعات کاربر:", error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const date = e.target.value;
-    setDiscountCode(date);
+    setSelectedDate(date);
 
     if (date) {
       const m = moment(date, "YYYY-MM-DD").locale("fa");
@@ -138,7 +174,7 @@ export default function CheckOut() {
     if (
       !userInfo.firstName ||
       !userInfo.lastName ||
-      !userInfo.address ||
+      !userInfo.addresses ||
       !userInfo.phone
     ) {
       toast.error(checkOutLocalization.allRequired);
@@ -155,135 +191,10 @@ export default function CheckOut() {
     <div>
       <div className="border-t border-primary mx-4 p-6 space-y-10">
         {/* اطلاعات کاربر */}
-        <div className="p-6 border rounded-xl shadow-accent space-y-4">
-          <h2 className="text-lg font-semibold mb-4">
-            {checkOutLocalization.userInformation}
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <Input
-              type="text"
-              placeholder={adminLocalization.firstName}
-              value={userInfo.firstName}
-              onChange={(e) =>
-                setUserInfo({ ...userInfo, firstName: e.target.value })
-              }
-              title={adminLocalization.firstName}
-            />
-            <Input
-              type="text"
-              placeholder={adminLocalization.lastName}
-              value={userInfo.lastName}
-              onChange={(e) =>
-                setUserInfo({ ...userInfo, lastName: e.target.value })
-              }
-              title={adminLocalization.lastName}
-            />
-            <Input
-              type="text"
-              placeholder={adminLocalization.phone}
-              value={userInfo.phone}
-              onChange={(e) =>
-                setUserInfo({ ...userInfo, phone: e.target.value })
-              }
-              title={adminLocalization.phone}
-            />
-          </div>
-          <Textarea
-            placeholder={adminLocalization.address}
-            value={userInfo.address}
-            onChange={(e) =>
-              setUserInfo({ ...userInfo, address: e.target.value })
-            }
-            title={adminLocalization.address}
-          />
-        </div>
+        <UserInfo userInfo={userInfo} setUserInfo={setUserInfo} />
 
         {/* خلاصه سبد خرید */}
-        <div className="p-6 border rounded-xl shadow-accent space-y-6">
-          <h2 className="text-lg font-semibold mb-4">
-            {cartLocalization.orderDetail}
-          </h2>
-
-          <div className="hidden md:block overflow-y-auto max-h-64">
-            <table className="w-full text-center rounded-xl">
-              <thead className="bg-primary text-white text-xs lg:text-[16px]">
-                <tr>
-                  <th className="p-2">{checkOutLocalization.name}</th>
-                  <th className="p-2">{checkOutLocalization.pricePerItem}</th>
-                  <th className="p-2">{checkOutLocalization.count}</th>
-                  <th className="p-2">
-                    {checkOutLocalization.discountPercent}
-                  </th>
-                  <th className="p-2">{checkOutLocalization.finalPrice}</th>
-                  <th className="p-2">{checkOutLocalization.payablePrice}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map((item) => {
-                  const originalPrice = item.productPrice * item.quantity;
-                  const discountedPrice =
-                    item.productPrice *
-                    (1 - item.discountPercent / 100) *
-                    item.quantity;
-                  return (
-                    <tr
-                      key={item.id}
-                      className="border-t md:text-xs lg:text-[15px]"
-                    >
-                      <td className="p-2">{item.productName}</td>
-                      <td className="p-2">
-                        {item.productPrice.toLocaleString()}{" "}
-                        {faLocalization.rial}
-                      </td>
-                      <td className="p-2">{item.quantity}</td>
-                      <td className="p-2">{item.discountPercent}%</td>
-                      <td className="p-2 text-gray-600">
-                        {originalPrice.toLocaleString()} {faLocalization.rial}
-                      </td>
-                      <td className="p-2 font-bold text-primary">
-                        {discountedPrice.toLocaleString()} {faLocalization.rial}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className="flex flex-col gap-2 border-b pb-2 items-center justify-between md:hidden"
-            >
-              <div>
-                {item.productName} × {item.quantity}
-              </div>
-              <div>
-                {item.discountPercent > 0 ? (
-                  <div className="flex items-center justify-center gap-4">
-                    <span className="line-through text-gray-400 text-sm">
-                      {(item.productPrice * item.quantity).toLocaleString()}{" "}
-                      ریال
-                    </span>
-                    <span className="font-semibold text-primary">
-                      {(
-                        item.productPrice *
-                        (1 - item.discountPercent / 100) *
-                        item.quantity
-                      ).toLocaleString()}{" "}
-                      ریال
-                    </span>
-                  </div>
-                ) : (
-                  <span className="font-semibold text-primary">
-                    {(item.productPrice * item.quantity).toLocaleString()}{" "}
-                    {faLocalization.rial}
-                  </span>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+        <CartSummary items={items} />
 
         {/* کد تخفیف */}
         <div className="p-6 border rounded-xl shadow-accent space-y-4">

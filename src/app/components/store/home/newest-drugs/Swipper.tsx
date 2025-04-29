@@ -63,7 +63,7 @@ export default function NewestDrugsSlider({
                   <img
                     src={`${BASE_url}${product.image}`}
                     alt={product.productName}
-                    className="rounded-lg object-contain w-full h-[100px] md:h-36 lg:h-40 mb-2 lg:mb-4"
+                    className="rounded-lg object-contain w-full h-[100px] md:h-36 mb-2 lg:mb-2"
                   />
                 </div>
 

@@ -55,9 +55,11 @@ export default function ProductCard({
           <FavoriteButton productId={product.id} />
         </div>
 
-        <h4 className="text-sm font-semibold">{product.productName}</h4>
+        <h4 className="flex items-center justify-center text-sm font-semibold mb-2 h-8">
+          {product.productName}
+        </h4>
 
-        <p className="text-primary text-sm font-semibold flex flex-col xl:flex-row gap-2 items-center justify-center">
+        <p className="text-primary text-sm font-semibold flex flex-col xl:flex-row gap-1 xl:gap-2 items-center justify-center h-8">
           {hasDiscount && (
             <span className="line-through text-gray-400 mr-2">
               {originalPrice.toLocaleString()} {faLocalization.rial}
@@ -66,14 +68,14 @@ export default function ProductCard({
           {finalPrice.toLocaleString()} {faLocalization.rial}
         </p>
 
-        <div className="text-sm text-gray-700 mb-2">
-          <div className="flex gap-2 items-center justify-center">
+        <div className="flex flex-col items-center justify-center text-sm text-gray-700 my-2 h-10">
+          <div className="flex gap-[2px] items-center justify-center mt-2">
             <p>{productsLocalization.expireDate}:</p>
             <p>{formatShamsiDate(product.productExpired)}</p>
           </div>
           {quantity < 5 && (
             <p
-              className={`mt-2 ${
+              className={`${
                 isOutOfStock ? "text-gray-500" : "text-red-600 mb-2"
               }`}
             >
