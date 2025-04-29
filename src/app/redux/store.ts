@@ -4,18 +4,20 @@ import storage from "redux-persist/lib/storage";
 import categoryReducer from "./reducers/categoryReducer/categoryReducer";
 import { productReducer } from "./reducers/productsReducer/productReducer";
 import { cartReducer } from "./reducers/cartReducer/cartReducer";
+import userReducer from "./reducers/userReducer/userReducer";
 
 const combinedReducers = combineReducers({
   categories: categoryReducer,
   products: productReducer,
   cart: cartReducer,
+  user: userReducer,
 });
 
 const persistedReducers = persistReducer(
   {
-    key: "listOfCategories",
+    key: "root",
     storage,
-    whitelist: ["categories"],
+    whitelist: ["categories", "user"],
   },
   combinedReducers
 );

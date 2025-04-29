@@ -17,16 +17,10 @@ import AddToCartButton from "../singleProduct/AddToCartButton";
 export default function ProductCard({
   product,
   discount,
-  isFavorite,
-  favoriteRecords,
 }: {
   product: any;
   discount: { productName: string; discountPercent: number } | undefined;
-  isFavorite: boolean;
-  favoriteRecords: any[];
 }) {
-  const [cartCount, setCartCount] = useState(0);
-
   const formatShamsiDate = (date: moment.MomentInput) => {
     return moment(date).format("jYYYY/jMM/jDD");
   };
@@ -38,27 +32,6 @@ export default function ProductCard({
   const finalPrice = hasDiscount
     ? Math.floor(originalPrice * (1 - discount.discountPercent / 100))
     : originalPrice;
-
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setCartCount(1);
-  };
-
-  const handleIncrement = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (cartCount < quantity) {
-      setCartCount(cartCount + 1);
-    }
-  };
-
-  const handleDecrement = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (cartCount > 1) {
-      setCartCount(cartCount - 1);
-    } else {
-      setCartCount(0);
-    }
-  };
 
   return (
     <div

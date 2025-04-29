@@ -1,26 +1,25 @@
 "use client";
 
-import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "@/app/redux/store/hooks";
+import { BASE_url } from "@/app/constants/api/BASE_URL";
+import {
+  cartLocalization,
+  faLocalization,
+  productsLocalization,
+} from "@/app/constants/localization/fa/localization";
 import {
   getCartItems,
   removeFromCart,
   updateCartItem,
 } from "@/app/redux/reducers/cartReducer/cartReducer";
-import { toast, ToastContainer } from "react-toastify";
-import { BASE_url } from "@/app/constants/api/BASE_URL";
-import { ImBin } from "react-icons/im";
+import { useAppDispatch, useAppSelector } from "@/app/redux/store/hooks";
 import Button from "@/app/shared/Button";
 import { confirmDelete } from "@/app/utils/sweetAlert";
-import {
-  cartLocalization,
-  faLocalization,
-  productsLocalization,
-  sweetAlert,
-} from "@/app/constants/localization/fa/localization";
-import { useRouter } from "next/navigation";
 import moment from "jalali-moment";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { ImBin } from "react-icons/im";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function CartPage() {
   const dispatch = useAppDispatch();
@@ -136,72 +135,49 @@ export default function CartPage() {
           {/* لیست آیتم‌های سبد خرید */}
           <div className="flex-1 space-y-6">
             {items.map((item) => (
-              <Link
+              <div
                 key={item.id}
-                className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-light/40 rounded-xl shadow-accent"
-                href={`/singleProduct/${item.productId}`}
+                className="flex flex-col md:flex-row items-center justify-between p-4 bg-light/40 rounded-xl shadow-accent"
               >
-                <img
-                  src={`${BASE_url}${item.image}`}
-                  alt={item.productName}
-                  className="w-20 h-20 rounded-lg object-cover"
-                />
+                <Link
+                  href={`/singleProduct/${item.productId}`}
+                  className="flex flex-col sm:flex-row items-center gap-4"
+                >
+                  <img
+                    src={`${BASE_url}${item.image}`}
+                    alt={item.productName}
+                    className="w-20 h-20 rounded-lg object-cover"
+                  />
 
-                <div className="flex-1 flex flex-col gap-2 text-center md:text-right">
-                  <h2 className=" font-semibold">{item.productName}</h2>
-                  <p className="text-gray-500 text-sm">
-                    {productsLocalization.expireDate} : :{" "}
-                    {formatShamsiDate(item.productExpired)}
-                  </p>
-                  <p className="text-gray-500 text-sm">
-                    {cartLocalization.pricePerProduct}:{" "}
-                    {item.productPrice.toLocaleString()} {faLocalization.rial}
-                  </p>
-                  {item.discountPercent > 0 && (
-                    <div className="text-accent flex gap-2 items-center font-semibold mt-2">
-                      %{item.discountPercent}{" "}
-                      <div className="">{productsLocalization.discount}</div>
-                    </div>
-                  )}
-                  <div className="flex items-center justify-center sm:justify-start gap-3 mt-3">
-                    <button
-                      onClick={() => handleDecrease(item.id, item.quantity)}
-                      className="w-6 h-6 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center active:scale-95"
-                    >
-                      -
-                    </button>
-                    <span className="text-lg font-semibold">
-                      {item.quantity}
-                    </span>
-                    <button
-                      onClick={() =>
-                        handleIncrease(
-                          item.id,
-                          item.quantity,
-                          item.productQuantity
-                        )
-                      }
-                      disabled={item.quantity >= item.productQuantity}
-                      className={`w-6 h-6 rounded-full flex items-center justify-center transition ${
-                        item.quantity >= item.productQuantity
-                          ? "bg-gray-400 text-white cursor-not-allowed pt-[2px] "
-                          : "bg-secondary text-white hover:bg-primary pt-[2px] active:scale-95"
-                      }`}
-                    >
-                      +
-                    </button>
+                  <div className="flex-1 flex flex-col gap-2 text-center md:text-right">
+                    <h2 className=" font-semibold">{item.productName}</h2>
+                    <p className="text-gray-500 text-sm">
+                      {productsLocalization.expireDate} : :{" "}
+                      {formatShamsiDate(item.productExpired)}
+                    </p>
+                    <p className="text-gray-500 text-sm">
+                      {cartLocalization.pricePerProduct}:{" "}
+                      {item.productPrice.toLocaleString()} {faLocalization.rial}
+                    </p>
+                    {item.discountPercent > 0 && (
+                      <div className="text-accent flex gap-2 items-center font-semibold mt-2">
+                        %{item.discountPercent}{" "}
+                        <div className="">{productsLocalization.discount}</div>
+                      </div>
+                    )}
                   </div>
-                </div>
+                </Link>
+
                 <div>
                   {item.discountPercent ? (
-                    <p className="text-lg font-semibold line-through text-gray-400">
+                    <p className="text-lg font-semibold line-through text-gray-400 text-left">
                       {(item.productPrice * item.quantity).toLocaleString()}{" "}
                       {faLocalization.rial}
                     </p>
                   ) : (
                     ""
                   )}
-                  <p className="text-lg font-bold text-primary">
+                  <p className="text-lg font-bold text-primary text-left">
                     {(
                       item.productPrice *
                       (1 - item.discountPercent / 100) *
@@ -209,16 +185,47 @@ export default function CartPage() {
                     ).toLocaleString()}{" "}
                     {faLocalization.rial}
                   </p>
-                  <div className="flex justify-center md:justify-end">
-                    <button
-                      onClick={() => handleRemove(item.id)}
-                      className="text-red-500 hover:text-red-600 mt-2 text-sm underline"
-                    >
-                      <ImBin size={20} />
-                    </button>
+                  <div className="flex flex-col items-center md:items-end gap-2">
+                    <div className="flex items-center justify-center md:justify-end gap-3 mt-3">
+                      <button
+                        onClick={() => handleDecrease(item.id, item.quantity)}
+                        className="w-6 h-6 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center active:scale-95"
+                      >
+                        -
+                      </button>
+                      <span className="text-lg font-semibold">
+                        {item.quantity}
+                      </span>
+                      <button
+                        onClick={() =>
+                          handleIncrease(
+                            item.id,
+                            item.quantity,
+                            item.productQuantity
+                          )
+                        }
+                        disabled={item.quantity >= item.productQuantity}
+                        className={`w-6 h-6 rounded-full flex items-center justify-center transition ${
+                          item.quantity >= item.productQuantity
+                            ? "bg-gray-400 text-white cursor-not-allowed pt-[2px] "
+                            : "bg-secondary text-white hover:bg-primary pt-[2px] active:scale-95"
+                        }`}
+                      >
+                        +
+                      </button>
+                    </div>
+                    <div className="flex justify-center md:justify-end">
+                      <button
+                        onClick={() => handleRemove(item.id)}
+                        className="text-red-500 hover:text-red-600 mt-2 text-sm underline"
+                        title={faLocalization.delete}
+                      >
+                        <ImBin size={20} />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
 

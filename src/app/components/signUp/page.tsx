@@ -60,7 +60,7 @@ const SignUp = () => {
     try {
       const res = await axios.post(
         `${BASE_url}/api/users/register`,
-        { ...formData },
+        { ...formData, userIdi: Date.now() },
         {
           headers: {
             api_key: API_KEY,
@@ -68,7 +68,7 @@ const SignUp = () => {
           },
         }
       );
-
+      console.log(res.data);
       router.push("/login");
     } catch (err: any) {
       console.error("Signup error:", err);

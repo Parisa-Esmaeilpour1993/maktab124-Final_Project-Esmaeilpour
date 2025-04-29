@@ -17,13 +17,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import moment from "jalali-moment";
-
-export interface OffTicket {
-  id: string;
-  name: string;
-  discount: number;
-  discountMinOrder: number;
-}
+import { OffTicket } from "@/app/types/offTickets";
 
 export default function CheckOut() {
   const { items } = useAppSelector((state) => state.cart);

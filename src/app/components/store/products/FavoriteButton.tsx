@@ -19,6 +19,12 @@ export default function FavoriteButton({ productId }: { productId: string }) {
   const router = useRouter();
   const token = getAuthToken();
 
+  const user =
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("user") || "{}")
+      : {};
+  const userIdi = user?.userIdi;
+
   useEffect(() => {
     if (!token) return;
     const fetchFavorites = async () => {
@@ -32,7 +38,8 @@ export default function FavoriteButton({ productId }: { productId: string }) {
         });
         const favorites = res.data.records || [];
         const match = favorites.find(
-          (item: any) => item.productId === productId
+          (item: any) =>
+            item.productId === productId && item.userIdi === userIdi
         );
         if (match) {
           setIsFav(true);
@@ -68,7 +75,7 @@ export default function FavoriteButton({ productId }: { productId: string }) {
       } else {
         const res = await axios.post(
           `${BASE_url}/api/records/favorites`,
-          { productId },
+          { productId, userIdi },
           {
             headers: {
               "Content-Type": "application/json",

@@ -1,13 +1,10 @@
 import { IProducts } from "@/app/types/products";
 import ProductCard from "./productCard";
 import { faLocalization } from "@/app/constants/localization/fa/localization";
-import moment from "jalali-moment";
 
 export default function ProductsList({
   products,
   discountedProducts,
-  favoriteProductIds,
-  favoriteRecords,
   isLoading,
 }: IProducts) {
   if (isLoading) {
@@ -34,13 +31,7 @@ export default function ProductsList({
         );
 
         return (
-          <ProductCard
-            key={product.id}
-            product={product}
-            discount={discount}
-            isFavorite={favoriteProductIds.includes(product.id)}
-            favoriteRecords={favoriteRecords}
-          />
+          <ProductCard key={product.id} product={product} discount={discount} />
         );
       })}
     </div>

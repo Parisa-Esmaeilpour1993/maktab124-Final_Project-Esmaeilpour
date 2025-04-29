@@ -2,6 +2,7 @@ export interface FavoriteRecord {
   id: string;
   productId: string;
   createdAt: string;
+  userIdi: string;
 }
 
 export interface Drug {

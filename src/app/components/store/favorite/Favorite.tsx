@@ -19,6 +19,14 @@ function Favorite() {
   const [favorites, setFavorites] = useState<FavoriteProduct[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const user =
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("user") || "{}")
+      : {};
+  const userIdi = user?.userIdi;
+
+  console.log("User from localStorage:", user);
+
   const fetchFavorites = async () => {
     try {
       const { data: favoritesData } = await axios.get(
@@ -37,6 +45,7 @@ function Favorite() {
       );
 
       const favoriteProducts = favoritesData.records
+        .filter((fav: FavoriteRecord) => fav.userIdi === userIdi)
         .map((fav: FavoriteRecord) => {
           const product = drugsData.records.find(
             (drug: Drug) => drug.id === fav.productId

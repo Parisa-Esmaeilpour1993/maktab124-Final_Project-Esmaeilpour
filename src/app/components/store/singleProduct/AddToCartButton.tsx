@@ -112,14 +112,16 @@ export default function AddToCartButton({ productId }: AddToCartButtonProps) {
       <button
         onClick={handleAddToCart}
         disabled={loading}
-        className="w-5/6 py-2 bg-primary rounded-xl font-semibold text-white hover:bg-primary/90 transition disabled:opacity-50"
+        className="w-full py-2 bg-primary rounded-xl font-semibold text-white hover:bg-primary/90 transition disabled:opacity-50"
       >
         {loading ? (
           faLocalization.adding
         ) : (
           <div className="flex items-center justify-center gap-2">
-            <FaCartPlus size={20} />
-            <span>{cartLocalization.addToCart}</span>
+            <FaCartPlus size={18} className="hidden md:block" />
+            <span className="text-xs lg:text-[13px] xl:text-[15px]">
+              {cartLocalization.addToCart}
+            </span>
           </div>
         )}
       </button>

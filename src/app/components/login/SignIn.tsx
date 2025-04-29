@@ -3,6 +3,8 @@
 import loginPage from "@/app/assets/images/login.jpg";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
 import { loginLocalization } from "@/app/constants/localization/fa/localization";
+import { setUser } from "@/app/redux/reducers/userReducer/userReducer";
+import { fetchUserInfo } from "@/app/services/fetchUserInfo";
 import Button from "@/app/shared/Button";
 import { Input } from "@/app/shared/Input";
 import { adminEmails } from "@/app/utils/adminsEmail";
@@ -14,6 +16,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { IoEyeOffSharp } from "react-icons/io5";
 import { MdRemoveRedEye } from "react-icons/md";
+import { useDispatch } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 
 const Login = () => {
@@ -24,6 +27,8 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,6 +50,14 @@ const Login = () => {
       localStorage.setItem("authToken", accessToken);
       localStorage.setItem("loginTime", Date.now().toString());
       document.cookie = "loginAuthToken=some-token; path=/";
+
+      const userInfo = await fetchUserInfo(accessToken);
+      dispatch(setUser(userInfo));
+      console.log(userInfo);
+
+      localStorage.setItem("username", userInfo.name);
+      localStorage.setItem("userIdi", userInfo.userIdi);
+      localStorage.setItem("user", JSON.stringify(userInfo));
 
       const admin = adminEmails.find((admin) => admin.email === email);
       if (admin) {
