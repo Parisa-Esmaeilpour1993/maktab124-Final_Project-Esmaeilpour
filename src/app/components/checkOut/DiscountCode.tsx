@@ -5,16 +5,15 @@ import {
 import Button from "@/app/shared/Button";
 import { Input } from "@/app/shared/Input";
 import { DiscountCodeProps, OffTicket } from "@/app/types/offTickets";
-import { useState } from "react";
 import { toast } from "react-toastify";
 
 function DiscountCode({
   setValidDiscount,
   offTickets,
   calculateTotalPrice,
+  discountCode,
+  setDiscountCode,
 }: DiscountCodeProps) {
-  const [discountCode, setDiscountCode] = useState("");
-
   const handleDiscountCheck = () => {
     const ticket = (offTickets as OffTicket[]).find(
       (ticket) => ticket.name === discountCode.trim()

@@ -8,24 +8,20 @@ type FinalPriceProps = {
   selectedDelivery: DeliveryMethod | null;
   calculateTotalPrice: () => number;
   validDiscount: number;
+  payableAmount: number;
+  isFreeShipping: (
+    totalPrice: number,
+    deliveryMethod: DeliveryMethod
+  ) => boolean;
 };
 
 function Bill({
   validDiscount,
   calculateTotalPrice,
   selectedDelivery,
+  payableAmount,
+  isFreeShipping,
 }: FinalPriceProps) {
-  const isFreeShipping = (
-    totalPrice: number,
-    deliveryMethod: DeliveryMethod
-  ) => {
-    return totalPrice >= deliveryMethod.freeShippingOver;
-  };
-
-  const finalShippingCost =
-    selectedDelivery && isFreeShipping(calculateTotalPrice(), selectedDelivery)
-      ? 0
-      : selectedDelivery?.minCost || 0;
   return (
     <div className="flex flex-col gap-3 font-bold p-6 border rounded-xl shadow-accent">
       <div className="flex justify-between items-center">
@@ -64,12 +60,7 @@ function Bill({
           {checkOutLocalization.payablePrice} :
         </span>
         <span className="text-primary">
-          {(
-            calculateTotalPrice() +
-            finalShippingCost -
-            validDiscount
-          ).toLocaleString()}{" "}
-          {faLocalization.rial}
+          {payableAmount.toLocaleString()} {faLocalization.rial}
         </span>
       </div>
     </div>

@@ -32,6 +32,9 @@ export default function CheckOut() {
   const [validDiscount, setValidDiscount] = useState<number>(0);
   const [selectedDelivery, setSelectedDelivery] =
     useState<DeliveryMethod | null>(null);
+  const [selectedAddress, setSelectedAddress] = useState("");
+  const [deliveryTime, setDeliveryTime] = useState<Date | null>(null);
+  const [discountCode, setDiscountCode] = useState("");
 
   const user =
     typeof window !== "undefined"
@@ -46,12 +49,11 @@ export default function CheckOut() {
         const res = await axios.get(`${BASE_url}/api/records/users`, {
           headers: { api_key: API_KEY },
         });
-        console.log(res.data.records);
+
         const users = res?.data.records;
         const user = users.find(
           (user: UserInfoData) => user.userIdi === userIdi
         );
-        console.log(user);
 
         if (user) {
           setUserInfo({
@@ -112,7 +114,19 @@ export default function CheckOut() {
     return total;
   };
 
-  const handleSubmit = () => {
+  const isFreeShipping = (
+    totalPrice: number,
+    deliveryMethod: DeliveryMethod
+  ) => {
+    return totalPrice >= deliveryMethod.freeShippingOver;
+  };
+
+  const finalShippingCost =
+    selectedDelivery && isFreeShipping(calculateTotalPrice(), selectedDelivery)
+      ? 0
+      : selectedDelivery?.minCost || 0;
+
+  const handleSubmit = async () => {
     if (
       !userInfo.firstName ||
       !userInfo.lastName ||
@@ -126,27 +140,87 @@ export default function CheckOut() {
       toast.error(checkOutLocalization.chooseDelivery);
       return;
     }
-    router.push("/payment");
+
+    if (!deliveryTime) {
+      toast.error(checkOutLocalization.selectTime);
+      return;
+    }
+
+    const orderPayload = {
+      userIdi,
+      firstName: userInfo.firstName,
+      lastName: userInfo.lastName,
+      phone: userInfo.phone,
+      address: selectedAddress,
+      deliveryTime: deliveryTime?.toISOString(),
+      discountCode: validDiscount > 0 ? discountCode : "",
+      deliveryMethod: {
+        name: selectedDelivery.name,
+        cost: selectedDelivery.minCost,
+      },
+      products: items.map((item) => ({
+        productId: item.id,
+        name: item.productName,
+        quantity: item.quantity,
+        unitPrice: item.productPrice,
+        discountPercent: item.discountPercent,
+        finalPrice: item.productPrice * (1 - item.discountPercent / 100),
+        total:
+          item.quantity * item.productPrice * (1 - item.discountPercent / 100),
+      })),
+      totalPrice: calculateTotalPrice(),
+      finalShippingCost: finalShippingCost,
+      validDiscount: validDiscount,
+      finalAmount: payableAmount,
+      createdAt: new Date().toISOString(),
+    };
+
+    console.log(orderPayload);
+    try {
+      await axios.post(`${BASE_url}/api/records/orders`, orderPayload, {
+        headers: {
+          api_key: API_KEY,
+        },
+      });
+
+      toast.success("سفارش ثبت شد");
+      router.push("/payment");
+    } catch (error) {
+      console.error("خطا در ثبت سفارش:", error);
+      toast.error("خطا در ثبت سفارش");
+    }
   };
+
+  const payableAmount =
+    calculateTotalPrice() + finalShippingCost - validDiscount;
 
   return (
     <div>
       <div className="border-t border-primary mx-4 p-6 space-y-10">
         {/* اطلاعات کاربر */}
-        <UserInfo userInfo={userInfo} setUserInfo={setUserInfo} />
+        <UserInfo
+          userInfo={userInfo}
+          setUserInfo={setUserInfo}
+          setSelectedAddress={setSelectedAddress}
+        />
 
         {/* خلاصه سبد خرید */}
         <CartSummary items={items} />
 
         {/* کد تخفیف */}
         <DiscountCode
-          setValidDiscount={setValidDiscount}
           offTickets={offTickets}
           calculateTotalPrice={calculateTotalPrice}
+          setValidDiscount={setValidDiscount}
+          discountCode={discountCode}
+          setDiscountCode={setDiscountCode}
         />
 
         {/* زمان ارسال  */}
-        <DeliveryTime />
+        <DeliveryTime
+          setDeliveryTime={setDeliveryTime}
+          deliveryTime={deliveryTime}
+        />
 
         {/* روش ارسال */}
         <DeliveryMethods
@@ -159,6 +233,8 @@ export default function CheckOut() {
           validDiscount={validDiscount}
           calculateTotalPrice={calculateTotalPrice}
           selectedDelivery={selectedDelivery}
+          payableAmount={payableAmount}
+          isFreeShipping={isFreeShipping}
         />
 
         {/* دکمه تایید */}

@@ -7,8 +7,14 @@ import { Input } from "@/app/shared/Input";
 import { UserInfoProps } from "@/app/types/UserInfo";
 import React, { useState } from "react";
 
-const UserInfo: React.FC<UserInfoProps> = ({ userInfo, setUserInfo }) => {
-  const [selectedAddressIndex, setSelectedAddressIndex] = useState<number>(0);
+const UserInfo: React.FC<UserInfoProps> = ({
+  userInfo,
+  setUserInfo,
+  setSelectedAddress,
+}) => {
+  const [selectedAddressIndex, setSelectedAddressIndex] = useState<
+    number | null
+  >(null);
 
   return (
     <div className="p-6 border rounded-xl shadow-accent space-y-4">
@@ -55,7 +61,11 @@ const UserInfo: React.FC<UserInfoProps> = ({ userInfo, setUserInfo }) => {
               type="radio"
               name="selectedAddress"
               checked={selectedAddressIndex === index}
-              onChange={() => setSelectedAddressIndex(index)}
+              onChange={() => {
+                setSelectedAddressIndex(index);
+                setSelectedAddress(userInfo.addresses[index].value);
+              }}
+              className="accent-green-700"
             />
             <span>{addr.value}</span>
           </label>

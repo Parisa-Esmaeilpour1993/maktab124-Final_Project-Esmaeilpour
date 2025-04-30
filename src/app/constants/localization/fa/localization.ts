@@ -432,6 +432,7 @@ export const checkOutLocalization = {
   freeDelivery: "ارسال رایگان",
   continue: "تایید و ادامه به پرداخت",
   minOrderAmount: "حداقل مبلغ سفارشی برای اعمال تخفیف:",
+  selectTime: "لطفا زمان ارسال را انتخاب کنید",
 };
 
 export const discountLocalization = {

@@ -13,4 +13,5 @@ export interface UserInfoData {
 export interface UserInfoProps {
   userInfo: UserInfoData;
   setUserInfo: (info: UserInfoData) => void;
+  setSelectedAddress: (address: string) => void;
 }
