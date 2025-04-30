@@ -27,6 +27,13 @@ export const getCartItems = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
+      const records = res.data.records as CartItem[];
+
+      if (records.length > 0) {
+        const cartId = records[0].id;
+        localStorage.setItem("cartId", cartId);
+      }
+
       return res.data.records as CartItem[];
     } catch (error) {
       return thunkAPI.rejectWithValue(cartLocalization.errorInRecieve);

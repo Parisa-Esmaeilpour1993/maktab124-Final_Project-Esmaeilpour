@@ -177,13 +177,21 @@ export default function CheckOut() {
 
     console.log(orderPayload);
     try {
-      await axios.post(`${BASE_url}/api/records/orders`, orderPayload, {
-        headers: {
-          api_key: API_KEY,
-        },
-      });
+      const res = await axios.post(
+        `${BASE_url}/api/records/orders`,
+        orderPayload,
+        {
+          headers: {
+            api_key: API_KEY,
+          },
+        }
+      );
 
-      toast.success("سفارش ثبت شد");
+      const orderId = res?.data?.id;
+
+      toast.info("در حال انتقال به صفحه پرداخت...");
+      localStorage.setItem("payableAmount", payableAmount.toString());
+      localStorage.setItem("orderId", orderId.toString());
       router.push("/payment");
     } catch (error) {
       console.error("خطا در ثبت سفارش:", error);

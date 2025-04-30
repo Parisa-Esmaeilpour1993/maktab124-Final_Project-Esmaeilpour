@@ -31,6 +31,10 @@ export default function CartPage() {
   };
 
   useEffect(() => {
+    dispatch(getCartItems());
+  }, []);
+
+  useEffect(() => {
     if (items.length === 0) {
       dispatch(getCartItems());
     }
