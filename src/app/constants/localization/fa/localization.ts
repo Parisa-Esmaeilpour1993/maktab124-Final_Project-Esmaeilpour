@@ -13,6 +13,7 @@ export const faLocalization = {
   next: "بعدی",
   page: "صفحه",
   from: "از",
+  year: "سال به بالا",
   errorInFetchingCategories: "خطا در دریافت دسته بندی",
   errorInAddingCategories: "خطا در اضافه کردن دسته بندی",
   add: "افزودن",

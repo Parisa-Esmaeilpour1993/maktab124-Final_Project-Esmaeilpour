@@ -4,3 +4,9 @@ export interface OffTicket {
   discount: number;
   discountMinOrder: number;
 }
+
+export interface DiscountCodeProps {
+  offTickets: OffTicket[];
+  setValidDiscount: (value: number) => void;
+  calculateTotalPrice: () => number;
+}

@@ -10,6 +10,7 @@ import {
 } from "@/app/constants/localization/fa/localization";
 import { Drug, FavoriteProduct, FavoriteRecord } from "@/app/types/favorites";
 import axios from "axios";
+import moment from "jalali-moment";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AiFillHeart } from "react-icons/ai";
@@ -18,6 +19,10 @@ import { toast } from "react-toastify";
 function Favorite() {
   const [favorites, setFavorites] = useState<FavoriteProduct[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const formatShamsiDate = (date: moment.MomentInput) => {
+    return moment(date).format("jYYYY/jMM/jDD");
+  };
 
   const user =
     typeof window !== "undefined"
@@ -135,7 +140,8 @@ function Favorite() {
                 {product.productName}
               </h2>
               <p className="text-gray-500 text-sm mb-1">
-                {productsLocalization.expireDate}: {product.productExpired}
+                {productsLocalization.expireDate}:{" "}
+                {formatShamsiDate(product.productExpired)}
               </p>
 
               {discountedPrice !== product.productPrice ? (

@@ -6,6 +6,7 @@ import { Input } from "@/app/shared/Input";
 import { Textarea } from "@/app/shared/TextArea";
 import { confirmDelete } from "@/app/utils/sweetAlert";
 import axios from "axios";
+import moment from "jalali-moment";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -40,6 +41,10 @@ function Profile() {
   });
 
   const router = useRouter();
+
+  const formatShamsiDate = (date: moment.MomentInput) => {
+    return moment(date).format("jYYYY/jMM/jDD");
+  };
 
   const user =
     typeof window !== "undefined"
@@ -270,7 +275,7 @@ function Profile() {
                       value={value}
                       checked={formData.gender === value}
                       onChange={handleChange}
-                      className=""
+                      className="accent-primary"
                     />
                     {label}
                   </label>
@@ -357,7 +362,8 @@ function Profile() {
             </div>
 
             <p className="border-b pb-2">
-              <strong>تاریخ تولد:</strong> {userData?.birthDate?.slice(0, 10)}
+              <strong>تاریخ تولد:</strong>{" "}
+              {formatShamsiDate(userData?.birthDate?.slice(0, 10))}
             </p>
             <p className="border-b pb-2">
               <strong>جنسیت:</strong> {userData?.gender}

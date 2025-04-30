@@ -1,10 +1,4 @@
-"use client";
-
-import { useState } from "react";
-import { BiCartAdd } from "react-icons/bi";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import Link from "next/link";
-import Button from "@/app/shared/Button";
 import FavoriteButton from "./FavoriteButton";
 import { BASE_url } from "@/app/constants/api/BASE_URL";
 import {

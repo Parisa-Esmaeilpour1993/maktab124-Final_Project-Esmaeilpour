@@ -1,7 +1,10 @@
 import axios from "axios";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
 import { ProductsProps } from "@/app/types/products";
-import { productsLocalization } from "@/app/constants/localization/fa/localization";
+import {
+  faLocalization,
+  productsLocalization,
+} from "@/app/constants/localization/fa/localization";
 import { notFound } from "next/navigation";
 import ExpandableBox from "@/app/components/store/singleProduct/ExpandableBox";
 import { GiHealthPotion } from "react-icons/gi";
@@ -209,7 +212,10 @@ export default async function SingleProductPage({
                   <span className="font-semibold">
                     {productsLocalization.age}
                   </span>
-                  <span>{product.productAge}</span>
+                  <span>
+                    {faLocalization.from} {product.productAge}{" "}
+                    {faLocalization.year}
+                  </span>
                 </div>
                 <div className="flex justify-between mx-3 px-3 border-b pb-1">
                   <span className="font-semibold">
