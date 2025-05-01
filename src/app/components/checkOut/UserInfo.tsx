@@ -50,9 +50,9 @@ const UserInfo: React.FC<UserInfoProps> = ({
       </div>
       <div className="space-y-2">
         <div className="flex flex-col md:flex-row items-center gap-2">
-          <h3 className="font-bold">آدرس را انتخاب کنید:</h3>{" "}
+          <h3 className="font-bold">{checkOutLocalization.chooseAddress}</h3>{" "}
           <span className="text-sm text-gray-500">
-            (برای افزودن آدرس جدید به بخش پروفایل کاربری مراجعه کتید.)
+            {checkOutLocalization.addAddress}
           </span>
         </div>
         {userInfo.addresses.map((addr, index) => (

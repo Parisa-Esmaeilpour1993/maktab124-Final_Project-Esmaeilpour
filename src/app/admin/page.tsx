@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardTitle } from "@/app/components/ui/Card";
-import { orders, products, users, usersOrders } from "@/data";
+import { orders, products } from "@/data";
 import { useEffect, useState } from "react";
 import {
   Bar,
@@ -16,21 +16,13 @@ import {
 } from "recharts";
 import { dashboardLocalization } from "../constants/localization/fa/localization";
 import useUsersLength from "../components/admin/user/useUsersLength";
+import axios from "axios";
+import { API_KEY, BASE_url } from "../constants/api/BASE_URL";
 
 function generateColor(index: number) {
   const hue = (index * 137.508) % 360;
   return `hsl(${hue}, 80%, 60%)`;
 }
-
-const totalIncome = orders.reduce((sum, order) => {
-  return (
-    sum +
-    order.products.reduce((acc, item) => {
-      const product = products.find((p) => p.id === item.productId);
-      return acc + (product?.price || 0) * item.quantity;
-    }, 0)
-  );
-}, 0);
 
 type CategoryCounts = {
   [category: string]: number;
@@ -69,8 +61,35 @@ const barData = Object.entries(orderedCategoryCounts).map(([name, value]) => ({
 export default function AdminDashboard() {
   const [isMobile, setIsMobile] = useState(false);
   const [rotateLabels, setRotateLabels] = useState(false);
+  const [orders, setOrders] = useState([]);
+  const [ordersNum, setOrdersNum] = useState([]);
 
   const usersLength = useUsersLength();
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const res = await axios(`${BASE_url}/api/records/orders`, {
+          headers: {
+            api_key: API_KEY,
+          },
+        });
+        const orders = res.data.records;
+        setOrders(orders);
+        const ordersNum = orders.length;
+        setOrdersNum(ordersNum);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  const totalIncome = orders.reduce(
+    (sum, order) => sum + (order.finalAmount || 0),
+    0
+  );
 
   useEffect(() => {
     const handleResize = () => {
@@ -114,7 +133,7 @@ export default function AdminDashboard() {
             <CardTitle className="text-gray-700 text-[15px]">
               📦 {dashboardLocalization.orders}
             </CardTitle>
-            <p className="font-bold text-green-600">{usersOrders.length}</p>
+            <p className="font-bold text-green-600">{ordersNum}</p>
           </CardContent>
         </Card>
 

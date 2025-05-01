@@ -2,10 +2,16 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import { getAuthToken } from "../base/getAuthToken";
 import Input, { PaymentFormData } from "../components/payment/Card";
 import { API_KEY, BASE_url } from "../constants/api/BASE_URL";
-import { toast, ToastContainer } from "react-toastify";
+import {
+  checkOutLocalization,
+  faLocalization,
+  loginLocalization,
+  productsLocalization,
+} from "../constants/localization/fa/localization";
 
 const PaymentForm = () => {
   const router = useRouter();
@@ -20,6 +26,19 @@ const PaymentForm = () => {
   const [amount, setAmount] = useState<number | null>(null);
   const [orderId, setOrderId] = useState<string | null>(null);
   const [cartId, setCartId] = useState<string | null>(null);
+
+  const [allowed, setAllowed] = useState(false);
+
+  useEffect(() => {
+    const orderId = localStorage.getItem("orderId");
+    const amount = localStorage.getItem("payableAmount");
+
+    if (!orderId || !amount) {
+      router.replace("/cart");
+    } else {
+      setAllowed(true);
+    }
+  }, []);
 
   useEffect(() => {
     const storedAmount = localStorage.getItem("payableAmount");
@@ -74,7 +93,20 @@ const PaymentForm = () => {
     const { cardName, cardNumber, expiryDate, cvv, secondPassword } = formData;
 
     if (!cardName || !cardNumber || !expiryDate || !cvv || !secondPassword) {
-      toast.error("لطفاً همه فیلدها را پر کنید.");
+      toast.error(loginLocalization.allFieldsRequired);
+      return;
+    }
+
+    const cleanedCardNumber = cardNumber.replace(/\D/g, "");
+    const cleanedCVV = cvv.replace(/\D/g, "");
+
+    if (cleanedCardNumber.length !== 16) {
+      toast.error(checkOutLocalization.cartValidation);
+      return;
+    }
+
+    if (cleanedCVV.length < 3) {
+      toast.error(checkOutLocalization.cvvValidation);
       return;
     }
 
@@ -86,12 +118,42 @@ const PaymentForm = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      await axios.post(
+        `${BASE_url}/api/records/payment`,
+        {
+          cardName,
+          cardNumber: cleanedCardNumber,
+          expiryDate,
+          cvv: cleanedCVV,
+          secondPassword,
+          amount,
+          orderId,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            api_key: API_KEY,
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       localStorage.removeItem("payableAmount");
       localStorage.removeItem("orderId");
       localStorage.removeItem("cartId");
       router.push("/payment-result?status=success");
     } catch (error) {
-      console.error("خطا در پاک‌سازی سبد:", error);
+      axios.delete(`${BASE_url}/api/records/orders/${orderId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          api_key: API_KEY,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      localStorage.removeItem("payableAmount");
+      localStorage.removeItem("orderId");
+      console.error(error);
       router.push("/payment-result?status=fail");
     }
   };
@@ -111,25 +173,27 @@ const PaymentForm = () => {
     router.push("/payment-result?status=fail");
   };
 
+  if (!allowed) return null;
+
   return (
     <div>
-      <div className="w-full min-h-screen bg-gray-50 flex items-center justify-center gap-12 px-20">
+      <div className="w-full min-h-screen py-8 lg:py-0 bg-gray-50 flex flex-col-reverse lg:flex-row items-center justify-center gap-12 px-4 md:px-20">
         <form
-          className="bg-white p-6 md:p-10 rounded-2xl shadow-2xl space-y-6 w-3/5"
+          className="bg-white p-6 md:p-10 rounded-2xl shadow-2xl space-y-6 w-full lg:w-1/2 xl:w-3/5"
           onSubmit={handleSubmit}
         >
           <h2 className="text-2xl font-semibold text-gray-800 text-center">
-            پرداخت اینترنتی
+            {checkOutLocalization.onlinePayment}
           </h2>
 
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-600 mb-1">
-                نام و نام خانوادگی دارنده کارت
+                {checkOutLocalization.fullName}
               </label>
               <input
                 type="text"
-                placeholder="نام - نام خانوادگی"
+                placeholder={checkOutLocalization.nameHolder}
                 className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
                 name="cardName"
                 value={formData.cardName}
@@ -139,7 +203,7 @@ const PaymentForm = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-600 mb-1">
-                شماره کارت
+                {checkOutLocalization.cartNumber}
               </label>
               <input
                 type="text"
@@ -156,11 +220,11 @@ const PaymentForm = () => {
             <div className="flex gap-4">
               <div className="flex-1">
                 <label className="block text-sm font-medium text-gray-600 mb-1">
-                  تاریخ انقضا
+                  {productsLocalization.expireDate}
                 </label>
                 <input
                   type="text"
-                  placeholder="ماه / سال"
+                  placeholder={checkOutLocalization.dateHolder}
                   maxLength={5}
                   name="expiryDate"
                   className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
@@ -186,7 +250,7 @@ const PaymentForm = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-600 mb-1">
-                رمز دوم (رمز پویا)
+                {checkOutLocalization.secondPass}
               </label>
               <input
                 type="password"
@@ -204,33 +268,33 @@ const PaymentForm = () => {
               type="submit"
               className="w-full bg-secondary hover:bg-primary text-white font-semibold py-3 rounded-lg transition-all duration-200"
             >
-              پرداخت
+              {checkOutLocalization.payment}
             </button>
             <button
               type="button"
               onClick={handleCancel}
               className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-lg transition-all duration-200"
             >
-              انصراف
+              {checkOutLocalization.cancel}
             </button>
           </div>
         </form>
-        <div className="bg-white shadow-2xl p-8 rounded-2xl w-2/5">
+        <div className="bg-white shadow-2xl p-8 rounded-2xl w-full lg:w-1/2 xl:w-2/5">
           <Input formData={formData} />
           <div className="flex flex-col gap-4 mt-10 px-4 text-sm text-gray-700">
             <div className="flex flex-col gap-2">
-              <div>نام پذیرنده: داروخانه آنلاین داروفارم</div>
-              <div>شماره ترمینال: 123456789</div>
-              <div>شماره پذیرنده: 987654321</div>
+              <div>{checkOutLocalization.p1}</div>
+              <div>{checkOutLocalization.p2}</div>
+              <div>{checkOutLocalization.p3}</div>
               <div className="pb-12 border-dashed border-b border-gray-900">
-                آدرس وبسایت: https://daroopharm.com
+                {checkOutLocalization.webAddress} https://daroopharm.com
               </div>
             </div>
             <div>
-              مبلغ قابل پرداخت:{" "}
+              {checkOutLocalization.payablePrice}{" "}
               {amount
-                ? `${amount.toLocaleString()} ریال`
-                : "در حال بارگذاری..."}
+                ? `${amount.toLocaleString()} ${faLocalization.rial}`
+                : faLocalization.loading}
             </div>
           </div>
         </div>

@@ -1,7 +1,152 @@
-import React from "react";
+"use client";
+
+import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
+import { faLocalization } from "@/app/constants/localization/fa/localization";
+import axios from "axios";
+import moment from "jalali-moment";
+import { useEffect, useState } from "react";
+
+interface OrderProduct {
+  productId: string;
+  name: string;
+  quantity: number;
+  unitPrice: number;
+  discountPercent: number;
+  finalPrice: number;
+  total: number;
+}
+
+interface OrderRecord {
+  id: string;
+  userIdi: number;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  address: string;
+  deliveryTime: string;
+  discountCode: string;
+  deliveryMethod: {
+    name: string;
+    cost: number;
+  };
+  products: OrderProduct[];
+  totalPrice: number;
+  finalShippingCost: number;
+  validDiscount: number;
+  finalAmount: number;
+  createdAt: string;
+}
 
 function Order() {
-  return <div></div>;
+  const [orders, setOrders] = useState<OrderRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const formatShamsiDate = (date: moment.MomentInput) => {
+    return moment(date).format("jYYYY/jMM/jDD");
+  };
+
+  const user =
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("user") || "{}")
+      : {};
+  const userIdi = user?.userIdi;
+
+  const fetchOrders = async () => {
+    try {
+      const res = await axios.get(`${BASE_url}/api/records/orders`, {
+        headers: { api_key: API_KEY },
+      });
+
+      const userOrders = res.data.records.filter(
+        (o: OrderRecord) => o.userIdi === userIdi
+      );
+
+      setOrders(userOrders);
+    } catch (error) {
+      console.error("خطا در دریافت سفارش‌ها:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-10 text-lg font-semibold border-t border-primary mx-4 px-6">
+        {faLocalization.loading}
+      </div>
+    );
+  }
+
+  if (orders.length === 0) {
+    return (
+      <div className="flex justify-center py-20 text-xl font-bold border-t border-primary mx-4 px-6">
+        سفارشی ثبت نشده است.
+      </div>
+    );
+  }
+
+  return (
+    <div className="border-t border-primary mx-4 pt-6 px-6">
+      <h1 className="font-semibold text-lg mb-4">سفارش‌های من</h1>
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-sm text-right border border-gray-300">
+          <thead className="bg-light text-xs font-bold text-center">
+            <tr>
+              <th className="p-2 border">شناسه سفارش</th>
+              <th className="p-2 border">تاریخ سفارش</th>
+              <th className="p-2 border">آدرس سفارش</th>
+              <th className="p-2 border">روش ارسال سفارش</th>
+              <th className="p-2 border">مبلغ کل سفارش</th>
+              <th className="p-2 border">محصولات سفارش</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.map((order) => (
+              <tr key={order.id} className="border-t">
+                <td className="p-2 border">{order.id}</td>
+                <td className="p-2 border">
+                  {formatShamsiDate(order.createdAt)}
+                </td>
+                <td className="p-2 border">{order.address}</td>
+                <td className="p-2 border">{order.deliveryMethod.name}</td>
+                <td className="p-2 border">
+                  {order.finalAmount.toLocaleString()} تومان
+                </td>
+                <td className="p-2 border">
+                  <table className="w-full text-xs border-collapse">
+                    <thead>
+                      <tr className="bg-light/50">
+                        <th className="p-1 border">نام محصول</th>
+                        <th className="p-1 border">تعداد</th>
+                        <th className="p-1 border">قیمت کل</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {order.products.map((product) => (
+                        <tr key={product.productId}>
+                          <td className="p-1 border">{product.name}</td>
+                          <td className="p-1 border text-center">
+                            {product.quantity}
+                          </td>
+                          <td className="p-1 border">
+                            {product.total.toLocaleString()} تومان
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 }
 
 export default Order;

@@ -1,9 +1,17 @@
 "use client";
 import { getAuthToken } from "@/app/base/getAuthToken";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
+import {
+  adminLocalization,
+  faLocalization,
+  loginLocalization,
+  profileLocalization,
+  sweetAlert,
+} from "@/app/constants/localization/fa/localization";
 import Button from "@/app/shared/Button";
 import { Input } from "@/app/shared/Input";
 import { Textarea } from "@/app/shared/TextArea";
+import { UserProps } from "@/app/types/profile";
 import { confirmDelete } from "@/app/utils/sweetAlert";
 import axios from "axios";
 import moment from "jalali-moment";
@@ -11,23 +19,8 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-interface AddressItem {
-  id: string;
-  value: string;
-}
-interface userProps {
-  id?: string;
-  firstName: string;
-  lastName: string;
-  addresses: AddressItem[];
-  birthDate: string;
-  gender: string;
-  phoneNumber: string;
-  education: string;
-}
-
 function Profile() {
-  const [userData, setUserData] = useState<userProps>();
+  const [userData, setUserData] = useState<UserProps>();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
@@ -55,7 +48,7 @@ function Profile() {
   useEffect(() => {
     const token = getAuthToken();
     if (!token) {
-      toast.error("برای ادامه باید وارد شوید!");
+      toast.error(loginLocalization.loginError);
       router.push("/login");
       return;
     }
@@ -91,7 +84,7 @@ function Profile() {
         });
       } catch (error) {
         console.error("Error fetching user data:", error);
-        toast.error("دریافت اطلاعات با خطا مواجه شد.");
+        toast.error(sweetAlert.error);
       } finally {
         setLoading(false);
       }
@@ -130,7 +123,7 @@ function Profile() {
             },
           }
         );
-        toast.success("پروفایل با موفقیت ایجاد شد!");
+        toast.success(profileLocalization.created);
         setUserData(res.data);
       } else {
         const res = await axios.put(
@@ -147,14 +140,14 @@ function Profile() {
             },
           }
         );
-        toast.success("پروفایل با موفقیت ویرایش شد!");
+        toast.success(profileLocalization.edited);
         setUserData(res.data);
       }
 
       setIsEditing(false);
     } catch (error) {
       console.error("Error saving profile:", error);
-      toast.error("ذخیره پروفایل با خطا مواجه شد.");
+      toast.error(sweetAlert.error);
     } finally {
       setLoading(false);
     }
@@ -175,11 +168,11 @@ function Profile() {
             Authorization: `Bearer ${token}`,
           },
         });
-        toast.success("پروفایل حذف شد.");
+        toast.success(profileLocalization.deleted);
         router.push("/login");
       } catch (error) {
         console.error("Error deleting profile:", error);
-        toast.error("خطا در حذف پروفایل.");
+        toast.error(sweetAlert.error);
       } finally {
         setLoading(false);
       }
@@ -189,24 +182,25 @@ function Profile() {
   if (loading)
     return (
       <div className="p-4 text-center mx-4 border-t border-secondary h-48">
-        در حال بارگذاری...
+        {faLocalization.loading}{" "}
       </div>
     );
 
   return (
-    <div className="container mx-4 border-t border-secondary p-4">
-      <h1 className="text-xl font-semibold mb-4">پروفایل کاربری</h1>
+    <div className="mx-4 border-t border-secondary p-4">
+      <h1 className="text-xl font-semibold mb-4">
+        {profileLocalization.profile}
+      </h1>
       {isEditing ? (
         <form onSubmit={(e) => e.preventDefault()}>
-          <div className="flex flex-col gap-2 md:flex-row justify-evenly items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="mb-4">
               <Input
                 type="text"
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                label="نام"
-                className="w-64"
+                label={adminLocalization.firstName}
               />
             </div>
             <div className="mb-6">
@@ -215,8 +209,7 @@ function Profile() {
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                label="نام خانوادگی"
-                className="w-64"
+                label={adminLocalization.lastName}
               />
             </div>
             <div className="mb-6">
@@ -225,48 +218,67 @@ function Profile() {
                 name="phoneNumber"
                 value={formData.phoneNumber}
                 onChange={handleChange}
-                label="شماره تماس"
-                className="w-64"
+                label={adminLocalization.phone}
               />
             </div>
-          </div>
 
-          <div className="flex flex-col gap-2 md:flex-row justify-evenly items-center">
+            <div className="flex flex-col mb-6">
+              <label className="font-semibold text-gray-700">
+                {adminLocalization.education}
+              </label>
+              <select
+                name="education"
+                value={formData.education}
+                onChange={handleChange}
+                className="p-2 border text-secondary border-accent rounded-md outline-none focus:ring-1 focus:ring-secondary mt-2"
+              >
+                <option value="">{profileLocalization.choose}</option>
+                <option value={profileLocalization.underDiploma}>
+                  {profileLocalization.underDiploma}{" "}
+                </option>
+                <option value={profileLocalization.diploma}>
+                  {profileLocalization.diploma}
+                </option>
+                <option value={profileLocalization.associate}>
+                  {profileLocalization.associate}
+                </option>
+                <option value={profileLocalization.bachelor}>
+                  {profileLocalization.bachelor}
+                </option>
+                <option value={profileLocalization.master}>
+                  {profileLocalization.master}
+                </option>
+                <option value={profileLocalization.doctora}>
+                  {profileLocalization.doctora}
+                </option>
+              </select>
+            </div>
+
             <div className="mb-6">
               <Input
                 type="date"
                 name="birthDate"
                 value={formData.birthDate}
                 onChange={handleChange}
-                label="تاریخ تولد"
-                className="w-64"
+                label={adminLocalization.age}
+                className=""
               />
             </div>
 
-            <div className="flex flex-col mb-6">
-              <label className="font-semibold text-gray-700">تحصیلات</label>
-              <select
-                name="education"
-                value={formData.education}
-                onChange={handleChange}
-                className="p-2 border text-secondary border-accent rounded-md outline-none focus:ring-1 focus:ring-secondary w-64 mt-2"
-              >
-                <option value="">انتخاب کنید</option>
-                <option value="زیر دیپلم">زیر دیپلم</option>
-                <option value="دیپلم">دیپلم</option>
-                <option value="کاردانی">کاردانی</option>
-                <option value="کارشناسی">کارشناسی</option>
-                <option value="کارشناسی ارشد">کارشناسی ارشد</option>
-                <option value="دکترا">دکترا</option>
-              </select>
-            </div>
-
-            <div className="w-64 mb-6 flex flex-col gap-2">
-              <label className="font-semibold text-gray-700">جنسیت</label>
+            <div className="mb-6 flex flex-col gap-2">
+              <label className="font-semibold text-gray-700">
+                {profileLocalization.gender}
+              </label>
               <div className="flex items-center gap-4">
                 {[
-                  { label: "مرد", value: "مرد" },
-                  { label: "زن", value: "زن" },
+                  {
+                    label: profileLocalization.male,
+                    value: profileLocalization.male,
+                  },
+                  {
+                    label: profileLocalization.female,
+                    value: profileLocalization.female,
+                  },
                 ].map(({ label, value }) => (
                   <label key={value} className="flex items-center gap-2 ">
                     <input
@@ -286,7 +298,9 @@ function Profile() {
 
           <div className="mb-6 flex flex-col gap-4 my-4">
             <div className="flex gap-4 items-center">
-              <label className="font-semibold text-gray-700">آدرس‌ها</label>
+              <label className="font-semibold text-gray-700">
+                {profileLocalization.addresses}
+              </label>
               <button
                 type="button"
                 onClick={() => {
@@ -300,7 +314,7 @@ function Profile() {
                 }}
                 className=" text-gray-500"
               >
-                + افزودن آدرس جدید
+                {profileLocalization.addAddress}
               </button>
             </div>
             {formData.addresses.map((addr, index) => (
@@ -325,35 +339,37 @@ function Profile() {
                   }}
                   className="text-red-500"
                 >
-                  حذف
+                  {sweetAlert.del}{" "}
                 </button>
               </div>
             ))}
           </div>
 
           <div className="flex justify-end gap-4">
-            <Button onClick={handleSave} children=" ذخیره" />
+            <Button onClick={handleSave} children={faLocalization.save} />
 
             <button
               type="button"
               onClick={() => setIsEditing(false)}
               className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md"
             >
-              انصراف
+              {sweetAlert.cancel}
             </button>
           </div>
         </form>
       ) : (
-        <div className="flex flex-col gap-4 mt-4 mr-40">
+        <div className="flex flex-col gap-4 mt-4 mx-8 md:mx-28 lg:mx-40">
           <div className="space-y-2">
             <p className="border-b pb-2">
-              <strong>نام:</strong> {userData?.firstName}
+              <strong>{adminLocalization.firstName}:</strong>{" "}
+              {userData?.firstName}
             </p>
             <p className="border-b pb-2">
-              <strong>نام خانوادگی:</strong> {userData?.lastName}
+              <strong>{adminLocalization.lastName}:</strong>{" "}
+              {userData?.lastName}
             </p>
             <div className="border-b pb-2">
-              <strong>آدرس‌ها:</strong>
+              <strong>{profileLocalization.addresses}:</strong>
               <ul className="list-disc pr-4 mt-2">
                 {userData?.addresses?.map((a: any, idx: number) => (
                   <li key={idx}>{a.value || a}</li>
@@ -362,17 +378,19 @@ function Profile() {
             </div>
 
             <p className="border-b pb-2">
-              <strong>تاریخ تولد:</strong>{" "}
+              <strong>{adminLocalization.age} :</strong>{" "}
               {formatShamsiDate(userData?.birthDate?.slice(0, 10))}
             </p>
             <p className="border-b pb-2">
-              <strong>جنسیت:</strong> {userData?.gender}
+              <strong>{profileLocalization.gender}:</strong> {userData?.gender}
             </p>
             <p className="border-b pb-2">
-              <strong>شماره تماس:</strong> {userData?.phoneNumber}
+              <strong>{adminLocalization.phone} :</strong>{" "}
+              {userData?.phoneNumber}
             </p>
             <p className="border-b pb-2">
-              <strong>تحصیلات:</strong> {userData?.education}
+              <strong>{adminLocalization.education}:</strong>{" "}
+              {userData?.education}
             </p>
           </div>
           <div className="self-end mb-6 flex items-center gap-4">
@@ -380,13 +398,13 @@ function Profile() {
               onClick={() => setIsEditing(true)}
               className="px-4 py-2 bg-primary text-white rounded-md"
             >
-              {userData?.firstName ? "ویرایش" : "افزودن"}
+              {userData?.firstName ? faLocalization.edit : faLocalization.add}
             </button>
             <button
               onClick={handleDelete}
               className="px-4 py-2 bg-red-500 text-white rounded-md"
             >
-              حذف
+              {faLocalization.delete}
             </button>
           </div>
         </div>

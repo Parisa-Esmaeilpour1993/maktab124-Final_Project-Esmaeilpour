@@ -1,7 +1,10 @@
 "use client";
 
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
-import { checkOutLocalization } from "@/app/constants/localization/fa/localization";
+import {
+  checkOutLocalization,
+  sweetAlert,
+} from "@/app/constants/localization/fa/localization";
 import { useAppSelector } from "@/app/redux/store/hooks";
 import Button from "@/app/shared/Button";
 import { DeliveryMethod } from "@/app/types/deliveryMethods";
@@ -64,7 +67,7 @@ export default function CheckOut() {
           });
         }
       } catch (error) {
-        console.error("خطا در دریافت اطلاعات کاربر:", error);
+        console.error(error);
       }
     };
 
@@ -127,6 +130,11 @@ export default function CheckOut() {
       : selectedDelivery?.minCost || 0;
 
   const handleSubmit = async () => {
+    if (items.length === 0) {
+      toast.error(checkOutLocalization.emptyCart);
+      return;
+    }
+
     if (
       !userInfo.firstName ||
       !userInfo.lastName ||
@@ -189,13 +197,13 @@ export default function CheckOut() {
 
       const orderId = res?.data?.id;
 
-      toast.info("در حال انتقال به صفحه پرداخت...");
+      toast.info(checkOutLocalization.transferingToOrders);
       localStorage.setItem("payableAmount", payableAmount.toString());
       localStorage.setItem("orderId", orderId.toString());
       router.push("/payment");
     } catch (error) {
-      console.error("خطا در ثبت سفارش:", error);
-      toast.error("خطا در ثبت سفارش");
+      console.error(error);
+      toast.error(sweetAlert.error);
     }
   };
 

@@ -43,7 +43,7 @@ function DiscountCode({
       <h2 className="text-lg font-semibold mb-4">
         {checkOutLocalization.discountCode}
       </h2>
-      <div className="flex gap-4">
+      <div className="flex items-center gap-4">
         <Input
           type="text"
           placeholder={checkOutLocalization.discountCode}

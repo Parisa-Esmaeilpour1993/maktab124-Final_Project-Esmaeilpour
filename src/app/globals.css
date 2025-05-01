@@ -100,3 +100,7 @@ body {
 .swiper-button-prev:after {
   font-size: 14px;
 }
+
+.swal-title-small {
+  font-size: 20px !important;
+}

@@ -105,17 +105,4 @@ export const usersOrders = [
       { id: 6, name: "رویال ژلی", quantity: 3, price: 600000 },
     ],
   },
-  {
-    id: "181920212",
-    customer: "کاربر4",
-    createdAt: "2025-04-20T16:00",
-    totalPrice: 1180000,
-    deliveryStatus: true,
-    deliveryDate: "2025-04-26T10:30",
-    items: [
-      { id: 4, name: "شامپو تقویت‌کننده", quantity: 5, price: 180000 },
-      { id: 5, name: "زینک پلاس", quantity: 2, price: 200000 },
-      { id: 6, name: "رویال ژلی", quantity: 2, price: 600000 },
-    ],
-  },
 ];

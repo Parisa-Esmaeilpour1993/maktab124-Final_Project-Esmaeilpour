@@ -59,7 +59,7 @@ function DeliveryTime({ deliveryTime, setDeliveryTime }: Props) {
           dateFormat="yyyy/MM/dd"
           locale={faIR}
           className="p-2 rounded w-full border"
-          placeholderText="تاریخ را انتخاب کنید"
+          placeholderText={checkOutLocalization.chooseDate}
         />
       )}
     </div>

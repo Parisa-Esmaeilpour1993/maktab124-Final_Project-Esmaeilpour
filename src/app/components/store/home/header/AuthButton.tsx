@@ -153,6 +153,9 @@ const AuthButton = () => {
                   onClick={() => {
                     Swal.fire({
                       title: logoutLocalization.areYouSure,
+                      customClass: {
+                        title: "swal-title-small",
+                      },
                       icon: "warning",
                       iconColor: "#67ae6e",
                       showCancelButton: true,

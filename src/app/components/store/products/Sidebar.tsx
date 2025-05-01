@@ -51,7 +51,7 @@ export default function Sidebar({ filter, setFilters }: SidebarProps) {
         <h4 className="font-semibold">{productsLocalization.categories}</h4>
         {categories.map((cat) => (
           <div key={cat.id}>
-            <label className="flex items-center gap-1">
+            <label className="flex items-center gap-1 mb-1">
               <input
                 type="checkbox"
                 checked={filter.categories.includes(cat.id)}

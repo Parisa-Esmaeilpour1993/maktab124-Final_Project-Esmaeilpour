@@ -1,4 +1,9 @@
 "use client";
+import {
+  adminLocalization,
+  checkOutLocalization,
+  productsLocalization,
+} from "@/app/constants/localization/fa/localization";
 import React from "react";
 import { MdPayments } from "react-icons/md";
 
@@ -21,7 +26,7 @@ const Input = ({ formData }: { formData: PaymentFormData }) => {
           dir="ltr"
           type="text"
           name="cardName"
-          placeholder="نام و نام خانوادگی"
+          placeholder={adminLocalization.fullName}
           value={formData.cardName}
           readOnly
         />
@@ -38,7 +43,9 @@ const Input = ({ formData }: { formData: PaymentFormData }) => {
         />
         <div className="flex justify-between pt-8">
           <div className="flex flex-col">
-            <label className="text-xs text-gray-800 ">رمز cvv2</label>
+            <label className="text-xs text-gray-800 ">
+              {checkOutLocalization.cvvPass}
+            </label>
             <input
               className="w-20 border-none outline-none   caret-green-500 text-white bg-primary rounded-md p-2"
               type="text"
@@ -49,13 +56,15 @@ const Input = ({ formData }: { formData: PaymentFormData }) => {
             />
           </div>
           <div className="flex flex-col text-left">
-            <label className="text-xs text-gray-800 pl-3">تاریخ انقضا</label>
+            <label className="text-xs text-gray-800 pl-3">
+              {productsLocalization.expireDate}
+            </label>
             <input
               className="border-none outline-none  caret-green-500 text-white bg-primary rounded-md p-2"
               dir="ltr"
               type="text"
               name="expiryDate"
-              placeholder="ماه / سال"
+              placeholder={checkOutLocalization.dateHolder}
               value={formData.expiryDate}
               readOnly
             />
