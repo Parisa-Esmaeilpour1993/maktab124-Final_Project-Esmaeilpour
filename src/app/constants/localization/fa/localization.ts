@@ -45,6 +45,7 @@ export const faLocalization = {
   products: "محصولات",
   just: "فقط",
   isAvailable: "عدد در انبار موجود است.",
+  priceRange: "محدوده قیمت",
 };
 
 export const sweetAlert = {

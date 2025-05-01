@@ -193,7 +193,7 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
           ) : (
             <div
               key={banner.id}
-              className="border border-primary p-4 rounded-lg bg-white shadow-md"
+              className="border border-primary p-4 rounded-lg bg-light/20 shadow-md"
             >
               <div className="flex flex-col mb-6 md:mb-0 md:flex-row gap-2">
                 <label className="font-semibold">

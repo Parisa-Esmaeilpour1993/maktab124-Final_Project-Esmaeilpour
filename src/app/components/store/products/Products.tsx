@@ -20,6 +20,8 @@ export default function ProductsPage() {
     availableOnly: false,
     categories: [],
     discountOnly: false,
+    minPrice: 0,
+    maxPrice: 0,
   });
   const [sort, setSort] = useState("newest");
 
@@ -86,6 +88,22 @@ export default function ProductsPage() {
 
     if (search) {
       data = data.filter((p) => p.productName.toLowerCase().includes(search));
+    }
+
+    if (filter.minPrice || filter.maxPrice) {
+      data = data.filter((p) => {
+        const discountObj = discounts.find(
+          (d) => d.productName === p.productName
+        );
+        const finalPrice = discountObj
+          ? +p.productPrice * (1 - discountObj.discountPercent / 100)
+          : +p.productPrice;
+
+        const minCheck = filter.minPrice ? finalPrice >= filter.minPrice : true;
+        const maxCheck = filter.maxPrice ? finalPrice <= filter.maxPrice : true;
+
+        return minCheck && maxCheck;
+      });
     }
 
     const matchedDiscounts = discounts

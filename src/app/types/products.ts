@@ -62,6 +62,8 @@ export interface Filters {
   availableOnly: boolean;
   discountOnly: boolean;
   categories: string[];
+  minPrice: number;
+  maxPrice: number;
 }
 
 export interface SidebarProps {

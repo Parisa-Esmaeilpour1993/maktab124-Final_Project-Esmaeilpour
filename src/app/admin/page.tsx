@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardTitle } from "@/app/components/ui/Card";
 import { orders, products } from "@/data";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import {
   Bar,
@@ -14,10 +15,9 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { dashboardLocalization } from "../constants/localization/fa/localization";
 import useUsersLength from "../components/admin/user/useUsersLength";
-import axios from "axios";
 import { API_KEY, BASE_url } from "../constants/api/BASE_URL";
+import { dashboardLocalization } from "../constants/localization/fa/localization";
 
 function generateColor(index: number) {
   const hue = (index * 137.508) % 360;
@@ -65,6 +65,56 @@ export default function AdminDashboard() {
   const [ordersNum, setOrdersNum] = useState([]);
 
   const usersLength = useUsersLength();
+
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [pieData, setPieData] = useState<{ name: string; value: number }[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [categoriesRes, productsRes] = await Promise.all([
+          axios.get(`${BASE_url}/api/records/category`, {
+            headers: { api_key: API_KEY },
+          }),
+          axios.get(`${BASE_url}/api/records/drugs`, {
+            headers: { api_key: API_KEY },
+          }),
+        ]);
+
+        const categoryList = categoriesRes.data.records;
+        const productList = productsRes.data.records;
+
+        setCategories(categoryList);
+        setProducts(productList);
+
+        // ساخت map از categoryId به title
+        const categoryMap: Record<string, string> = {};
+        categoryList.forEach((cat: Category) => {
+          categoryMap[cat.id] = cat.title;
+        });
+
+        // شمارش محصولات در هر دسته
+        const categoryCounts: Record<string, number> = {};
+        productList.forEach((product: Product) => {
+          const title =
+            categoryMap[product.productCategory] || "دسته‌بندی نامشخص";
+          categoryCounts[title] = (categoryCounts[title] || 0) + 1;
+        });
+
+        // ساخت دیتا برای PieChart
+        const pieDataFormatted = Object.entries(categoryCounts).map(
+          ([name, value]) => ({ name, value })
+        );
+
+        setPieData(pieDataFormatted);
+      } catch (error) {
+        console.error("خطا در دریافت اطلاعات:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -177,13 +227,13 @@ export default function AdminDashboard() {
                 </PieChart>
               </ResponsiveContainer>
 
-              <div className="mt-4 md:mt-0 md:w-1/2 md:pr-8 space-y-2">
+              <div className="mt-4 md:mt-0 md:w-1/2 space-y-2">
                 {pieData.map((item, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-end gap-2 text-sm flex-row-reverse text-right"
+                    className="flex items-center justify-end gap-2 flex-row-reverse text-right"
                   >
-                    <span className="text-gray-700">
+                    <span className="text-gray-700 text-xs">
                       {item.name} ({item.value})
                     </span>
                     <span

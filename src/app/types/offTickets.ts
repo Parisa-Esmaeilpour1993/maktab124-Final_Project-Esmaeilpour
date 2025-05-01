@@ -1,5 +1,5 @@
 export interface OffTicket {
-  id: string;
+  id: string | number;
   name: string;
   discount: number;
   discountMinOrder: number;

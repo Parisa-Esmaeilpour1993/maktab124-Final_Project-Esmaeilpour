@@ -59,7 +59,7 @@ export default function AdminSidebar({
       )}
 
       <aside
-        className={`bg-secondary text-white shadow-2xl w-3/5 md:w-1/4 lg:w-1/5 fixed top-0 right-0 md:static h-screen overflow-y-auto z-50 transition-transform duration-300 ${
+        className={`bg-secondary text-white shadow-2xl w-3/5 md:w-1/4 lg:w-1/5 fixed top-0 right-0 bottom-0 md:static h-screen overflow-y-auto z-50 transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"
         }`}
       >
@@ -155,7 +155,7 @@ export default function AdminSidebar({
           })}
         </nav>
 
-        <div className="fixed bottom-1 flex items-center justify-center w-full">
+        <div className="bottom-1 flex items-center justify-center w-full">
           <Button
             onClick={() => {
               setIsLoad(true);

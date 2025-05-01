@@ -14,13 +14,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import Pagination from "../products/Pagination";
-
-interface OffTicket {
-  id: number;
-  name: string;
-  discount: number;
-  discountMinOrder: number;
-}
+import { OffTicket } from "@/app/types/offTickets";
 
 export default function Discount() {
   const [tickets, setTickets] = useState<OffTicket[]>([]);
@@ -105,7 +99,7 @@ export default function Discount() {
     setName(ticket.name);
     setDiscount(ticket.discount);
     setDiscountMinOrder(ticket.discountMinOrder);
-    setEditId(ticket.id);
+    setEditId(+ticket.id);
   };
 
   const handleDelete = async (id: number) => {
@@ -142,7 +136,7 @@ export default function Discount() {
           {discountLocalization.discountManage}
         </h1>
 
-        <div className="flex gap-4 mb-6">
+        <div className="flex flex-col items-center md:flex-row gap-4 mb-6">
           <Input
             placeholder={discountLocalization.name}
             value={name}
@@ -168,10 +162,10 @@ export default function Discount() {
           </Button>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto max-w-80 md:max-w-full">
           <table className="min-w-full bg-white border">
             <thead>
-              <tr className="bg-gray-100">
+              <tr className="bg-accent/70">
                 <th className="py-2 text-sm px-3 border">
                   {discountLocalization.num}
                 </th>
@@ -203,11 +197,11 @@ export default function Discount() {
                     {ticket.discountMinOrder.toLocaleString()}
                     {faLocalization.rial}
                   </td>
-                  <td className="py-2 text-sm px-3 border flex justify-center gap-2">
+                  <td className="py-2 text-sm px-3 border flex flex-col lg:flex-row justify-center gap-2">
                     <Button onClick={() => handleEdit(ticket)}>
                       {faLocalization.edit}
                     </Button>
-                    <Button onClick={() => handleDelete(ticket.id)}>
+                    <Button onClick={() => handleDelete(+ticket.id)}>
                       {faLocalization.delete}
                     </Button>
                   </td>

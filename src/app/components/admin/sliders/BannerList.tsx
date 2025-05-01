@@ -145,7 +145,7 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
             <form
               key={banner.id}
               onSubmit={handleEditSubmit}
-              className="space-y-2 border p-4 border-primary rounded-lg"
+              className="space-y-2 border p-4 border-primary bg-light/30 rounded-lg"
             >
               <Input
                 className="border w-full p-2 rounded"
@@ -269,7 +269,7 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
           ) : (
             <div
               key={banner.id}
-              className="border border-primary p-4 rounded-lg bg-white shadow-md"
+              className="border border-primary p-4 rounded-lg bg-light/30 shadow-md"
             >
               <div className="flex gap-2 items-center">
                 <label className="font-semibold">
