@@ -290,7 +290,7 @@ export const ordersLocalization = {
   all: "همه",
   delivered: "تحویل داده شده",
   inDelivery: "در حال ارسال",
-  placeholder: "شناسه سفارش را وارد کنید",
+  placeholder: "نام مشتری را وارد کنید",
   id: "شناسه سفارش",
   customer: "مشتری",
   createdAt: "زمان ثبت",
@@ -304,6 +304,8 @@ export const ordersLocalization = {
   sum: "مجموع",
   saveChanges: "ذخیره تغییرات",
   deleteOrder: "حذف سفارش",
+  finalShippingCost: "هزینه ارسال نهایی:",
+  lastPrice: "قیمت تمام شده:",
 };
 
 export const adminLocalization = {

@@ -8,6 +8,7 @@ export type CartItem = {
   productExpired: string;
   image: string;
   discountPercent: number;
+  productCategory: string;
 };
 
 export type CartSummaryProps = {

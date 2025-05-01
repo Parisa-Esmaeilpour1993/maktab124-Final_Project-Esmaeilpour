@@ -170,6 +170,7 @@ export default function CheckOut() {
         productId: item.id,
         name: item.productName,
         quantity: item.quantity,
+        category: item.productCategory,
         unitPrice: item.productPrice,
         discountPercent: item.discountPercent,
         finalPrice: item.productPrice * (1 - item.discountPercent / 100),
@@ -180,6 +181,7 @@ export default function CheckOut() {
       finalShippingCost: finalShippingCost,
       validDiscount: validDiscount,
       finalAmount: payableAmount,
+      isDelivered: false,
       createdAt: new Date().toISOString(),
     };
 

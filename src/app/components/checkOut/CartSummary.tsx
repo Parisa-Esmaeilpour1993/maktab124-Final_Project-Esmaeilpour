@@ -13,9 +13,9 @@ function CartSummary({ items }: CartSummaryProps) {
         {cartLocalization.orderDetail}
       </h2>
 
-      <div className="hidden md:block overflow-y-auto max-h-64">
+      <div className="hidden md:block overflow-y-auto max-h-32">
         <table className="w-full text-center rounded-xl">
-          <thead className="bg-primary text-white text-xs lg:text-[16px]">
+          <thead className="bg-primary text-white text-xs lg:text-[16px] sticky top-0">
             <tr>
               <th className="p-2">{checkOutLocalization.name}</th>
               <th className="p-2">{checkOutLocalization.pricePerItem}</th>

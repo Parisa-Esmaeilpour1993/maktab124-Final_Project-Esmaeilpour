@@ -63,7 +63,7 @@ function Order() {
 
       setOrders(userOrders);
     } catch (error) {
-      console.error("خطا در دریافت سفارش‌ها:", error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -90,7 +90,7 @@ function Order() {
   }
 
   return (
-    <div className="border-t border-primary mx-4 pt-6 px-6">
+    <div className="border-t border-primary m-4 p-6">
       <h1 className="font-semibold text-lg mb-4">سفارش‌های من</h1>
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm text-right border border-gray-300">
@@ -106,7 +106,7 @@ function Order() {
           </thead>
           <tbody>
             {orders.map((order) => (
-              <tr key={order.id} className="border-t">
+              <tr key={order.id} className="border-t text-center">
                 <td className="p-2 border">{order.id}</td>
                 <td className="p-2 border">
                   {formatShamsiDate(order.createdAt)}
