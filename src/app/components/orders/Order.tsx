@@ -24,6 +24,7 @@ interface OrderRecord {
   phone: string;
   address: string;
   deliveryTime: string;
+  deliveryDate: string;
   discountCode: string;
   deliveryMethod: {
     name: string;
@@ -35,11 +36,14 @@ interface OrderRecord {
   validDiscount: number;
   finalAmount: number;
   createdAt: string;
+  isDelivered: boolean;
 }
 
 function Order() {
   const [orders, setOrders] = useState<OrderRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedOrder, setSelectedOrder] = useState<OrderRecord | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const formatShamsiDate = (date: moment.MomentInput) => {
     return moment(date).format("jYYYY/jMM/jDD");
@@ -67,6 +71,16 @@ function Order() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const openModal = (order: OrderRecord) => {
+    setSelectedOrder(order);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedOrder(null);
+    setIsModalOpen(false);
   };
 
   useEffect(() => {
@@ -98,8 +112,10 @@ function Order() {
             <tr>
               <th className="p-2 border">شناسه سفارش</th>
               <th className="p-2 border">تاریخ سفارش</th>
-              <th className="p-2 border">آدرس سفارش</th>
-              <th className="p-2 border">روش ارسال سفارش</th>
+              <th className="p-2 border">تاریخ تحویل</th>
+              <th className="p-2 border">آدرس</th>
+              <th className="p-2 border">کد تخفیف</th>
+              <th className="p-2 border">روش ارسال</th>
               <th className="p-2 border">مبلغ کل سفارش</th>
               <th className="p-2 border">محصولات سفارش</th>
             </tr>
@@ -111,40 +127,120 @@ function Order() {
                 <td className="p-2 border">
                   {formatShamsiDate(order.createdAt)}
                 </td>
-                <td className="p-2 border">{order.address}</td>
-                <td className="p-2 border">{order.deliveryMethod.name}</td>
                 <td className="p-2 border">
-                  {order.finalAmount.toLocaleString()} تومان
+                  {!order.isDelivered
+                    ? "در حال ارسال..."
+                    : formatShamsiDate(order.deliveryDate)}
+                </td>
+                <td className="p-2 border">{order.address}</td>
+                <td className="p-2 border">
+                  {order.validDiscount.toLocaleString()} {faLocalization.rial}
+                </td>
+                <td className="p-2 border max-w-28">
+                  {order.deliveryMethod.name}{" "}
+                  {order.finalShippingCost === 0
+                    ? "ارسال رایگان"
+                    : order.finalShippingCost.toLocaleString() +
+                      " " +
+                      faLocalization.rial}
                 </td>
                 <td className="p-2 border">
+                  {order.finalAmount.toLocaleString()} {faLocalization.rial}
+                </td>
+
+                {/* نمایش جدول محصولات در دسکتاپ */}
+                <td className="p-2 border hidden lg:table-cell">
                   <table className="w-full text-xs border-collapse">
                     <thead>
                       <tr className="bg-light/50">
                         <th className="p-1 border">نام محصول</th>
+                        <th className="p-1 border">قیمت واحد</th>
                         <th className="p-1 border">تعداد</th>
-                        <th className="p-1 border">قیمت کل</th>
+                        <th className="p-1 border">درصد تخفیف</th>
+                        <th className="p-1 border">قیمت محصول</th>
                       </tr>
                     </thead>
                     <tbody>
                       {order.products.map((product) => (
                         <tr key={product.productId}>
                           <td className="p-1 border">{product.name}</td>
+                          <td className="p-1 border">
+                            {product.unitPrice.toLocaleString()}{" "}
+                            {faLocalization.rial}
+                          </td>
                           <td className="p-1 border text-center">
                             {product.quantity}
                           </td>
+                          <td className="p-1 border text-center">
+                            %{product.discountPercent}
+                          </td>
                           <td className="p-1 border">
-                            {product.total.toLocaleString()} تومان
+                            {product.total.toLocaleString()}{" "}
+                            {faLocalization.rial}
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </td>
+
+                {/* دکمه در حالت موبایل */}
+                <td className="p-2 border lg:hidden text-center">
+                  <button
+                    onClick={() => openModal(order)}
+                    className="text-primary underline hover:text-secondary"
+                  >
+                    مشاهده محصولات
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {/* مودال نمایش محصولات */}
+      {isModalOpen && selectedOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 px-4">
+          <div className="bg-white max-w-md w-full p-4 rounded-lg shadow-md relative">
+            <button
+              onClick={closeModal}
+              className="absolute top-2 left-2 text-gray-500 hover:text-black text-sm"
+            >
+              ✕
+            </button>
+            <h2 className="text-center font-bold text-lg mb-2">
+              محصولات سفارش
+            </h2>
+            <table className="w-full text-xs border border-gray-300">
+              <thead className="bg-light">
+                <tr>
+                  <th className="p-1 border">نام محصول</th>
+                  <th className="p-1 border">قیمت واحد</th>
+                  <th className="p-1 border">تعداد</th>
+                  <th className="p-1 border">درصد تخفیف</th>
+                  <th className="p-1 border">قیمت کل محصول</th>
+                </tr>
+              </thead>
+              <tbody>
+                {selectedOrder.products.map((product) => (
+                  <tr key={product.productId}>
+                    <td className="p-1 border">{product.name}</td>
+                    <td className="p-1 border">
+                      {product.unitPrice.toLocaleString()} {faLocalization.rial}
+                    </td>
+                    <td className="p-1 border">{product.quantity}</td>
+                    <td className="p-1 border">%{product.discountPercent}</td>
+                    <td className="p-1 border">
+                      {product.total.toLocaleString()} {faLocalization.rial}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

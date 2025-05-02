@@ -14,6 +14,10 @@ import {
 import { Input } from "@/app/shared/Input";
 import { Order } from "@/app/types/orders";
 import axios from "axios";
+import { saveAs } from "file-saver";
+import * as htmlDocx from "html-docx-js/dist/html-docx";
+import html2pdf from "html2pdf.js";
+import moment from "jalali-moment";
 import React from "react";
 import { AiFillCloseSquare } from "react-icons/ai";
 import { toast } from "react-toastify";
@@ -103,9 +107,43 @@ function Modal({
     setIsModified(true);
   };
 
+  const exportToPDF = () => {
+    const content = document.getElementById("modal-content");
+    if (!content) return;
+
+    // ذخیره مقادیر اصلی
+    const originalMaxHeight = content.style.maxHeight;
+    const originalOverflow = content.style.overflow;
+
+    // تغییر موقت
+    content.style.maxHeight = "none";
+    content.style.overflow = "visible";
+
+    const opt = {
+      margin: 0.5,
+      filename: "order-details.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+    };
+
+    html2pdf()
+      .set(opt)
+      .from(content)
+      .save()
+      .then(() => {
+        // بازگرداندن به حالت قبلی
+        content.style.maxHeight = originalMaxHeight;
+        content.style.overflow = originalOverflow;
+      });
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center px-6 md:px-12">
-      <div className="flex flex-col gap-4 bg-white p-3 md:p-6 rounded-lg w-full shadow-lg max-h-screen overflow-y-auto">
+      <div
+        id="modal-content"
+        className="flex flex-col gap-4 bg-white p-3 md:p-6 rounded-lg w-full shadow-lg max-h-[90vh] overflow-y-auto"
+      >
         <div className="flex items-center justify-between">
           <h2 className="md:text-lg font-semibold text-gray-700">
             {ordersLocalization.ordersDetail} {selectedOrder.id}
@@ -115,7 +153,7 @@ function Modal({
           </button>
         </div>
 
-        <div className="flex flex-col gap-2 lg:flex-row lg:gap-8 items-center text-[15px]">
+        <div className="flex flex-col gap-2 lg:flex-row lg:gap-8 text-[15px]">
           <p className="text-gray-700">
             <strong>{ordersLocalization.customer}:</strong>{" "}
             <span className="text-secondary">{selectedOrder.customer}</span>
@@ -130,12 +168,12 @@ function Modal({
           </p>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center gap-2 md:gap-8">
-          <div className="flex flex-col gap-2 md:flex-row items-center">
+        <div className="flex flex-col md:flex-row items-start lg:items-center gap-2 md:gap-8">
+          <div className="flex gap-2 items-center">
             <p className="text-gray-700 font-medium">
               {ordersLocalization.status}:
             </p>
-            <div className="border border-accent px-1 rounded-md">
+            <div className="border border-accent px-1 md:py-[3px] rounded-md mr-6 md:mr-0">
               <select
                 value={
                   editStatus
@@ -164,15 +202,22 @@ function Modal({
           </div>
 
           {editStatus && (
-            <div className="flex flex-col gap-2 md:flex-row items-center">
-              <strong className="text-gray-700 font-medium">
+            <div className="flex gap-2 lg:items-center">
+              <strong className="text-gray-700 font-medium pt-2 lg:pt-0">
                 {ordersLocalization.deliveryTime}:
               </strong>
-              <Input
-                type="datetime-local"
-                value={deliveryDate || ""}
-                onChange={handleDeliveryDateChange}
-              />
+              <div className="flex flex-col lg:flex-row gap-2 items-center">
+                <Input
+                  type="datetime-local"
+                  value={deliveryDate || ""}
+                  onChange={handleDeliveryDateChange}
+                />
+                {deliveryDate && (
+                  <span className="text-sm text-gray-500 mx-4">
+                    {moment(deliveryDate).format("jYYYY/jMM/jDD - HH:mm")}
+                  </span>
+                )}
+              </div>
             </div>
           )}
         </div>
@@ -181,7 +226,7 @@ function Modal({
           {ordersLocalization.ordersProducts}:
         </h3>
 
-        <div className="hidden md:block rounded border border-accent bg-white max-h-36 overflow-y-auto">
+        <div className="hidden md:block rounded border border-accent bg-white">
           <table className="min-w-full text-sm text-gray-700">
             <thead className="bg-accent text-xs font-semibold text-gray-600 sticky top-0">
               <tr>
@@ -224,7 +269,7 @@ function Modal({
           </table>
         </div>
 
-        <div className="md:hidden flex flex-col gap-4 overflow-y-auto max-h-36 shadow-accent p-2">
+        <div className="md:hidden flex flex-col gap-4 shadow-accent p-2">
           {selectedOrder.items.map((item, index) => (
             <div
               key={index}
@@ -300,6 +345,14 @@ function Modal({
           >
             {ordersLocalization.saveChanges}
           </button>
+
+          <button
+            onClick={exportToPDF}
+            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition"
+          >
+            خروجی PDF
+          </button>
+
           <button
             onClick={() => handleDeleteOrder(selectedOrder.id)}
             className="w-full bg-red-600 text-white p-2 rounded hover:bg-red-700 transition"

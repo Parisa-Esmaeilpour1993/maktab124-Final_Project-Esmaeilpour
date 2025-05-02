@@ -12,6 +12,9 @@ import { useEffect, useRef, useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
+import { getAuthToken } from "@/app/base/getAuthToken";
+import axios from "axios";
 
 const AuthButton = () => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -90,6 +93,8 @@ const AuthButton = () => {
     };
   }, []);
 
+  const username = localStorage.getItem("username");
+
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("loginTime");
@@ -152,8 +157,8 @@ const AuthButton = () => {
               </li>
               <li>
                 <button
-                  onClick={() => {
-                    Swal.fire({
+                  onClick={async () => {
+                    const result = await Swal.fire({
                       title: logoutLocalization.areYouSure,
                       customClass: {
                         title: "swal-title-small",
@@ -165,11 +170,28 @@ const AuthButton = () => {
                       cancelButtonColor: "gray",
                       confirmButtonText: logoutLocalization.yesExit,
                       cancelButtonText: sweetAlert.cancel,
-                    }).then((result) => {
-                      if (result.isConfirmed) {
+                    });
+
+                    if (result.isConfirmed) {
+                      try {
+                        const cartId = localStorage.getItem("cartId");
+                        const token = getAuthToken();
+                        await axios.delete(
+                          `${BASE_url}/api/records/cart/${cartId}`,
+                          {
+                            headers: {
+                              "Content-Type": "application/json",
+                              api_key: API_KEY,
+                              Authorization: `Bearer ${token}`,
+                            },
+                          }
+                        );
+                      } catch (error) {
+                        console.error("Error deleting cart:", error);
+                      } finally {
                         handleLogout();
                       }
-                    });
+                    }
                   }}
                   className="text-red-500 hover:text-red-700"
                 >
@@ -197,7 +219,7 @@ const AuthButton = () => {
                   setShowLogoutPopup(true);
                 }}
               >
-                {faLocalization.welCome}
+                {username ? username : faLocalization.welCome}
               </span>
             ) : (
               faLocalization.loginOrRegister

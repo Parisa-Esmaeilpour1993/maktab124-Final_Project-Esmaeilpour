@@ -2,7 +2,10 @@
 
 import loginPage from "@/app/assets/images/login.jpg";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
-import { loginLocalization } from "@/app/constants/localization/fa/localization";
+import {
+  faLocalization,
+  loginLocalization,
+} from "@/app/constants/localization/fa/localization";
 import { setUser } from "@/app/redux/reducers/userReducer/userReducer";
 import { fetchUserInfo } from "@/app/services/fetchUserInfo";
 import Button from "@/app/shared/Button";
@@ -55,7 +58,8 @@ const Login = () => {
       dispatch(setUser(userInfo));
       console.log(userInfo);
 
-      localStorage.setItem("username", userInfo.name);
+      const username = userInfo.name || faLocalization.welCome;
+      localStorage.setItem("username", username);
       localStorage.setItem("userIdi", userInfo.userIdi);
       localStorage.setItem("user", JSON.stringify(userInfo));
 
