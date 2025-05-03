@@ -3,12 +3,12 @@ import {
   faLocalization,
   ordersLocalization,
 } from "@/app/constants/localization/fa/localization";
-import { Order } from "@/app/types/orders";
+import { OrderRecord } from "@/app/types/orders";
 import React from "react";
 
 type Props = {
-  filteredOrders: Order[];
-  setSelectedOrder: (order: Order) => void;
+  filteredOrders: OrderRecord[];
+  setSelectedOrder: (order: OrderRecord) => void;
 };
 
 function OrderTabel({ filteredOrders, setSelectedOrder }: Props) {

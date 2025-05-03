@@ -2,42 +2,10 @@
 
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
 import { faLocalization } from "@/app/constants/localization/fa/localization";
+import { OrderRecord } from "@/app/types/orders";
 import axios from "axios";
 import moment from "jalali-moment";
 import { useEffect, useState } from "react";
-
-interface OrderProduct {
-  productId: string;
-  name: string;
-  quantity: number;
-  unitPrice: number;
-  discountPercent: number;
-  finalPrice: number;
-  total: number;
-}
-
-interface OrderRecord {
-  id: string;
-  userIdi: number;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  address: string;
-  deliveryTime: string;
-  deliveryDate: string;
-  discountCode: string;
-  deliveryMethod: {
-    name: string;
-    cost: number;
-  };
-  products: OrderProduct[];
-  totalPrice: number;
-  finalShippingCost: number;
-  validDiscount: number;
-  finalAmount: number;
-  createdAt: string;
-  isDelivered: boolean;
-}
 
 function Order() {
   const [orders, setOrders] = useState<OrderRecord[]>([]);

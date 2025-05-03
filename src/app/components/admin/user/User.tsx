@@ -1,14 +1,4 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
-import Modal from "react-modal";
-import {
-  ColumnDef,
-  getCoreRowModel,
-  getPaginationRowModel,
-  useReactTable,
-  flexRender,
-} from "@tanstack/react-table";
-import axios from "axios";
 import { getAuthToken } from "@/app/base/getAuthToken";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
 import {
@@ -17,14 +7,25 @@ import {
   sweetAlert,
   UsersLocalization,
 } from "@/app/constants/localization/fa/localization";
-import { ClipLoader } from "react-spinners";
-import { confirmDelete } from "@/app/utils/sweetAlert";
-import { UserProps } from "@/app/types/users";
 import Button from "@/app/shared/Button";
 import SearchInput from "@/app/shared/SearchInput";
+import { UserProps } from "@/app/types/users";
+import { confirmDelete } from "@/app/utils/sweetAlert";
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import axios from "axios";
+import React, { useEffect, useMemo, useState } from "react";
+import Modal from "react-modal";
+import { ClipLoader } from "react-spinners";
 
 const UsersTable = () => {
   const [data, setData] = useState<UserProps[]>([]);
+  const [dataDetail, setDataDetail] = useState<UserProps[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedUser, setSelectedUser] = useState<UserProps | null>(null);
@@ -40,6 +41,7 @@ const UsersTable = () => {
         },
       });
       setData(response.data.filter((user: UserProps) => user.name));
+      console.log(response.data);
     } catch (err) {
       console.error("Error:", err);
       setError(sweetAlert.adminError);
@@ -48,8 +50,35 @@ const UsersTable = () => {
     }
   };
 
+  const fetchUsersDetail = async () => {
+    try {
+      const token = getAuthToken();
+      const response = await axios.get(`${BASE_url}/api/records/users`, {
+        headers: {
+          api_key: API_KEY,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setDataDetail(response.data.records);
+      console.log(response.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+    }
+  };
+
+  const handleSelectUser = (basicUser: UserProps) => {
+    const detail = dataDetail.find((d: any) => d.userIdi === basicUser.userIdi);
+    if (detail) {
+      setSelectedUser({ ...basicUser, ...detail });
+    } else {
+      setSelectedUser(basicUser);
+    }
+  };
+
   useEffect(() => {
     fetchUsers();
+    fetchUsersDetail();
   }, []);
 
   useEffect(() => {
@@ -73,20 +102,43 @@ const UsersTable = () => {
   const handleDelete = async (userId: string) => {
     const result = await confirmDelete();
 
-    if (result.isConfirmed) {
-      try {
-        const token = getAuthToken();
-        await axios.delete(`${BASE_url}/api/admin/users/${userId}`, {
-          headers: {
-            api_key: API_KEY,
-            Authorization: `Bearer ${token}`,
-          },
-        });
+    if (!result.isConfirmed) return;
 
-        setData((prev) => prev.filter((user) => user._id !== userId));
-      } catch (error) {
-        console.error("Delete error:", error);
-      }
+    try {
+      const token = getAuthToken();
+
+      const adminUser = data.find((user) => user._id === userId);
+      console.log(adminUser);
+      const userIdi = adminUser?.userIdi;
+      console.log(userIdi);
+
+      if (!userIdi) throw new Error("userIdi not found in admin data");
+
+      const record = dataDetail.find(
+        (user) => String(user.userIdi) === String(userIdi)
+      );
+      const recordId = record?.id;
+
+      if (!recordId) throw new Error("Record ID not found in user records");
+
+      await axios.delete(`${BASE_url}/api/records/users/${recordId}`, {
+        headers: {
+          api_key: API_KEY,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      await axios.delete(`${BASE_url}/api/admin/users/${userId}`, {
+        headers: {
+          api_key: API_KEY,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setData((prev) => prev.filter((user) => user._id !== userId));
+      setDataDetail((prev) => prev.filter((user: any) => user.id !== recordId));
+    } catch (error) {
+      console.error("Delete error:", error);
     }
   };
 
@@ -105,7 +157,7 @@ const UsersTable = () => {
         cell: ({ row }) => (
           <div className="flex flex-col md:flex-row gap-2 items-center justify-center">
             <button
-              onClick={() => setSelectedUser(row.original)}
+              onClick={() => handleSelectUser(row.original)}
               className="text-secondary hover:text-primary"
             >
               {faLocalization.show}
@@ -213,8 +265,43 @@ const UsersTable = () => {
               <strong>{adminLocalization.username}:</strong> {selectedUser.name}
             </p>
             <p className="border-b border-secondary pb-1">
+              <strong>{adminLocalization.email}:</strong>{" "}
+              {selectedUser.firstName}
+            </p>
+            <p className="border-b border-secondary pb-1">
+              <strong>{adminLocalization.email}:</strong>{" "}
+              {selectedUser.lastName}
+            </p>
+            <p className="border-b border-secondary pb-1">
               <strong>{adminLocalization.email}:</strong> {selectedUser.email}
             </p>
+            <p className="border-b border-secondary pb-1">
+              <strong>{adminLocalization.email}:</strong>{" "}
+              {selectedUser.phoneNumber}
+            </p>
+            <p className="border-b border-secondary pb-1">
+              <strong>{adminLocalization.email}:</strong>{" "}
+              {selectedUser.birthDate}
+            </p>
+            <p className="border-b border-secondary pb-1">
+              <strong>{adminLocalization.email}:</strong>{" "}
+              {selectedUser.education}
+            </p>
+            <p className="border-b border-secondary pb-1">
+              <strong>{adminLocalization.email}:</strong> {selectedUser.gender}
+            </p>
+            <p className="border-b border-secondary pb-1">
+              <strong>{adminLocalization.email}:</strong>{" "}
+              {Array.isArray(selectedUser?.addresses) &&
+                selectedUser.addresses.map((add, id) => (
+                  <div key={id}>
+                    <ul>
+                      <li>{add.value}</li>
+                    </ul>
+                  </div>
+                ))}
+            </p>
+
             <p className="border-b border-secondary pb-1">
               <strong>{UsersLocalization.loginDate}:</strong>{" "}
               {new Date(selectedUser.createdAt).toLocaleDateString("fa-IR")}

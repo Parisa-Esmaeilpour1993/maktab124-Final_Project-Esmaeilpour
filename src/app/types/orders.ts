@@ -1,28 +1,34 @@
-export interface OrderItem {
+interface OrderProduct {
+  productId: string;
   name: string;
   quantity: number;
-  price: number;
-  discountPercent: number;
   unitPrice: number;
+  discountPercent: number;
+  finalPrice: number;
+  total: number;
+  category: string;
 }
-
-export interface OrderDeliveryMethods {
-  name: string;
-  cost: number;
-}
-export interface Order {
+export interface OrderRecord {
   id: string;
   customer: string;
-  createdAt: string;
-  totalPrice: number;
-  deliveryStatus: boolean;
-  deliveryDate: string | null;
-  items: OrderItem[];
-  finalAmount: number;
-  validDiscount: number;
-  discountCode: string;
-  finalShippingCost: number;
-  deliveryMethods: OrderDeliveryMethods;
+  userIdi: number;
+  firstName: string;
+  lastName: string;
   phone: string;
   address: string;
+  deliveryStatus: boolean;
+  deliveryTime: string;
+  deliveryDate: string;
+  discountCode: string;
+  validDiscount: number;
+  deliveryMethod: {
+    name: string;
+    cost: number;
+  };
+  products: OrderProduct[];
+  totalPrice: number;
+  finalShippingCost: number;
+  finalAmount: number;
+  createdAt: string;
+  isDelivered: boolean;
 }

@@ -104,3 +104,22 @@ body {
 .swal-title-small {
   font-size: 20px !important;
 }
+
+.pdf-export-style input {
+  display: none;
+}
+.pdf-export-style select {
+  padding-bottom: 11px;
+  font-size: 1.2rem;
+  color: red !important;
+}
+.pdf-export-style div:has(select) {
+  border: none;
+}
+.pdf-export-style div:has(input) {
+  padding-bottom: 11px;
+}
+
+.pdf-export-style h3 {
+  padding-bottom: 4px;
+}

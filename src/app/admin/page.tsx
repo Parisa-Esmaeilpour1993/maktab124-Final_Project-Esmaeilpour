@@ -1,7 +1,6 @@
 "use client";
 
 import { Card, CardContent, CardTitle } from "@/app/components/ui/Card";
-import { orders, products } from "@/data";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import {
@@ -12,63 +11,72 @@ import {
   PieChart,
   ResponsiveContainer,
   Tooltip,
+  TooltipProps,
   XAxis,
   YAxis,
 } from "recharts";
 import useUsersLength from "../components/admin/user/useUsersLength";
 import { API_KEY, BASE_url } from "../constants/api/BASE_URL";
 import { dashboardLocalization } from "../constants/localization/fa/localization";
+import { Category } from "../types/category";
+import {
+  NameType,
+  ValueType,
+} from "recharts/types/component/DefaultTooltipContent";
+import { ProductsProps } from "../types/products";
+import { OrderRecord } from "../types/orders";
+
+type PieChartData = {
+  name: string;
+  value: number;
+};
 
 function generateColor(index: number) {
   const hue = (index * 137.508) % 360;
   return `hsl(${hue}, 80%, 60%)`;
 }
 
-type CategoryCounts = {
-  [category: string]: number;
+const CustomTooltip = ({
+  active,
+  payload,
+}: TooltipProps<ValueType, NameType>) => {
+  if (active && payload && payload.length) {
+    const item = payload[0].payload;
+    return (
+      <div className="bg-light p-2 rounded shadow text-sm text-gray-800">
+        <p>{item.value}٪</p>
+      </div>
+    );
+  }
+  return null;
 };
 
-const categoryCounts: CategoryCounts = products.reduce((acc, product) => {
-  acc[product.category] = (acc[product.category] || 0) + 1;
-  return acc;
-}, {} as CategoryCounts);
-
-const pieData = Object.entries(categoryCounts).map(([name, value]) => ({
-  name,
-  value,
-}));
-
-type OrderedCategoryCounts = {
-  [category: string]: number;
+const CustomTooltipPie = ({
+  active,
+  payload,
+}: TooltipProps<ValueType, NameType>) => {
+  if (active && payload && payload.length) {
+    const item = payload[0].payload;
+    return (
+      <div className="bg-white p-2 rounded shadow text-sm text-gray-800">
+        <p>({item.value})</p>
+      </div>
+    );
+  }
+  return null;
 };
-
-const orderedCategoryCounts: OrderedCategoryCounts = {};
-orders.forEach((order) => {
-  order.products.forEach(({ productId, quantity }) => {
-    const product = products.find((p) => p.id === productId);
-    if (product) {
-      orderedCategoryCounts[product.category] =
-        (orderedCategoryCounts[product.category] || 0) + quantity;
-    }
-  });
-});
-
-const barData = Object.entries(orderedCategoryCounts).map(([name, value]) => ({
-  name,
-  value,
-}));
-
 export default function AdminDashboard() {
   const [isMobile, setIsMobile] = useState(false);
   const [rotateLabels, setRotateLabels] = useState(false);
-  const [orders, setOrders] = useState([]);
-  const [ordersNum, setOrdersNum] = useState([]);
+  const [orders, setOrders] = useState<OrderRecord[]>([]);
+  const [ordersNum, setOrdersNum] = useState<number>(0);
 
   const usersLength = useUsersLength();
 
   const [categories, setCategories] = useState<Category[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [pieData, setPieData] = useState<{ name: string; value: number }[]>([]);
+  const [products, setProducts] = useState<ProductsProps[]>([]);
+  const [pieData, setPieData] = useState<PieChartData[]>([]);
+  const [barData, setBarData] = useState<PieChartData[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -88,28 +96,25 @@ export default function AdminDashboard() {
         setCategories(categoryList);
         setProducts(productList);
 
-        // ساخت map از categoryId به title
         const categoryMap: Record<string, string> = {};
         categoryList.forEach((cat: Category) => {
           categoryMap[cat.id] = cat.title;
         });
 
-        // شمارش محصولات در هر دسته
         const categoryCounts: Record<string, number> = {};
-        productList.forEach((product: Product) => {
+        productList.forEach((product: ProductsProps) => {
           const title =
             categoryMap[product.productCategory] || "دسته‌بندی نامشخص";
           categoryCounts[title] = (categoryCounts[title] || 0) + 1;
         });
 
-        // ساخت دیتا برای PieChart
         const pieDataFormatted = Object.entries(categoryCounts).map(
           ([name, value]) => ({ name, value })
         );
 
         setPieData(pieDataFormatted);
       } catch (error) {
-        console.error("خطا در دریافت اطلاعات:", error);
+        console.error(error);
       }
     };
 
@@ -117,6 +122,7 @@ export default function AdminDashboard() {
   }, []);
 
   useEffect(() => {
+    if (products.length === 0 || categories.length === 0) return;
     const fetchOrders = async () => {
       try {
         const res = await axios(`${BASE_url}/api/records/orders`, {
@@ -124,17 +130,40 @@ export default function AdminDashboard() {
             api_key: API_KEY,
           },
         });
-        const orders = res.data.records;
+        const orders: OrderRecord[] = res.data.records;
         setOrders(orders);
         const ordersNum = orders.length;
         setOrdersNum(ordersNum);
+
+        const orderedCategoryCounts: Record<string, number> = {};
+        let totalOrderedProducts = 0;
+
+        orders.forEach((order) => {
+          order.products.forEach(({ category, quantity }) => {
+            totalOrderedProducts += quantity;
+            const categoryTitle =
+              categories.find((c) => c.id === category)?.title ??
+              "دسته‌بندی نامشخص";
+            orderedCategoryCounts[categoryTitle] =
+              (orderedCategoryCounts[categoryTitle] || 0) + quantity;
+          });
+        });
+
+        const barDataFormatted = Object.entries(orderedCategoryCounts).map(
+          ([name, value]) => ({
+            name,
+            value: Math.round((value / totalOrderedProducts) * 100),
+          })
+        );
+
+        setBarData(barDataFormatted);
       } catch (error) {
         console.error(error);
       }
     };
 
     fetchOrders();
-  }, []);
+  }, [products, categories]);
 
   const totalIncome = orders.reduce(
     (sum, order) => sum + (order.finalAmount || 0),
@@ -147,7 +176,7 @@ export default function AdminDashboard() {
       const isMobileSize = width < 768;
       setIsMobile(isMobileSize);
 
-      if (!isMobileSize && barData.length > 7) {
+      if (!isMobileSize && barData.length > 3) {
         setRotateLabels(true);
       } else if (isMobileSize) {
         setRotateLabels(true);
@@ -224,6 +253,7 @@ export default function AdminDashboard() {
                       <Cell key={`cell-${index}`} fill={generateColor(index)} />
                     ))}
                   </Pie>
+                  <Tooltip content={CustomTooltipPie} />
                 </PieChart>
               </ResponsiveContainer>
 
@@ -258,14 +288,17 @@ export default function AdminDashboard() {
                   <XAxis
                     dataKey="name"
                     interval={0}
-                    angle={rotateLabels ? -40 : 0}
-                    textAnchor={rotateLabels ? "end" : "middle"}
-                    tick={{ fontSize: 12, dy: rotateLabels ? 25 : 0 }}
-                    height={rotateLabels ? 50 : 30}
+                    angle={rotateLabels ? -20 : 0}
+                    textAnchor={rotateLabels ? "middle" : "middle"}
+                    tick={{ fontSize: 10, dy: rotateLabels ? 20 : 0 }}
+                    height={rotateLabels ? 40 : 30}
                   />
-                  <YAxis allowDecimals={false} tickMargin={16} />
-                  <Tooltip />
-                  <Bar dataKey="value" fill="#328e6e" />
+                  <YAxis allowDecimals={false} tickMargin={24} />
+                  <Tooltip
+                    content={CustomTooltip}
+                    cursor={{ fill: "transparent" }}
+                  />
+                  <Bar dataKey="value" fill="#328e6e" barSize={50} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

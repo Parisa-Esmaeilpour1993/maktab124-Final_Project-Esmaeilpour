@@ -9,6 +9,20 @@ export interface UserProps {
   __v: number;
   _id: string;
   name: string;
+  id: string;
+  phoneNumber: string;
+  firstName: string;
+  lastName: string;
+  education: string;
+  birthDate: string;
+  gender: string;
+  userIdi: string;
+  addresses: [
+    {
+      id: string;
+      value: string;
+    }
+  ];
 }
 
 export interface AdminDataProps {

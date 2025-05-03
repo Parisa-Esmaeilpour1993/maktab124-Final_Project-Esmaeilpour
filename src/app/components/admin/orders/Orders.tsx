@@ -7,16 +7,17 @@ import {
 import { fetchOrders } from "@/app/services/fetchOrders";
 import { Input } from "@/app/shared/Input";
 import SearchInput from "@/app/shared/SearchInput";
-import { Order } from "@/app/types/orders";
+
 import React, { useEffect, useState } from "react";
 import OrderTabel from "./OrderTabel";
 import Modal from "./Modal";
+import { OrderRecord } from "@/app/types/orders";
 
 export default function Orders() {
   const [filter, setFilter] = useState<string>("all");
   const [search, setSearch] = useState<string>("");
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [orders, setOrders] = useState<OrderRecord[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<OrderRecord | null>(null);
   const [deliveryDate, setDeliveryDate] = useState<string>("");
   const [isModified, setIsModified] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
