@@ -8,11 +8,13 @@ import axios from "axios";
 interface CartState {
   items: CartItem[];
   status: "idle" | "loading" | "failed";
+  totalQuantity: number;
 }
 
 const initialState: CartState = {
   items: [],
   status: "idle",
+  totalQuantity: 0,
 };
 
 export const getCartItems = createAsyncThunk(

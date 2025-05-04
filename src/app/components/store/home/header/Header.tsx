@@ -7,6 +7,7 @@ import Link from "next/link";
 import AuthButton from "./AuthButton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const router = useRouter();
@@ -14,6 +15,8 @@ const Header = () => {
   const [inputValue, setInputValue] = useState(
     searchParams.get("search") || ""
   );
+
+  const itemTypesCount = useSelector((state: any) => state.cart.items.length);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -42,7 +45,7 @@ const Header = () => {
         </form>
       </div>
 
-      <div className="flex gap-2 justify-center items-center">
+      <div className="relative flex gap-2 justify-center items-center">
         <Link
           className="flex justify-center items-center border border-primary rounded-2xl hover:scale-105 hover:border-primary"
           href={"/cart"}
@@ -51,6 +54,11 @@ const Header = () => {
             size={32}
             className="bg-light p-[6px] rounded-2xl text-primary"
           />
+          {itemTypesCount > 0 && (
+            <span className="absolute -top-3 -right-3 bg-accent text-white text-xs rounded-full w-6 h-6 flex items-center justify-center z-50">
+              {itemTypesCount}
+            </span>
+          )}
         </Link>
         <AuthButton />
       </div>

@@ -155,6 +155,7 @@ export const dashboardLocalization = {
   rial: "ریال",
   categoriesNumber: "تعداد محصولات در هر دسته‌بندی",
   categoriesOrder: " محصولات سفارش داده شده به تفکیک دسته‌بندی",
+  unknownCategory: "دسته‌بندی نامشخص",
 };
 
 export const deliveryMethodsLocalization = {

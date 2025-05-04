@@ -17,7 +17,10 @@ import {
 } from "recharts";
 import useUsersLength from "../components/admin/user/useUsersLength";
 import { API_KEY, BASE_url } from "../constants/api/BASE_URL";
-import { dashboardLocalization } from "../constants/localization/fa/localization";
+import {
+  dashboardLocalization,
+  faLocalization,
+} from "../constants/localization/fa/localization";
 import { Category } from "../types/category";
 import {
   NameType,
@@ -104,7 +107,8 @@ export default function AdminDashboard() {
         const categoryCounts: Record<string, number> = {};
         productList.forEach((product: ProductsProps) => {
           const title =
-            categoryMap[product.productCategory] || "دسته‌بندی نامشخص";
+            categoryMap[product.productCategory] ||
+            dashboardLocalization.unknownCategory;
           categoryCounts[title] = (categoryCounts[title] || 0) + 1;
         });
 
@@ -143,7 +147,7 @@ export default function AdminDashboard() {
             totalOrderedProducts += quantity;
             const categoryTitle =
               categories.find((c) => c.id === category)?.title ??
-              "دسته‌بندی نامشخص";
+              dashboardLocalization.unknownCategory;
             orderedCategoryCounts[categoryTitle] =
               (orderedCategoryCounts[categoryTitle] || 0) + quantity;
           });
