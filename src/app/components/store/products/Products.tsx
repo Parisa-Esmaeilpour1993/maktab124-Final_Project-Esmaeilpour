@@ -1,16 +1,17 @@
 "use client";
 
 import { useAppDispatch } from "@/app/redux/store/hooks";
+import { fetchDiscountedProducts } from "@/app/services/fetchDiscountedProducts";
 import { fetchProducts } from "@/app/services/fetchProducts";
+import { favorites } from "@/app/services/getFavorites";
 import { Discount, Filters, ProductsProps } from "@/app/types/products";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
 import Header from "./Header";
+import Pagination from "./Pagination";
 import ProductsList from "./ProductsList";
 import Sidebar from "./Sidebar";
-import { fetchDiscountedProducts } from "@/app/services/fetchDiscountedProducts";
-import { favorites } from "@/app/services/getFavorites";
-import { ToastContainer } from "react-toastify";
-import { useSearchParams } from "next/navigation";
 
 export default function ProductsPage() {
   const [allProducts, setAllProducts] = useState<ProductsProps[]>([]);
@@ -36,12 +37,36 @@ export default function ProductsPage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [discounts, setDiscounts] = useState<Discount[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
 
   const dispatch = useAppDispatch();
 
   const searchParams = useSearchParams();
   const categoryId = searchParams.get("category");
   const search = searchParams.get("search")?.trim().toLowerCase() || "";
+  const currentPage = searchParams.get("page") || "1";
+  const itemsPerPage = searchParams.get("limit") || "6";
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    let needsUpdate = false;
+
+    if (!params.get("page")) {
+      params.set("page", "1");
+      needsUpdate = true;
+    }
+
+    if (!params.get("limit")) {
+      params.set("limit", "6");
+      needsUpdate = true;
+    }
+
+    if (needsUpdate) {
+      router.replace(`?${params.toString()}`);
+    }
+  }, []);
 
   useEffect(() => {
     if (categoryId) {
@@ -62,15 +87,15 @@ export default function ProductsPage() {
     setIsLoading(true);
 
     dispatch(
-      fetchProducts(
-        categoryId
-          ? { filterKey: "productCategory", filterValue: categoryId }
-          : undefined
-      )
+      fetchProducts({
+        filterKey: categoryId ? "productCategory" : undefined,
+        filterValue: categoryId || undefined,
+      })
     )
       .unwrap()
       .then((res) => {
-        setAllProducts(res);
+        setAllProducts(res.records);
+        setTotalItems(res.totalRecords);
       })
       .finally(() => setIsLoading(false));
   }, [categoryId, dispatch]);
@@ -161,8 +186,27 @@ export default function ProductsPage() {
       }
     };
 
-    setProducts(applySort(data));
-  }, [filter, sort, search, discounts, allProducts]);
+    const sorted = applySort(data);
+
+    const currentPageNumber = parseInt(currentPage);
+    const itemsPerPageNumber = parseInt(itemsPerPage);
+
+    const startIndex = (currentPageNumber - 1) * itemsPerPageNumber;
+    const endIndex = startIndex + itemsPerPageNumber;
+
+    const maxPage = Math.ceil(data.length / itemsPerPageNumber);
+    if (currentPageNumber > maxPage && maxPage > 0) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", maxPage.toString());
+      router.replace(`?${params.toString()}`);
+      return;
+    }
+
+    const paginated = sorted.slice(startIndex, endIndex);
+
+    setProducts(paginated);
+    setTotalItems(data.length);
+  }, [filter, sort, search, discounts, allProducts, currentPage, itemsPerPage]);
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -187,6 +231,11 @@ export default function ProductsPage() {
             favoriteProductIds={favoriteProductIds}
             favoriteRecords={favoriteRecords}
             isLoading={isLoading}
+          />
+          <Pagination
+            currentPage={+currentPage}
+            totalItems={+totalItems}
+            itemsPerPage={+itemsPerPage}
           />
         </main>
       </div>

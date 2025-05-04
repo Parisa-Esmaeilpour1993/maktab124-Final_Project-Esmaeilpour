@@ -51,6 +51,12 @@ const AuthButton = () => {
       return Date.now() - parseInt(loginTime) <= oneHour;
     };
 
+    if (!isTokenValid()) {
+      localStorage.removeItem("email");
+      localStorage.removeItem("username");
+      setEmail("");
+    }
+
     setIsAdmin(!!token && isTokenValid() && fromAdmin);
   };
 
@@ -63,6 +69,11 @@ const AuthButton = () => {
         localStorage.removeItem("email");
         setIsAdmin(false);
         toast.success(loginLocalization.logoutSuccessfully);
+        document.cookie =
+          "loginAuthToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+        document.cookie =
+          "fromAdmin=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+        window.location.href = "/login";
       }
     };
 

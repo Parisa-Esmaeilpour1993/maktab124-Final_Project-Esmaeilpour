@@ -96,16 +96,20 @@ export default function Sidebar({ filter, setFilters }: SidebarProps) {
           className="w-full h-2 bg-light rounded"
           thumbClassName="w-3 h-3 bg-secondary outline-none border-none rounded-full cursor-pointer -mt-[2px]"
           renderTrack={(
-            props: React.HTMLAttributes<HTMLDivElement>,
+            props: React.HTMLAttributes<HTMLDivElement> & { key?: React.Key },
             state: { index: number }
-          ) => (
-            <div
-              {...props}
-              className={`h-2 rounded ${
-                state.index === 1 ? "bg-accent" : "bg-light"
-              }`}
-            />
-          )}
+          ) => {
+            const { key, ...restProps } = props;
+            return (
+              <div
+                key={key}
+                {...restProps}
+                className={`h-2 rounded ${
+                  state.index === 1 ? "bg-accent" : "bg-light"
+                }`}
+              />
+            );
+          }}
           min={0}
           max={100000000}
           step={1000000}

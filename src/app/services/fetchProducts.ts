@@ -1,28 +1,45 @@
+import { ProductsProps } from "@/app/types/products";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { ProductsProps } from "@/app/types/products";
-import { API_KEY, BASE_url } from "../constants/api/BASE_URL";
 import { getAuthToken } from "../base/getAuthToken";
+import { API_KEY, BASE_url } from "../constants/api/BASE_URL";
 
 export const token = getAuthToken();
 
 interface FetchProductsArgs {
   filterKey?: string;
   filterValue?: string;
+  currentPage?: number;
+  itemsPerPage?: number;
 }
 
 export const fetchProducts = createAsyncThunk<
-  ProductsProps[],
+  { records: ProductsProps[]; totalRecords: number },
   FetchProductsArgs | undefined
 >("products/fetch", async (params, thunkAPI) => {
   try {
-    const { filterKey, filterValue } = params || {};
+    const { filterKey, filterValue, currentPage, itemsPerPage } = params || {};
 
-    const url =
-      filterKey && filterValue
-        ? `${BASE_url}/api/records/drugs?filterKey=${filterKey}&filterValue=${filterValue}`
-        : `${BASE_url}/api/records/drugs`;
+    const urlParams = new URLSearchParams();
 
+    if (filterKey && filterValue) {
+      urlParams.append("filterKey", filterKey);
+      urlParams.append("filterValue", filterValue);
+    }
+
+    if (currentPage !== undefined) {
+      urlParams.append("page", currentPage.toString());
+    }
+
+    if (itemsPerPage !== undefined) {
+      urlParams.append("limit", itemsPerPage.toString());
+    }
+
+    const url = `${BASE_url}/api/records/drugs?${urlParams.toString()}`;
+    console.log(
+      "URL:",
+      `${BASE_url}/api/records/drugs?${urlParams.toString()}`
+    );
     const response = await axios.get(url, {
       headers: {
         "Content-Type": "application/json",
@@ -31,7 +48,10 @@ export const fetchProducts = createAsyncThunk<
       },
     });
 
-    return response.data.records;
+    return {
+      records: response.data.records,
+      totalRecords: response.data.total,
+    };
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message);
   }

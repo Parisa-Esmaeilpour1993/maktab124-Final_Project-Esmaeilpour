@@ -28,6 +28,7 @@ export interface ProductsProps {
 
 export interface ProductsState {
   products: ProductsProps[];
+  totalRecords: number;
   loading: boolean;
   error: string | null;
 }

@@ -46,6 +46,7 @@ export const faLocalization = {
   just: "فقط",
   isAvailable: "عدد در انبار موجود است.",
   priceRange: "محدوده قیمت",
+  perPage: "تعداد در صفحه:",
 };
 
 export const sweetAlert = {

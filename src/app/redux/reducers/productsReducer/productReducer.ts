@@ -7,6 +7,7 @@ import { addProduct } from "@/app/services/addProducts";
 
 const initialState: ProductsState = {
   products: [],
+  totalRecords: 0,
   loading: false,
   error: null,
 };
@@ -23,7 +24,8 @@ const productSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
-        state.products = action.payload;
+        state.products = action.payload.records;
+        state.totalRecords = action.payload.totalRecords;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
