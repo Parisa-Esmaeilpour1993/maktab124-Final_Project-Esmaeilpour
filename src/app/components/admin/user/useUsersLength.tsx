@@ -33,7 +33,6 @@ function useUsersLength() {
         setLoading(false);
       }
     };
-    console.log(usersCount);
     getUsersLength();
   }, []);
 

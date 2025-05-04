@@ -14,6 +14,7 @@ export const faLocalization = {
   page: "صفحه",
   from: "از",
   year: "سال به بالا",
+  adminSerach: "نام کاربری ادمین را وارد کنید",
   errorInFetchingCategories: "خطا در دریافت دسته بندی",
   errorInAddingCategories: "خطا در اضافه کردن دسته بندی",
   add: "افزودن",
@@ -248,11 +249,12 @@ export const productsLocalization = {
   loginError: "ابتدا عضو سایت شوید.",
   productType: "نوع محصول",
   company: "شرکت سازنده",
-  number: "تعداد محصول",
+  number: "تعداد محصول در هر بسته",
   capsule: "نوع محفظه",
   country: "کشور سازنده",
   process: "گروه",
   age: "سن مصرف",
+  above: " سال به بالا",
 };
 
 export const newestProduct = {
@@ -440,7 +442,8 @@ export const checkOutLocalization = {
   selectTime: "لطفا زمان ارسال را انتخاب کنید",
   transferingToOrders: "در حال انتقال به صفحه پرداخت...",
   chooseAddress: "آدرس را انتخاب کنید:",
-  addAddress: "(برای افزودن آدرس جدید به بخش پروفایل کاربری مراجعه کتید.)",
+  addAddress:
+    "(برای افزودن یا ویرایش اطلاعات به بخش پروفایل کاربری مراجعه کتید.)",
   chooseDate: "تاریخ را انتخاب کنید",
   cartValidation: "شماره کارت باید دقیقاً ۱۶ رقم باشد.",
   cvvValidation: "CVV2 باید حداقل ۳ رقم باشد.",

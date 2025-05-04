@@ -264,7 +264,11 @@ const AdminsTable = () => {
       <div className="p-4">
         <div className="flex flex-col gap-2 lg:flex-row justify-between items-center mb-4">
           <h2 className="text-xl font-bold">{UsersLocalization.usersList}</h2>
-          <SearchInput value={searchQuery} onChange={handleSearchChange} />
+          <SearchInput
+            value={searchQuery}
+            onChange={handleSearchChange}
+            placeholder={faLocalization.adminSerach}
+          />
           <Button onClick={() => setIsAddModalOpen(true)}>
             {UsersLocalization.add}
           </Button>

@@ -114,8 +114,8 @@ export default function ProductsPage() {
             id: editId,
             productPrice: Number(formData.productPrice),
             productQuantity: Number(formData.productQuantity),
-            productNumber: Number(formData.productNumber),
-            productAge: Number(formData.productAge),
+            productNumber: formData.productNumber,
+            productAge: formData.productAge,
             createdAt: formData.createdAt,
           })
         );
@@ -131,8 +131,8 @@ export default function ProductsPage() {
             ...formData,
             productPrice: Number(formData.productPrice),
             productQuantity: Number(formData.productQuantity),
-            productNumber: Number(formData.productNumber),
-            productAge: Number(formData.productAge),
+            productNumber: formData.productNumber,
+            productAge: formData.productAge,
             createdAt: formData.createdAt,
           })
         );
@@ -228,8 +228,8 @@ export default function ProductsPage() {
               ...product,
               productPrice: product.productPrice.toString(),
               productQuantity: product.productQuantity.toString(),
-              productNumber: product.productNumber.toString(),
-              productAge: product.productAge.toString(),
+              productNumber: product.productNumber,
+              productAge: product.productAge,
             });
             setFileName(product.image.split("/").pop() ?? null);
             setIsModalOpen(true);

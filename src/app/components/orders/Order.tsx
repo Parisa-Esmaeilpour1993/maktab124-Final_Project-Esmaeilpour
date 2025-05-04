@@ -30,7 +30,8 @@ function Order() {
       });
 
       const userOrders = res.data.records.filter(
-        (o: OrderRecord) => o.userIdi === userIdi
+        (o: OrderRecord) =>
+          o.userIdi === userIdi || o.userIdi === `${userIdi}-receiver`
       );
 
       setOrders(userOrders);

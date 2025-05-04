@@ -7,7 +7,7 @@ import Link from "next/link";
 import AuthButton from "./AuthButton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/app/redux/store/hooks";
 
 const Header = () => {
   const router = useRouter();
@@ -16,7 +16,7 @@ const Header = () => {
     searchParams.get("search") || ""
   );
 
-  const itemTypesCount = useSelector((state: any) => state.cart.items.length);
+  const itemTypesCount = useAppSelector((state) => state.cart.items.length);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);

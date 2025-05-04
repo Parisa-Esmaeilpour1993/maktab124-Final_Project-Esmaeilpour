@@ -19,10 +19,10 @@ export interface ProductsProps {
   createdAt: string;
   productType: string;
   productCompany: string;
-  productNumber: number;
+  productNumber: string;
   productCapsule: string;
   productCountry: string;
-  productAge: number;
+  productAge: string;
   productProcess: string;
 }
 

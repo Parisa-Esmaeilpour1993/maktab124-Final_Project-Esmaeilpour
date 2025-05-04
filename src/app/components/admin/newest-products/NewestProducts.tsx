@@ -189,7 +189,7 @@ const NewestProductsAdmin = () => {
                   alt={product.productName}
                   className="object-contain p-8 md:p-6 rounded"
                 />
-                <h4 className="font-semibold">{product.productName}</h4>
+                <h4 className="font-semibold h-10">{product.productName}</h4>
                 <p className="text-sm text-gray-600">
                   {product.productPrice.toLocaleString()} {faLocalization.rial}
                 </p>

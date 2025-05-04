@@ -4,6 +4,7 @@ import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
 import {
   adminLocalization,
   faLocalization,
+  profileLocalization,
   sweetAlert,
   UsersLocalization,
 } from "@/app/constants/localization/fa/localization";
@@ -253,11 +254,11 @@ const UsersTable = () => {
         ariaHideApp={false}
         onRequestClose={() => setSelectedUser(null)}
         contentLabel="User Info"
-        className="bg-white p-6 mx-auto mt-20 rounded-lg shadow-lg outline-none"
-        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start pt-20 z-50"
+        className="bg-white px-6 py-12 w-2/3 md:w-1/2 max-h-96 lg:max-h-fit overflow-y-auto rounded-lg shadow-lg outline-none"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
       >
         {selectedUser && (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3 text-xs md:text-sm lg:text-[16px]">
             <h2 className="text-xl font-bold mb-4">
               {UsersLocalization.usersDetail}
             </h2>
@@ -265,33 +266,33 @@ const UsersTable = () => {
               <strong>{adminLocalization.username}:</strong> {selectedUser.name}
             </p>
             <p className="border-b border-secondary pb-1">
-              <strong>{adminLocalization.email}:</strong>{" "}
+              <strong>{adminLocalization.firstName}:</strong>{" "}
               {selectedUser.firstName}
             </p>
             <p className="border-b border-secondary pb-1">
-              <strong>{adminLocalization.email}:</strong>{" "}
+              <strong>{adminLocalization.lastName}:</strong>{" "}
               {selectedUser.lastName}
             </p>
             <p className="border-b border-secondary pb-1">
               <strong>{adminLocalization.email}:</strong> {selectedUser.email}
             </p>
             <p className="border-b border-secondary pb-1">
-              <strong>{adminLocalization.email}:</strong>{" "}
+              <strong>{adminLocalization.phone}:</strong>{" "}
               {selectedUser.phoneNumber}
             </p>
             <p className="border-b border-secondary pb-1">
-              <strong>{adminLocalization.email}:</strong>{" "}
-              {selectedUser.birthDate}
+              <strong>{adminLocalization.age}:</strong> {selectedUser.birthDate}
             </p>
             <p className="border-b border-secondary pb-1">
-              <strong>{adminLocalization.email}:</strong>{" "}
+              <strong>{adminLocalization.education}:</strong>{" "}
               {selectedUser.education}
             </p>
             <p className="border-b border-secondary pb-1">
-              <strong>{adminLocalization.email}:</strong> {selectedUser.gender}
+              <strong>{profileLocalization.gender}:</strong>{" "}
+              {selectedUser.gender}
             </p>
-            <p className="border-b border-secondary pb-1">
-              <strong>{adminLocalization.email}:</strong>{" "}
+            <div className="border-b border-secondary pb-1">
+              <strong>{adminLocalization.address}:</strong>{" "}
               {Array.isArray(selectedUser?.addresses) &&
                 selectedUser.addresses.map((add, id) => (
                   <div key={id}>
@@ -300,7 +301,7 @@ const UsersTable = () => {
                     </ul>
                   </div>
                 ))}
-            </p>
+            </div>
 
             <p className="border-b border-secondary pb-1">
               <strong>{UsersLocalization.loginDate}:</strong>{" "}

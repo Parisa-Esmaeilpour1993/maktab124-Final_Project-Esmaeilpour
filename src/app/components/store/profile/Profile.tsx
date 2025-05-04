@@ -226,32 +226,34 @@ function Profile() {
               <label className="font-semibold text-gray-700">
                 {adminLocalization.education}
               </label>
-              <select
-                name="education"
-                value={formData.education}
-                onChange={handleChange}
-                className="p-2 border text-secondary border-accent rounded-md outline-none focus:ring-1 focus:ring-secondary mt-2"
-              >
-                <option value="">{profileLocalization.choose}</option>
-                <option value={profileLocalization.underDiploma}>
-                  {profileLocalization.underDiploma}{" "}
-                </option>
-                <option value={profileLocalization.diploma}>
-                  {profileLocalization.diploma}
-                </option>
-                <option value={profileLocalization.associate}>
-                  {profileLocalization.associate}
-                </option>
-                <option value={profileLocalization.bachelor}>
-                  {profileLocalization.bachelor}
-                </option>
-                <option value={profileLocalization.master}>
-                  {profileLocalization.master}
-                </option>
-                <option value={profileLocalization.doctora}>
-                  {profileLocalization.doctora}
-                </option>
-              </select>
+              <div className="border border-accent rounded-lg p-2 mt-2 text-sm hover:ring-1 hover:ring-secondary">
+                <select
+                  name="education"
+                  value={formData.education}
+                  onChange={handleChange}
+                  className="text-secondary outline-none w-full"
+                >
+                  <option value="">{profileLocalization.choose}</option>
+                  <option value={profileLocalization.underDiploma}>
+                    {profileLocalization.underDiploma}{" "}
+                  </option>
+                  <option value={profileLocalization.diploma}>
+                    {profileLocalization.diploma}
+                  </option>
+                  <option value={profileLocalization.associate}>
+                    {profileLocalization.associate}
+                  </option>
+                  <option value={profileLocalization.bachelor}>
+                    {profileLocalization.bachelor}
+                  </option>
+                  <option value={profileLocalization.master}>
+                    {profileLocalization.master}
+                  </option>
+                  <option value={profileLocalization.doctora}>
+                    {profileLocalization.doctora}
+                  </option>
+                </select>
+              </div>
             </div>
 
             <div className="mb-6">
@@ -265,7 +267,7 @@ function Profile() {
               />
             </div>
 
-            <div className="mb-6 flex flex-col gap-2">
+            <div className="mb-6 flex flex-col gap-2 md:mt-2">
               <label className="font-semibold text-gray-700">
                 {profileLocalization.gender}
               </label>

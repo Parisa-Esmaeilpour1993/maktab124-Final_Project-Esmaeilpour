@@ -12,6 +12,8 @@ import {
   loginLocalization,
   productsLocalization,
 } from "../constants/localization/fa/localization";
+import { useAppDispatch } from "../redux/store/hooks";
+import { clearCart } from "../redux/reducers/cartReducer/cartReducer";
 
 const PaymentForm = () => {
   const router = useRouter();
@@ -28,6 +30,8 @@ const PaymentForm = () => {
   const [cartId, setCartId] = useState<string | null>(null);
 
   const [allowed, setAllowed] = useState(false);
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const orderId = localStorage.getItem("orderId");
@@ -118,7 +122,9 @@ const PaymentForm = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      localStorage.removeItem("cartId");
 
+      dispatch(clearCart());
       await axios.post(
         `${BASE_url}/api/records/payment`,
         {

@@ -38,6 +38,7 @@ export default function CheckOut() {
   const [selectedAddress, setSelectedAddress] = useState("");
   const [deliveryTime, setDeliveryTime] = useState<Date | null>(null);
   const [discountCode, setDiscountCode] = useState("");
+  const [isDifferentReceiver, setIsDifferentReceiver] = useState(false);
 
   const user =
     typeof window !== "undefined"
@@ -47,7 +48,7 @@ export default function CheckOut() {
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      if (!userIdi) return;
+      if (!userIdi || isDifferentReceiver) return;
       try {
         const res = await axios.get(`${BASE_url}/api/records/users`, {
           headers: { api_key: API_KEY },
@@ -63,7 +64,7 @@ export default function CheckOut() {
             firstName: user.firstName || "",
             lastName: user.lastName || "",
             phone: user.phoneNumber || "",
-            addresses: user.addresses || "",
+            addresses: user.addresses || [],
           });
         }
       } catch (error) {
@@ -72,7 +73,7 @@ export default function CheckOut() {
     };
 
     fetchUserInfo();
-  }, []);
+  }, [userIdi, isDifferentReceiver]);
 
   useEffect(() => {
     fetchOffTickets();
@@ -109,12 +110,11 @@ export default function CheckOut() {
   };
 
   const calculateTotalPrice = () => {
-    const total = items.reduce((acc, item) => {
+    return items.reduce((acc, item) => {
       const discountedPrice =
         item.productPrice * (1 - item.discountPercent / 100);
       return acc + discountedPrice * item.quantity;
     }, 0);
-    return total;
   };
 
   const isFreeShipping = (
@@ -129,6 +129,9 @@ export default function CheckOut() {
       ? 0
       : selectedDelivery?.minCost || 0;
 
+  const payableAmount =
+    calculateTotalPrice() + finalShippingCost - validDiscount;
+
   const handleSubmit = async () => {
     if (items.length === 0) {
       toast.error(checkOutLocalization.emptyCart);
@@ -138,12 +141,13 @@ export default function CheckOut() {
     if (
       !userInfo.firstName ||
       !userInfo.lastName ||
-      !userInfo.addresses ||
+      !userInfo.addresses.length ||
       !userInfo.phone
     ) {
       toast.error(checkOutLocalization.allRequired);
       return;
     }
+
     if (!selectedDelivery) {
       toast.error(checkOutLocalization.chooseDelivery);
       return;
@@ -154,8 +158,10 @@ export default function CheckOut() {
       return;
     }
 
+    const finalUserIdi = isDifferentReceiver ? `${userIdi}-receiver` : userIdi;
+
     const orderPayload = {
-      userIdi,
+      userIdi: finalUserIdi,
       firstName: userInfo.firstName,
       lastName: userInfo.lastName,
       phone: userInfo.phone,
@@ -178,27 +184,35 @@ export default function CheckOut() {
           item.quantity * item.productPrice * (1 - item.discountPercent / 100),
       })),
       totalPrice: calculateTotalPrice(),
-      finalShippingCost: finalShippingCost,
-      validDiscount: validDiscount,
+      finalShippingCost,
+      validDiscount,
       finalAmount: payableAmount,
       isDelivered: false,
       createdAt: new Date().toISOString(),
     };
 
-    console.log(orderPayload);
     try {
+      if (isDifferentReceiver) {
+        await axios.post(
+          `${BASE_url}/api/records/users`,
+          {
+            userIdi: `${userIdi}-receiver`,
+            firstName: userInfo.firstName,
+            lastName: userInfo.lastName,
+            phoneNumber: userInfo.phone,
+            addresses: userInfo.addresses,
+          },
+          { headers: { api_key: API_KEY } }
+        );
+      }
+
       const res = await axios.post(
         `${BASE_url}/api/records/orders`,
         orderPayload,
-        {
-          headers: {
-            api_key: API_KEY,
-          },
-        }
+        { headers: { api_key: API_KEY } }
       );
 
       const orderId = res?.data?.id;
-
       toast.info(checkOutLocalization.transferingToOrders);
       localStorage.setItem("payableAmount", payableAmount.toString());
       localStorage.setItem("orderId", orderId.toString());
@@ -209,17 +223,28 @@ export default function CheckOut() {
     }
   };
 
-  const payableAmount =
-    calculateTotalPrice() + finalShippingCost - validDiscount;
-
   return (
     <div>
       <div className="border-t border-primary mx-4 p-6 space-y-10">
+        {/* سوییچ گیرنده متفاوت */}
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="receiverToggle"
+            checked={isDifferentReceiver}
+            onChange={() => setIsDifferentReceiver(!isDifferentReceiver)}
+          />
+          <label htmlFor="receiverToggle" className="text-sm">
+            گیرنده فرد دیگری است
+          </label>
+        </div>
+
         {/* اطلاعات کاربر */}
         <UserInfo
           userInfo={userInfo}
           setUserInfo={setUserInfo}
           setSelectedAddress={setSelectedAddress}
+          isReceiverOther={isDifferentReceiver}
         />
 
         {/* خلاصه سبد خرید */}
@@ -234,7 +259,7 @@ export default function CheckOut() {
           setDiscountCode={setDiscountCode}
         />
 
-        {/* زمان ارسال  */}
+        {/* زمان ارسال */}
         <DeliveryTime
           setDeliveryTime={setDeliveryTime}
           deliveryTime={deliveryTime}

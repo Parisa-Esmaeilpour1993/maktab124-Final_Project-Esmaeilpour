@@ -11,7 +11,7 @@ interface OrderProduct {
 export interface OrderRecord {
   id: string;
   customer: string;
-  userIdi: number;
+  userIdi: number | string;
   firstName: string;
   lastName: string;
   phone: string;

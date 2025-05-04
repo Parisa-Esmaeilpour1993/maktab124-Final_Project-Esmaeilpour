@@ -32,12 +32,43 @@ const ShowDetailProducts = ({
         </p>
         <p className="border-2 border-gray-200 p-2">
           <strong>{[productsLocalization.price]}:</strong>{" "}
-          {selectedProduct.productPrice} {dashboardLocalization.rial}
+          {selectedProduct.productPrice.toLocaleString()}{" "}
+          {dashboardLocalization.rial}
         </p>
         <p className="border-2 border-gray-200 p-2">
           <strong>{productsLocalization.available}:</strong>{" "}
           {selectedProduct.productQuantity}
         </p>
+        <p className="border-2 border-gray-200 p-2">
+          <strong>{productsLocalization.process}:</strong>{" "}
+          {selectedProduct.productProcess}
+        </p>
+        <p className="border-2 border-gray-200 p-2">
+          <strong>{productsLocalization.productType}:</strong>{" "}
+          {selectedProduct.productType}
+        </p>
+        <p className="border-2 border-gray-200 p-2">
+          <strong>{productsLocalization.capsule}:</strong>{" "}
+          {selectedProduct.productCapsule}
+        </p>
+        <p className="border-2 border-gray-200 p-2">
+          <strong>{productsLocalization.age}:</strong>{" "}
+          {selectedProduct.productAge}
+          {productsLocalization.above}
+        </p>
+        <p className="border-2 border-gray-200 p-2">
+          <strong>{productsLocalization.company}:</strong>{" "}
+          {selectedProduct.productCompany}
+        </p>
+        <p className="border-2 border-gray-200 p-2">
+          <strong>{productsLocalization.country}:</strong>{" "}
+          {selectedProduct.productCountry}
+        </p>
+        <p className="border-2 border-gray-200 p-2">
+          <strong>{productsLocalization.number}:</strong>{" "}
+          {selectedProduct.productNumber}
+        </p>
+
         <div className="border-2 border-gray-200 p-2">
           <strong>{productsLocalization.description}:</strong>
           <div className="max-h-24 overflow-y-auto">

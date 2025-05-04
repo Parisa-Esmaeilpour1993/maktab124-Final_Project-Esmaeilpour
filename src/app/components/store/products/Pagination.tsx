@@ -79,7 +79,7 @@ const Pagination = ({
             </span>
           ) : (
             <button
-              key={num}
+              key={String(num)}
               onClick={() => handlePageChange(num, itemsPerPage)}
               className={`px-3 py-1 border rounded ${
                 num === currentPage ? "bg-secondary text-white" : ""

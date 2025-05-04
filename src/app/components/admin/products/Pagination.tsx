@@ -11,7 +11,14 @@ const Pagination = ({
   setCurrentPage,
   totalPages,
 }: PaginationProps) => {
-  const [inputValue, setInputValue] = useState(currentPage.toString());
+  const [inputValue, setInputValue] = useState(
+    currentPage ? currentPage.toString() : "1"
+  );
+
+  const updatePage = (page: number) => {
+    setCurrentPage(page);
+    setInputValue(page.toString());
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -23,7 +30,7 @@ const Pagination = ({
   const handleInputBlurOrEnter = () => {
     const page = parseInt(inputValue, 10);
     if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
+      updatePage(page);
     } else {
       setInputValue(currentPage.toString());
     }
@@ -32,7 +39,7 @@ const Pagination = ({
   return (
     <div className="flex justify-center items-center mt-4 gap-4 text-sm">
       <button
-        onClick={() => setCurrentPage(1)}
+        onClick={() => updatePage(1)}
         disabled={currentPage === 1}
         className={`px-2 py-1 rounded-md border border-accent ${
           currentPage === 1
@@ -43,7 +50,10 @@ const Pagination = ({
         {faLocalization.first}
       </button>
       <button
-        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+        onClick={() => {
+          const newPage = Math.max(currentPage - 1, 1);
+          updatePage(newPage);
+        }}
         disabled={currentPage === 1}
         className={`px-2 py-1 rounded-md border border-accent ${
           currentPage === 1
@@ -72,7 +82,10 @@ const Pagination = ({
       </span>
 
       <button
-        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+        onClick={() => {
+          const newPage = Math.min(currentPage + 1, totalPages);
+          updatePage(newPage);
+        }}
         disabled={currentPage === totalPages}
         className={`px-2 py-1 rounded-md border border-accent ${
           currentPage === totalPages
@@ -83,7 +96,7 @@ const Pagination = ({
         {faLocalization.next}
       </button>
       <button
-        onClick={() => setCurrentPage(totalPages)}
+        onClick={() => updatePage(totalPages)}
         disabled={currentPage === totalPages}
         className={`px-2 py-1 rounded-md border border-accent ${
           currentPage === totalPages
