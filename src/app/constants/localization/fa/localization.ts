@@ -255,6 +255,12 @@ export const productsLocalization = {
   process: "گروه",
   age: "سن مصرف",
   above: " سال به بالا",
+  relativeProducts: "محصولات مشابه",
+  title1: "تضمین کیفیت",
+  just: "فقط",
+  availableInStore: "عدد در انبار موجود است.",
+  consumerPrice: "قیمت مصرف کننده:",
+  announce: "اگر موجود شد، خبر بده",
 };
 
 export const newestProduct = {
