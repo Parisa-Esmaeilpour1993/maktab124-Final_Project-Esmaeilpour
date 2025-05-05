@@ -292,9 +292,9 @@ export default function AdminDashboard() {
                   <XAxis
                     dataKey="name"
                     interval={0}
-                    angle={rotateLabels ? -20 : 0}
+                    angle={rotateLabels ? -18 : 0}
                     textAnchor={rotateLabels ? "middle" : "middle"}
-                    tick={{ fontSize: 10, dy: rotateLabels ? 20 : 0 }}
+                    tick={{ fontSize: 12, dy: rotateLabels ? 16 : 0 }}
                     height={rotateLabels ? 40 : 30}
                   />
                   <YAxis allowDecimals={false} tickMargin={24} />

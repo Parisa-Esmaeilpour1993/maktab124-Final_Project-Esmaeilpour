@@ -91,7 +91,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="relative z-40 font-medium text-gray-800 mx-4 mb-4 px-4 py-3 border-b border-accent rounded-2xl shadow-accent">
+    <nav className=" z-40 font-medium text-gray-800 mx-4 mb-4 px-4 py-3 border-b border-accent rounded-2xl shadow-accent sticky top-2 bg-white">
       <div
         ref={navbarRef}
         className={`flex gap-6 overflow-x-auto whitespace-nowrap custom-scrollbar transition-all duration-300 ${

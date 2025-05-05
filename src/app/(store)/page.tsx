@@ -7,6 +7,17 @@ import Offer from "../components/store/home/offers/Offer";
 import Sliders from "../components/store/home/sliders/Sliders";
 import WhyDaroopharm from "../components/store/home/whyDaroopharm/WhyDaroopharm";
 
+export const metadata = {
+  title: "داروفارم",
+  description: "",
+  keywords: [
+    "داروفارم",
+    "مکمل های دارویی",
+    "مکمل های ورزشی",
+    "مکمل های غذایی",
+    "آرایشی یهداشتی",
+  ],
+};
 export default function Home() {
   return (
     <div className="w-full">

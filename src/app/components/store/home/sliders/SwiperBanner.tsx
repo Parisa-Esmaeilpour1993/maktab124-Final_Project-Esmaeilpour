@@ -7,6 +7,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { BASE_url } from "@/app/constants/api/BASE_URL";
 import { BannerProps } from "@/app/types/Banner";
+import Link from "next/link";
 
 interface Props {
   banners: BannerProps[];
@@ -28,30 +29,32 @@ export default function SwiperBanner({ banners }: Props) {
         >
           {banners?.map((banner) => (
             <SwiperSlide key={banner.id}>
-              <div
-                className="h-[380px] bg-center bg-cover relative"
-                style={{
-                  backgroundImage: `url(${BASE_url}${banner.background})`,
-                }}
-              >
-                <div className="absolute inset-0 px-10 flex items-center lg:items-start md:px-24">
-                  <div className="text-white text-right lg:mt-16 max-w-[50%]">
-                    <h2 className=" text-lg font-semibold md:text-2xl lg:text-3xl md:font-bold mb-2">
-                      {banner.title}
-                    </h2>
-                    <p className=" text-[16px] md:text-lg">
-                      {banner.description}
-                    </p>
+              <Link href={banner.link}>
+                <div
+                  className="h-[380px] bg-center bg-cover relative"
+                  style={{
+                    backgroundImage: `url(${BASE_url}${banner.background})`,
+                  }}
+                >
+                  <div className="absolute inset-0 px-10 flex items-center lg:items-start md:px-24">
+                    <div className="text-white text-right lg:mt-16 max-w-[50%]">
+                      <h2 className=" text-lg font-semibold md:text-2xl lg:text-3xl md:font-bold mb-2">
+                        {banner.title}
+                      </h2>
+                      <p className=" text-[16px] md:text-lg">
+                        {banner.description}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="absolute px-6 bottom-8 lg:bottom-4 left-0 lg:left-4 md:px-12">
+                    <img
+                      src={`${BASE_url}${banner.image}`}
+                      alt=""
+                      className="w-[180px] md:w-[260px] lg:w-[320px]"
+                    />
                   </div>
                 </div>
-                <div className="absolute px-6 bottom-8 lg:bottom-4 left-0 lg:left-4 md:px-12">
-                  <img
-                    src={`${BASE_url}${banner.image}`}
-                    alt=""
-                    className="w-[180px] md:w-[260px] lg:w-[320px]"
-                  />
-                </div>
-              </div>
+              </Link>
             </SwiperSlide>
           ))}
         </Swiper>

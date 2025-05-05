@@ -1,19 +1,20 @@
-import axios from "axios";
+import FavoriteButton from "@/app/components/store/products/FavoriteButton";
+import AddToCartButton from "@/app/components/store/singleProduct/AddToCartButton";
+import ExpandableBox from "@/app/components/store/singleProduct/ExpandableBox";
+import ProductImageZoom from "@/app/components/store/singleProduct/Magnifire";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
-import { ProductsProps } from "@/app/types/products";
 import {
   faLocalization,
   productsLocalization,
 } from "@/app/constants/localization/fa/localization";
-import { notFound } from "next/navigation";
-import ExpandableBox from "@/app/components/store/singleProduct/ExpandableBox";
-import { GiHealthPotion } from "react-icons/gi";
-import { TbTruckDelivery } from "react-icons/tb";
-import { MdOutlineLocalPharmacy } from "react-icons/md";
-import { FaUserDoctor } from "react-icons/fa6";
-import FavoriteButton from "@/app/components/store/products/FavoriteButton";
-import AddToCartButton from "@/app/components/store/singleProduct/AddToCartButton";
+import { ProductsProps } from "@/app/types/products";
+import axios from "axios";
 import moment from "jalali-moment";
+import { notFound } from "next/navigation";
+import { FaUserDoctor } from "react-icons/fa6";
+import { GiHealthPotion } from "react-icons/gi";
+import { MdOutlineLocalPharmacy } from "react-icons/md";
+import { TbTruckDelivery } from "react-icons/tb";
 
 export default async function SingleProductPage({
   params,
@@ -137,11 +138,7 @@ export default async function SingleProductPage({
           }`}
         >
           <div className="relative hidden lg:block lg:col-span-1 p-4">
-            <img
-              src={`${BASE_url}${product.image}`}
-              alt={product.productName}
-              className="rounded-xl w-full h-96 object-contain bg-white"
-            />
+            <ProductImageZoom imageUrl={`${BASE_url}${product.image}`} />
             <FavoriteButton productId={product.id} />
           </div>
 
@@ -184,31 +181,31 @@ export default async function SingleProductPage({
                 مشخصات
               </div>
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 text-sm border p-4 rounded">
-                <div className="flex justify-between mx-3 px-3 border-b pb-1">
+                <div className="flex justify-between mx-3 px-2 border-b pb-1">
                   <span className="font-semibold">
                     {productsLocalization.productType}
                   </span>
                   <span>{product.productType}</span>
                 </div>
-                <div className="flex justify-between mx-3 px-3 border-b pb-1">
+                <div className="flex justify-between mx-3 px-2 border-b pb-1">
                   <span className="font-semibold">
                     {productsLocalization.number}
                   </span>
                   <span>{product.productNumber}</span>
                 </div>
-                <div className="flex justify-between mx-3 px-3 border-b pb-1">
+                <div className="flex justify-between mx-3 px-2 border-b pb-1">
                   <span className="font-semibold">
                     {productsLocalization.process}
                   </span>
                   <span>{product.productProcess}</span>
                 </div>
-                <div className="flex justify-between mx-3 px-3 border-b pb-1">
+                <div className="flex justify-between mx-3 px-2 border-b pb-1">
                   <span className="font-semibold">
                     {productsLocalization.capsule}
                   </span>
                   <span>{product.productCapsule}</span>
                 </div>
-                <div className="flex justify-between mx-3 px-3 border-b pb-1">
+                <div className="flex justify-between mx-3 px-2 border-b pb-1">
                   <span className="font-semibold">
                     {productsLocalization.age}
                   </span>
@@ -217,13 +214,13 @@ export default async function SingleProductPage({
                     {faLocalization.year}
                   </span>
                 </div>
-                <div className="flex justify-between mx-3 px-3 border-b pb-1">
+                <div className="flex justify-between mx-3 px-2 border-b pb-1">
                   <span className="font-semibold">
                     {productsLocalization.country}
                   </span>
                   <span>{product.productCountry}</span>
                 </div>
-                <div className="flex justify-between mx-3 px-3 pb-1">
+                <div className="flex justify-between mx-3 px-2 pb-1">
                   <span className="font-semibold">
                     {productsLocalization.company}
                   </span>

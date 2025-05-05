@@ -150,23 +150,29 @@ const ProductTable: React.FC<ProductTableProps> = ({
                     )}
                   </td>
                   <td className="p-2 border border-accent">
-                    <select
-                      value={product.productCategory}
-                      onChange={(e) =>
-                        onInlineEdit(
-                          product.id,
-                          "productCategory",
-                          e.target.value
-                        )
-                      }
-                      className="border px-2 py-1 rounded-md"
-                    >
-                      {category?.map((cat) => (
-                        <option key={cat.id} value={cat.id} className="text-xs">
-                          {cat.title}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="border border-accent p-1 rounded-md">
+                      <select
+                        value={product.productCategory}
+                        onChange={(e) =>
+                          onInlineEdit(
+                            product.id,
+                            "productCategory",
+                            e.target.value
+                          )
+                        }
+                        className="outline-none"
+                      >
+                        {category?.map((cat) => (
+                          <option
+                            key={cat.id}
+                            value={cat.id}
+                            className="text-xs"
+                          >
+                            {cat.title}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </td>
                   <td
                     className="p-2 border cursor-pointer border-accent"

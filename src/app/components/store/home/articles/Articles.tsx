@@ -53,7 +53,7 @@ export default function ArticlesSection() {
                   <img src={`${BASE_url}${blog.image}`} alt={blog.title} />
                 </div>
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2 h-14 line-clamp-2">
                     {blog.title}
                   </h3>
                   <p className="text-sm text-gray-600 line-clamp-3 mb-4">
