@@ -14,7 +14,6 @@ import {
 import { useAppDispatch, useAppSelector } from "@/app/redux/store/hooks";
 import Button from "@/app/shared/Button";
 import { confirmDelete } from "@/app/utils/sweetAlert";
-import moment from "jalali-moment";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -25,10 +24,6 @@ export default function CartPage() {
   const dispatch = useAppDispatch();
   const { items, status } = useAppSelector((state) => state.cart);
   const router = useRouter();
-
-  const formatShamsiDate = (date: moment.MomentInput) => {
-    return moment(date).format("jYYYY/jMM/jDD");
-  };
 
   useEffect(() => {
     dispatch(getCartItems());
@@ -157,7 +152,7 @@ export default function CartPage() {
                     <h2 className=" font-semibold">{item.productName}</h2>
                     <p className="text-gray-500 text-sm">
                       {productsLocalization.expireDate} : :{" "}
-                      {formatShamsiDate(item.productExpired)}
+                      <span dir="ltr">{item.productExpired}</span>
                     </p>
                     <p className="text-gray-500 text-sm">
                       {cartLocalization.pricePerProduct}:{" "}

@@ -14,9 +14,11 @@ import { Textarea } from "@/app/shared/TextArea";
 import { UserProps } from "@/app/types/profile";
 import { confirmDelete } from "@/app/utils/sweetAlert";
 import axios from "axios";
-import moment from "jalali-moment";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
 import { toast } from "react-toastify";
 
 function Profile() {
@@ -34,10 +36,6 @@ function Profile() {
   });
 
   const router = useRouter();
-
-  const formatShamsiDate = (date: moment.MomentInput) => {
-    return moment(date).format("jYYYY/jMM/jDD");
-  };
 
   const user =
     typeof window !== "undefined"
@@ -77,7 +75,7 @@ function Profile() {
           addresses: Array.isArray(currentUser.addresses)
             ? currentUser.addresses
             : [],
-          birthDate: currentUser.birthDate?.slice(0, 10) || "",
+          birthDate: currentUser.birthDate || "",
           gender: currentUser.gender || "",
           phoneNumber: currentUser.phoneNumber || "",
           education: currentUser.education || "",
@@ -193,7 +191,7 @@ function Profile() {
       </h1>
       {isEditing ? (
         <form onSubmit={(e) => e.preventDefault()}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
             <div className="mb-4">
               <Input
                 type="text"
@@ -256,14 +254,23 @@ function Profile() {
               </div>
             </div>
 
-            <div className="mb-6">
-              <Input
-                type="date"
-                name="birthDate"
+            <div className="mb-6  flex flex-col gap-2">
+              <label className="font-semibold text-gray-700">
+                {adminLocalization.age}
+              </label>
+              <DatePicker
                 value={formData.birthDate}
-                onChange={handleChange}
-                label={adminLocalization.age}
-                className=""
+                onChange={(date) =>
+                  setFormData({
+                    ...formData,
+                    birthDate: date?.format("YYYY-MM-DD") || "",
+                  })
+                }
+                calendar={persian}
+                locale={persian_fa}
+                calendarPosition="bottom-right"
+                inputClass="w-full border border-secondary px-3 py-2 rounded-md text-gray-600 outline-none focus:border-2"
+                placeholder={adminLocalization.age}
               />
             </div>
 
@@ -381,7 +388,7 @@ function Profile() {
 
             <p className="border-b pb-2">
               <strong>{adminLocalization.age} :</strong>{" "}
-              {formatShamsiDate(userData?.birthDate?.slice(0, 10))}
+              <span dir="ltr">{userData?.birthDate}</span>
             </p>
             <p className="border-b pb-2">
               <strong>{profileLocalization.gender}:</strong> {userData?.gender}

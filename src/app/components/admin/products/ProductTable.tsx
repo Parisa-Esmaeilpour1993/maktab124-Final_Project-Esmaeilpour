@@ -1,6 +1,8 @@
 import { BASE_url } from "@/app/constants/api/BASE_URL";
 import { productsLocalization } from "@/app/constants/localization/fa/localization";
 import { ProductsProps, ProductTableProps } from "@/app/types/products";
+import { faIR } from "date-fns/locale";
+import moment from "jalali-moment";
 import React, { useState } from "react";
 import { BiSolidDetail } from "react-icons/bi";
 import { FaEdit, FaTrash } from "react-icons/fa";
@@ -228,32 +230,8 @@ const ProductTable: React.FC<ProductTableProps> = ({
                       product.productQuantity
                     )}
                   </td>
-                  <td
-                    className="p-2 border cursor-pointer border-accent"
-                    onClick={() =>
-                      handleCellClick(
-                        product.id,
-                        "productExpired",
-                        product.productExpired || ""
-                      )
-                    }
-                  >
-                    {isEditing(product.id, "productExpired") ? (
-                      <input
-                        type="date"
-                        autoFocus
-                        value={tempValue}
-                        onChange={(e) => setTempValue(e.target.value)}
-                        onBlur={handleBlur}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") handleBlur();
-                          if (e.key === "Escape") setEditingCell(null);
-                        }}
-                        className="w-full p-1 border rounded"
-                      />
-                    ) : (
-                      product.productExpired || "-"
-                    )}
+                  <td className="p-2 border border-accent">
+                    {product.productExpired}
                   </td>
                   <td className="p-2 border border-accent">
                     <div className="flex justify-center gap-2 items-center">
@@ -428,33 +406,9 @@ const ProductTable: React.FC<ProductTableProps> = ({
                   product.productQuantity
                 )}
               </p>
-              <p
-                onClick={() =>
-                  handleCellClick(
-                    product.id,
-                    "productExpired",
-                    product.productExpired || ""
-                  )
-                }
-                className="cursor-pointer"
-              >
+              <p>
                 <strong>{productsLocalization.expireDate}:</strong>{" "}
-                {isEditing(product.id, "productExpired") ? (
-                  <input
-                    type="date"
-                    autoFocus
-                    value={tempValue}
-                    onChange={(e) => setTempValue(e.target.value)}
-                    onBlur={handleBlur}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") handleBlur();
-                      if (e.key === "Escape") setEditingCell(null);
-                    }}
-                    className="w-full p-1 border rounded"
-                  />
-                ) : (
-                  product.productExpired || "-"
-                )}
+                <span dir="ltr">{product.productExpired}</span>
               </p>
             </div>
           ))

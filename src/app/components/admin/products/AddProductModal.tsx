@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-import { Category } from "@/app/types/category";
 import {
   faLocalization,
   productsLocalization,
@@ -9,6 +7,11 @@ import {
 } from "@/app/constants/localization/fa/localization";
 import { Input } from "@/app/shared/Input";
 import { Textarea } from "@/app/shared/TextArea";
+import { Category } from "@/app/types/category";
+import React from "react";
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
 
 interface Props {
   isOpen: boolean;
@@ -21,6 +24,7 @@ interface Props {
   ) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setFormData: React.Dispatch<React.SetStateAction<any>>;
   fileName: string | null;
   loading: boolean;
   category: Category[];
@@ -31,6 +35,7 @@ const AddProductModal: React.FC<Props> = ({
   isOpen,
   onClose,
   formData,
+  setFormData,
   onChange,
   onSubmit,
   onFileChange,
@@ -169,7 +174,7 @@ const AddProductModal: React.FC<Props> = ({
               title={productsLocalization.country}
               className="!text-gray-700 w-60"
             />
-            <Input
+            {/* <Input
               type="date"
               name="productExpired"
               value={formData.productExpired}
@@ -178,6 +183,20 @@ const AddProductModal: React.FC<Props> = ({
               className="w-[250px] border px-3 py-2 rounded !text-gray-700"
               required
               title={productsLocalization.expireDate}
+            /> */}
+            <DatePicker
+              value={formData.productExpired}
+              onChange={(date) =>
+                setFormData({
+                  ...formData,
+                  productExpired: date?.format("YYYY-MM-DD") || "",
+                })
+              }
+              calendar={persian}
+              locale={persian_fa}
+              calendarPosition="bottom-right"
+              inputClass="w-[250px] border px-3 py-2 rounded text-gray-700"
+              placeholder={productsLocalization.productExpired}
             />
           </div>
 

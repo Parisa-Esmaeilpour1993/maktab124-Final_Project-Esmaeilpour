@@ -3,20 +3,20 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import { getAuthToken } from "../base/getAuthToken";
-import Input, { PaymentFormData } from "../components/payment/Card";
-import { API_KEY, BASE_url } from "../constants/api/BASE_URL";
+import { getAuthToken } from "../../base/getAuthToken";
+import Input, { PaymentFormData } from "../../components/payment/Card";
+import { API_KEY, BASE_url } from "../../constants/api/BASE_URL";
 import {
   checkOutLocalization,
   faLocalization,
   loginLocalization,
   productsLocalization,
-} from "../constants/localization/fa/localization";
-import { useAppDispatch } from "../redux/store/hooks";
+} from "../../constants/localization/fa/localization";
+import { useAppDispatch } from "../../redux/store/hooks";
 import {
   clearCart,
   removeFromCart,
-} from "../redux/reducers/cartReducer/cartReducer";
+} from "../../redux/reducers/cartReducer/cartReducer";
 
 const PaymentForm = () => {
   const router = useRouter();

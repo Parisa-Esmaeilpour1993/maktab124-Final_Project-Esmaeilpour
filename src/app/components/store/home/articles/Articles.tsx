@@ -16,6 +16,7 @@ export default function ArticlesSection() {
   const [blogs, setBlogs] = useState<BlogProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const token = getAuthToken();
+  const [windowWidth, setWindowWidth] = useState<number>(0);
 
   useEffect(() => {
     axios
@@ -32,6 +33,37 @@ export default function ArticlesSection() {
       });
   }, []);
 
+  const shuffleArray = <T,>(array: T[]): T[] => {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+  };
+
+  const getRandomBlogs = (blogs: BlogProps[], count: number) => {
+    return shuffleArray(blogs).slice(0, count);
+  };
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  if (!blogs || blogs.length === 0) return null;
+
+  let displayBlogs = blogs;
+  if (windowWidth >= 1024) {
+    displayBlogs = blogs.length > 4 ? getRandomBlogs(blogs, 4) : blogs;
+  } else if (windowWidth >= 768) {
+    displayBlogs = blogs.length > 3 ? getRandomBlogs(blogs, 3) : blogs;
+  } else {
+    displayBlogs = blogs.length > 2 ? getRandomBlogs(blogs, 2) : blogs;
+  }
+
   return (
     <section className="py-10 m-8 rounded-md shadow-accent">
       <div className="mx-8 px-4">
@@ -44,7 +76,7 @@ export default function ArticlesSection() {
           {loading ? (
             <p>{faLocalization.loading}</p>
           ) : (
-            blogs.map((blog) => (
+            displayBlogs.map((blog) => (
               <div
                 key={blog.id}
                 className="bg-white rounded-2xl overflow-hidden border border-secondary hover:shadow-accent transition duration-300 hover:-translate-y-1 hover:translate-x-1"

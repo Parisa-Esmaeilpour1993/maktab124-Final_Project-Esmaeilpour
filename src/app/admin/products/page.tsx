@@ -266,6 +266,7 @@ export default function ProductsPage() {
           loading={loading}
           category={categories}
           editId={editId}
+          setFormData={setFormData}
         />
       )}
 

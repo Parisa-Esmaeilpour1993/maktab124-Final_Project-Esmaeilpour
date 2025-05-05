@@ -5,7 +5,6 @@ import {
   faLocalization,
   productsLocalization,
 } from "@/app/constants/localization/fa/localization";
-import moment from "jalali-moment";
 import AddToCartButton from "../singleProduct/AddToCartButton";
 
 export default function ProductCard({
@@ -15,10 +14,6 @@ export default function ProductCard({
   product: any;
   discount: { productName: string; discountPercent: number } | undefined;
 }) {
-  const formatShamsiDate = (date: moment.MomentInput) => {
-    return moment(date).format("jYYYY/jMM/jDD");
-  };
-
   const quantity = +product.productQuantity;
   const isOutOfStock = quantity === 0;
   const hasDiscount = !!discount;
@@ -65,7 +60,7 @@ export default function ProductCard({
         <div className="flex flex-col items-center justify-center text-sm text-gray-700 my-2 h-10">
           <div className="flex gap-[2px] items-center justify-center mt-2">
             <p>{productsLocalization.expireDate}:</p>
-            <p>{formatShamsiDate(product.productExpired)}</p>
+            <p>{product.productExpired}</p>
           </div>
           {quantity < 5 && (
             <p

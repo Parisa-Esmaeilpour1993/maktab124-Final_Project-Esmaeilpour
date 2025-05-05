@@ -19,10 +19,6 @@ export default async function SingleProductPage({
 }: {
   params: { id: string };
 }) {
-  const formatShamsiDate = (date: moment.MomentInput) => {
-    return moment(date).format("jYYYY/jMM/jDD");
-  };
-
   try {
     const productResponse = await axios.get(
       `${BASE_url}/api/records/drugs/${params.id}`,
@@ -149,7 +145,7 @@ export default async function SingleProductPage({
                   </div>
                   <p className="text-gray-700">
                     <strong>{productsLocalization.expireDate}:</strong>{" "}
-                    {formatShamsiDate(product.productExpired) || "—"}
+                    <span dir="ltr">{product.productExpired}</span>
                   </p>
                 </div>
                 {discountPercent !== 0 && (

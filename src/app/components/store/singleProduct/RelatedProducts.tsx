@@ -7,7 +7,6 @@ import {
   faLocalization,
   productsLocalization,
 } from "@/app/constants/localization/fa/localization";
-import moment from "jalali-moment";
 
 interface RelatedProductsProps {
   products: ProductsProps[];
@@ -77,9 +76,7 @@ export default function RelatedProducts({ products }: RelatedProductsProps) {
               <h3 className="text-sm font-normal text-gray-500 mt-2">
                 {productsLocalization.expireDate}
                 {": "}
-                {moment(product.productExpired, "YYYY-MM-DD")
-                  .locale("fa")
-                  .format("YYYY/MM/DD")}
+                <span dir="ltr"> {product.productExpired}</span>
               </h3>
             </div>
           </Link>

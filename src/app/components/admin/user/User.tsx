@@ -61,7 +61,7 @@ const UsersTable = () => {
         },
       });
       setDataDetail(response.data.records);
-      console.log(response.data);
+      console.log(response.data.records);
     } catch (err) {
       console.error(err);
     } finally {
