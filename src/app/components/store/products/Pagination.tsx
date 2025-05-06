@@ -10,8 +10,11 @@ const Pagination = ({
   totalItems,
   itemsPerPage,
 }: PaginationProps) => {
-  const totalPages =
-    itemsPerPage > 0 ? Math.ceil(totalItems / itemsPerPage) : 1;
+  const totalPages = useMemo(() => {
+    const total = itemsPerPage > 0 ? Math.ceil(totalItems / itemsPerPage) : 1;
+    return isNaN(total) ? 1 : total;
+  }, [totalItems, itemsPerPage]);
+
   const router = useRouter();
   const searchParams = useSearchParams();
 

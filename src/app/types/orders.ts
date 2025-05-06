@@ -1,4 +1,4 @@
-interface OrderProduct {
+export interface OrderProduct {
   productId: string;
   name: string;
   quantity: number;
@@ -21,7 +21,7 @@ export interface OrderRecord {
   deliveryDate: string;
   discountCode: string;
   validDiscount: number;
-  deliveryMethod: {
+  deliveryMethods: {
     name: string;
     cost: number;
   };

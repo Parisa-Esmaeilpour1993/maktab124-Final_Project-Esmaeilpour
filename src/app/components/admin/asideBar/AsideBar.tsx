@@ -31,6 +31,10 @@ export default function AdminSidebar({
     try {
       localStorage.removeItem("authToken");
       localStorage.removeItem("email");
+      document.cookie =
+        "loginAuthToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+      document.cookie =
+        "fromAdmin=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";
 
       router.push("/login");
     } catch (error) {

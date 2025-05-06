@@ -45,6 +45,7 @@ function DeliveryTime({ deliveryTime, setDeliveryTime }: Props) {
           minDate={tomorrow}
           locale={persian_fa}
           className="p-2 rounded-md w-full"
+          inputClass="w-full p-1 rounded-md border border-gray-300 focus:ring-1 focus:ring-accent outline-none text-secondary"
           placeholder={checkOutLocalization.chooseDate}
         />
       )}

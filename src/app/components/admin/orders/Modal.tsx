@@ -11,26 +11,29 @@ import {
   productsLocalization,
   sweetAlert,
 } from "@/app/constants/localization/fa/localization";
-import { Input } from "@/app/shared/Input";
-import { Order } from "@/app/types/orders";
 import axios from "axios";
 import html2pdf from "html2pdf.js";
-import moment from "jalali-moment";
-import React from "react";
+import React, { useState } from "react";
 import { AiFillCloseSquare } from "react-icons/ai";
 import { toast } from "react-toastify";
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
+import { CiCalendarDate } from "react-icons/ci";
+import DateObject from "react-date-object";
+import { OrderRecord } from "@/app/types/orders";
 
 type ModalProps = {
-  selectedOrder: Order;
-  setSelectedOrder: (order: Order | null) => void;
+  selectedOrder: OrderRecord;
+  setSelectedOrder: (order: OrderRecord | null) => void;
   deliveryDate: string;
   setDeliveryDate: React.Dispatch<React.SetStateAction<string>>;
   editStatus: boolean | null;
   setEditStatus: React.Dispatch<React.SetStateAction<boolean | null>>;
   isModified: boolean;
   setIsModified: React.Dispatch<React.SetStateAction<boolean>>;
-  orders: Order[];
-  setOrders: React.Dispatch<React.SetStateAction<Order[]>>;
+  orders: OrderRecord[];
+  setOrders: React.Dispatch<React.SetStateAction<OrderRecord[]>>;
 };
 
 function Modal({
@@ -46,6 +49,10 @@ function Modal({
   setOrders,
 }: ModalProps) {
   const token = getAuthToken();
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
 
   const handleSaveChanges = async () => {
     if (!selectedOrder) return;
@@ -98,11 +105,6 @@ function Modal({
       toast.error(sweetAlert.error);
       console.error(err);
     }
-  };
-
-  const handleDeliveryDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDeliveryDate(e.target.value);
-    setIsModified(true);
   };
 
   const exportToPDF = () => {
@@ -209,16 +211,41 @@ function Modal({
                   {ordersLocalization.deliveryTime}:
                 </h3>
                 <div className="flex flex-col lg:flex-row gap-2 items-center">
-                  <Input
-                    type="datetime-local"
-                    value={deliveryDate || ""}
-                    onChange={handleDeliveryDateChange}
-                    className="!px-[3px] !py-[2px]"
-                  />
-                  {deliveryDate && (
-                    <span className=" text-gray-500 mx-4">
-                      {moment(deliveryDate).format("jYYYY/jMM/jDD - HH:mm")}
-                    </span>
+                  {deliveryDate && !isPickerOpen ? (
+                    <div className="flex items-center gap-4">
+                      <div className="text-sm text-gray-700">
+                        <span dir="ltr">{deliveryDate}</span>
+                      </div>
+                      <button
+                        className="text-primary text-xl"
+                        onClick={() => setIsPickerOpen(true)}
+                      >
+                        <CiCalendarDate />
+                      </button>
+                    </div>
+                  ) : (
+                    <DatePicker
+                      value={
+                        deliveryDate
+                          ? new DateObject({
+                              date: deliveryDate,
+                              format: "YYYY/MM/DD",
+                            })
+                          : ""
+                      }
+                      onChange={(dateObj) => {
+                        if (dateObj) {
+                          setDeliveryDate(dateObj.format("YYYY/MM/DD"));
+                          setIsModified(true);
+                        }
+                      }}
+                      calendar={persian}
+                      minDate={tomorrow}
+                      locale={persian_fa}
+                      className="p-2 rounded-md w-full"
+                      inputClass="w-full p-1 rounded-md border border-gray-300 focus:ring-1 focus:ring-accent outline-none text-secondary"
+                      placeholder={checkOutLocalization.chooseDate}
+                    />
                   )}
                 </div>
               </div>
@@ -253,7 +280,7 @@ function Modal({
                 </tr>
               </thead>
               <tbody>
-                {selectedOrder.items.map((item, index) => (
+                {selectedOrder?.products?.map((item, index) => (
                   <tr key={index} className="border-t border-accent">
                     <td className="px-3 py-2">{item.name}</td>
                     <td className="px-3 py-2 text-center">{item.quantity}</td>
@@ -264,7 +291,7 @@ function Modal({
                       {item.discountPercent}
                     </td>
                     <td className="px-3 py-2 text-center">
-                      {item.price.toLocaleString()}
+                      {item.finalPrice.toLocaleString()}
                     </td>
                   </tr>
                 ))}
@@ -273,7 +300,7 @@ function Modal({
           </div>
 
           <div className="md:hidden flex flex-col gap-4 shadow-accent p-2">
-            {selectedOrder.items.map((item, index) => (
+            {selectedOrder?.products?.map((item, index) => (
               <div
                 key={index}
                 className="border border-accent rounded p-3 bg-white shadow-sm text-sm"
@@ -296,7 +323,7 @@ function Modal({
                 </p>
                 <p>
                   <strong>{cartLocalization.totalPrice}:</strong>{" "}
-                  {item.price.toLocaleString()} {dashboardLocalization.rial}
+                  {item.total.toLocaleString()} {dashboardLocalization.rial}
                 </p>
               </div>
             ))}

@@ -195,7 +195,7 @@ const AddProductModal: React.FC<Props> = ({
               calendar={persian}
               locale={persian_fa}
               calendarPosition="bottom-right"
-              inputClass="w-[250px] border px-3 py-2 rounded text-gray-700"
+              inputClass="w-full p-1 rounded-md border border-gray-300 focus:ring-1 focus:ring-accent outline-none text-secondary"
               placeholder={productsLocalization.productExpired}
             />
           </div>

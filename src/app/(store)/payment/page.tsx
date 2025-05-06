@@ -118,7 +118,7 @@ const PaymentForm = () => {
     }
 
     try {
-      await axios.delete(`${BASE_url}/api/records/cart/${cartId}`, {
+      await axios.delete(`${BASE_url}/api/records/cart/delete-all`, {
         headers: {
           "Content-Type": "application/json",
           api_key: API_KEY,
@@ -127,7 +127,7 @@ const PaymentForm = () => {
       });
 
       dispatch(clearCart());
-      dispatch(removeFromCart(cartId));
+
       await axios.post(
         `${BASE_url}/api/records/payment`,
         {

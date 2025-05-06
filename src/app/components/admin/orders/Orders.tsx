@@ -3,25 +3,31 @@
 import {
   faLocalization,
   ordersLocalization,
+  UsersLocalization,
 } from "@/app/constants/localization/fa/localization";
 import { fetchOrders } from "@/app/services/fetchOrders";
 import { Input } from "@/app/shared/Input";
 import SearchInput from "@/app/shared/SearchInput";
 
-import React, { useEffect, useState } from "react";
-import OrderTabel from "./OrderTabel";
-import Modal from "./Modal";
 import { OrderRecord } from "@/app/types/orders";
+import { useEffect, useMemo, useState } from "react";
+import Pagination from "../products/Pagination";
+import Modal from "./Modal";
+import OrderTabel from "./OrderTabel";
 
 export default function Orders() {
-  const [filter, setFilter] = useState<string>("all");
-  const [search, setSearch] = useState<string>("");
+  const [filter, setFilter] = useState<"all" | "delivered" | "inDelivery">(
+    "all"
+  );
+  const [search, setSearch] = useState("");
   const [orders, setOrders] = useState<OrderRecord[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<OrderRecord | null>(null);
-  const [deliveryDate, setDeliveryDate] = useState<string>("");
-  const [isModified, setIsModified] = useState<boolean>(false);
+  const [deliveryDate, setDeliveryDate] = useState("");
+  const [isModified, setIsModified] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [editStatus, setEditStatus] = useState<boolean | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     const getData = async () => {
@@ -30,7 +36,6 @@ export default function Orders() {
       setOrders(data);
       setIsLoading(false);
     };
-
     getData();
   }, []);
 
@@ -42,15 +47,26 @@ export default function Orders() {
     }
   }, [selectedOrder]);
 
-  const filteredOrders = orders?.filter((order) => {
-    const matchesFilter =
-      filter === "all"
-        ? true
-        : order.deliveryStatus === (filter === "delivered");
+  const filteredOrders = useMemo(() => {
+    return orders.filter((order) => {
+      const matchesFilter =
+        filter === "all"
+          ? true
+          : order.deliveryStatus === (filter === "delivered");
 
-    const matchesSearch = order.customer.includes(search.trim());
-    return matchesFilter && matchesSearch;
-  });
+      const matchesSearch = order.customer
+        .toLowerCase()
+        .includes(search.trim().toLowerCase());
+
+      return matchesFilter && matchesSearch;
+    });
+  }, [orders, filter, search]);
+
+  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+  const paginatedOrders = filteredOrders.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div className="p-2 md:p-4 w-full">
@@ -71,7 +87,9 @@ export default function Orders() {
                 type="radio"
                 name="filter"
                 checked={filter === status}
-                onChange={() => setFilter(status)}
+                onChange={() =>
+                  setFilter(status as "all" | "delivered" | "inDelivery")
+                }
                 className="accent-primary focus:outline-none focus:ring-0"
               />
               <span>
@@ -86,14 +104,17 @@ export default function Orders() {
         <div className="text-center text-gray-500">
           {faLocalization.loading}
         </div>
+      ) : filteredOrders.length === 0 ? (
+        <div className="text-center text-gray-500">
+          {ordersLocalization.noOrderFound}
+        </div>
       ) : (
         <OrderTabel
-          filteredOrders={filteredOrders || []}
+          filteredOrders={paginatedOrders}
           setSelectedOrder={setSelectedOrder}
         />
       )}
 
-      {/* Order Detail Modal */}
       {selectedOrder && (
         <Modal
           selectedOrder={selectedOrder}
@@ -106,6 +127,14 @@ export default function Orders() {
           setIsModified={setIsModified}
           orders={orders}
           setOrders={setOrders}
+        />
+      )}
+
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPages={totalPages}
         />
       )}
     </div>

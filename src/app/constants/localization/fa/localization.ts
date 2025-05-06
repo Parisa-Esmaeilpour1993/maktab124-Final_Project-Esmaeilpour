@@ -316,6 +316,7 @@ export const ordersLocalization = {
   deleteOrder: "حذف سفارش",
   finalShippingCost: "هزینه ارسال نهایی:",
   lastPrice: "قیمت تمام شده:",
+  noOrderFound: "سفارشی هنوز ثبت نشده است.",
 };
 
 export const adminLocalization = {
