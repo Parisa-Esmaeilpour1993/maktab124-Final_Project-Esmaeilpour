@@ -56,15 +56,15 @@ A modern e-commerce platform for an online pharmacy built with Next.js, TypeScri
 
 ## ScreenShots
 
-<div className="grid grid-cols-2 gap-4">
-  <img src="src/app/assets/images/01.png" width="400" />
-<img src="src/app/assets/images/02.png" width="400" />
-<img src="src/app/assets/images/03.png" width="400" />
-<img src="src/app/assets/images/04.png" width="400" />
-<img src="src/app/assets/images/05.png" width="400" />
-<img src="src/app/assets/images/10.png" width="400" />
-<img src="src/app/assets/images/08.png" width="400" />
-<img src="src/app/assets/images/11.png" width="400" />
+<div className="grid grid-cols-2 gap-8">
+  <img src="src/app/assets/images/01.png" width="400" className="border border-gray-700 p-4/>
+<img src="src/app/assets/images/02.png" width="400" className="border border-gray-700 p-4/>
+<img src="src/app/assets/images/03.png" width="400" className="border border-gray-700 p-4/>
+<img src="src/app/assets/images/04.png" width="400" className="border border-gray-700 p-4/>
+<img src="src/app/assets/images/05.png" width="400" className="border border-gray-700 p-4/>
+<img src="src/app/assets/images/10.png" width="400" className="border border-gray-700 p-4/>
+<img src="src/app/assets/images/08.png" width="400" className="border border-gray-700 p-4/>
+<img src="src/app/assets/images/11.png" width="400" className="border border-gray-700 p-4/>
 </div>
 
 ## 📦 Installation
