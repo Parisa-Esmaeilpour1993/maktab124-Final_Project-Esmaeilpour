@@ -12,13 +12,14 @@ import Button from "@/app/shared/Button";
 import { Input } from "@/app/shared/Input";
 import { Textarea } from "@/app/shared/TextArea";
 import { UserProps } from "@/app/types/profile";
+import { UserProps as UserProp } from "@/app/types/users";
 import { confirmDelete } from "@/app/utils/sweetAlert";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
+import DatePicker from "react-multi-date-picker";
 import { toast } from "react-toastify";
 
 function Profile() {
@@ -62,7 +63,7 @@ function Profile() {
         });
 
         const users = res.data.records;
-        const currentUser = users.find((u: any) => u.userIdi === userIdi);
+        const currentUser = users.find((u: UserProp) => u.userIdi === userIdi);
         if (!currentUser) {
           setIsEditing(true);
           return;

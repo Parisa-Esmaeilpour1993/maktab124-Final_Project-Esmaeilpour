@@ -6,13 +6,14 @@ import {
   productsLocalization,
 } from "@/app/constants/localization/fa/localization";
 import AddToCartButton from "../singleProduct/AddToCartButton";
+import { Discount, ProductsProps } from "@/app/types/products";
 
 export default function ProductCard({
   product,
   discount,
 }: {
-  product: any;
-  discount: { productName: string; discountPercent: number } | undefined;
+  product: ProductsProps;
+  discount: Discount | undefined;
 }) {
   const quantity = +product.productQuantity;
   const isOutOfStock = quantity === 0;

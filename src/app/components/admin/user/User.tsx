@@ -69,7 +69,9 @@ const UsersTable = () => {
   };
 
   const handleSelectUser = (basicUser: UserProps) => {
-    const detail = dataDetail.find((d: any) => d.userIdi === basicUser.userIdi);
+    const detail = dataDetail.find(
+      (d: UserProps) => d.userIdi === basicUser.userIdi
+    );
     if (detail) {
       setSelectedUser({ ...basicUser, ...detail });
     } else {
@@ -137,7 +139,9 @@ const UsersTable = () => {
       });
 
       setData((prev) => prev.filter((user) => user._id !== userId));
-      setDataDetail((prev) => prev.filter((user: any) => user.id !== recordId));
+      setDataDetail((prev) =>
+        prev.filter((user: UserProps) => user.id !== recordId)
+      );
     } catch (error) {
       console.error("Delete error:", error);
     }

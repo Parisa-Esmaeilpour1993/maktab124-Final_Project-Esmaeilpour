@@ -114,8 +114,8 @@ export default function ProductsPage() {
             id: editId,
             productPrice: Number(formData.productPrice),
             productQuantity: Number(formData.productQuantity),
-            productNumber: formData.productNumber,
-            productAge: formData.productAge,
+            productNumber: Number(formData.productNumber),
+            productAge: Number(formData.productAge),
             createdAt: formData.createdAt,
           })
         );
@@ -131,8 +131,8 @@ export default function ProductsPage() {
             ...formData,
             productPrice: Number(formData.productPrice),
             productQuantity: Number(formData.productQuantity),
-            productNumber: formData.productNumber,
-            productAge: formData.productAge,
+            productNumber: Number(formData.productNumber),
+            productAge: Number(formData.productAge),
             createdAt: formData.createdAt,
           })
         );
@@ -226,8 +226,8 @@ export default function ProductsPage() {
           onEditClick={(product) => {
             setFormData({
               ...product,
-              productPrice: product.productPrice.toString(),
-              productQuantity: product.productQuantity.toString(),
+              productPrice: product.productPrice,
+              productQuantity: product.productQuantity,
               productNumber: product.productNumber,
               productAge: product.productAge,
             });

@@ -3,7 +3,6 @@
 import {
   faLocalization,
   ordersLocalization,
-  UsersLocalization,
 } from "@/app/constants/localization/fa/localization";
 import { fetchOrders } from "@/app/services/fetchOrders";
 import { Input } from "@/app/shared/Input";

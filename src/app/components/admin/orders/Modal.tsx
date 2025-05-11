@@ -138,6 +138,7 @@ function Modal({
       });
   };
 
+  console.log(selectedOrder);
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center px-6 md:px-12">
       <div className="flex flex-col gap-4 bg-white p-3 md:p-6 rounded-lg w-full shadow-lg max-h-[90vh] overflow-y-auto">
@@ -206,8 +207,8 @@ function Modal({
             </div>
 
             {editStatus && (
-              <div className="flex gap-2 lg:items-center">
-                <h3 className="text-gray-700 font-medium pt-2 lg:pt-0">
+              <div className="flex gap-2 items-center">
+                <h3 className="text-gray-700 font-medium">
                   {ordersLocalization.deliveryTime}:
                 </h3>
                 <div className="flex flex-col lg:flex-row gap-2 items-center">
@@ -280,7 +281,7 @@ function Modal({
                 </tr>
               </thead>
               <tbody>
-                {selectedOrder?.products?.map((item, index) => (
+                {selectedOrder?.items?.map((item, index) => (
                   <tr key={index} className="border-t border-accent">
                     <td className="px-3 py-2">{item.name}</td>
                     <td className="px-3 py-2 text-center">{item.quantity}</td>
@@ -291,7 +292,7 @@ function Modal({
                       {item.discountPercent}
                     </td>
                     <td className="px-3 py-2 text-center">
-                      {item.finalPrice.toLocaleString()}
+                      {item.price.toLocaleString()}
                     </td>
                   </tr>
                 ))}
@@ -300,7 +301,7 @@ function Modal({
           </div>
 
           <div className="md:hidden flex flex-col gap-4 shadow-accent p-2">
-            {selectedOrder?.products?.map((item, index) => (
+            {selectedOrder?.items?.map((item, index) => (
               <div
                 key={index}
                 className="border border-accent rounded p-3 bg-white shadow-sm text-sm"
@@ -323,7 +324,7 @@ function Modal({
                 </p>
                 <p>
                   <strong>{cartLocalization.totalPrice}:</strong>{" "}
-                  {item.total.toLocaleString()} {dashboardLocalization.rial}
+                  {item.price.toLocaleString()} {dashboardLocalization.rial}
                 </p>
               </div>
             ))}
@@ -332,8 +333,8 @@ function Modal({
           <div className="grid grid-cols-2 gap-2 md:gap-4 mt-4 text-sm text-gray-700">
             <div className="bg-light/40 p-3 rounded shadow-sm">
               <strong>{checkOutLocalization.deliveryMethod} :</strong>{" "}
-              {selectedOrder.deliveryMethods.name} -{" "}
-              {selectedOrder.deliveryMethods.cost.toLocaleString()}{" "}
+              {selectedOrder.deliveryMethod?.name} -{" "}
+              {selectedOrder.deliveryMethod?.cost.toLocaleString()}{" "}
               {dashboardLocalization.rial}
             </div>
 

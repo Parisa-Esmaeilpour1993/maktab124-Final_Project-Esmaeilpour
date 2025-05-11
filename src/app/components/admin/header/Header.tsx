@@ -3,14 +3,12 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import logo from "@/app/assets/images/logo.png";
 import admin from "@/app/assets/images/admin.jpg";
-import {
-  adminHeaderLocalization,
-  faLocalization,
-} from "@/app/constants/localization/fa/localization";
+import { adminHeaderLocalization } from "@/app/constants/localization/fa/localization";
 import Button from "@/app/shared/Button";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
 import axios from "axios";
 import { getAuthToken } from "@/app/base/getAuthToken";
+import { AdminDataProps } from "@/app/types/users";
 
 export default function AdminHeader({
   toggleSidebar,
@@ -33,7 +31,7 @@ export default function AdminHeader({
         const admins = res.data.records;
         if (!userEmail) throw new Error("No user email found in localStorage");
         const currentAdmin = admins.find(
-          (admin: any) => admin.email === userEmail
+          (admin: AdminDataProps) => admin.email === userEmail
         );
         if (currentAdmin) {
           const fullName = `${currentAdmin.firstName} ${currentAdmin.lastName}`;

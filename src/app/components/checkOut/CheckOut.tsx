@@ -233,6 +233,7 @@ export default function CheckOut() {
             id="receiverToggle"
             checked={isDifferentReceiver}
             onChange={() => setIsDifferentReceiver(!isDifferentReceiver)}
+            className="accent-green-700"
           />
           <label htmlFor="receiverToggle" className="text-sm">
             گیرنده فرد دیگری است

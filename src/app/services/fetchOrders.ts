@@ -2,6 +2,7 @@ import { toast } from "react-toastify";
 import { sweetAlert } from "../constants/localization/fa/localization";
 import { API_KEY, BASE_url } from "../constants/api/BASE_URL";
 import axios from "axios";
+import { OrderProduct, OrderRecord } from "../types/orders";
 
 export const fetchOrders = async () => {
   try {
@@ -9,7 +10,7 @@ export const fetchOrders = async () => {
       headers: { api_key: API_KEY },
     });
 
-    const fetchedOrders = response.data.records.map((item: any) => ({
+    const fetchedOrders = response.data.records.map((item: OrderRecord) => ({
       id: item.id,
       isDelivered: item.isDelivered,
       customer: `${item.firstName} ${item.lastName}`,
@@ -24,7 +25,7 @@ export const fetchOrders = async () => {
       discountCode: item.discountCode,
       validDiscount: item.validDiscount,
       finalShippingCost: item.finalShippingCost,
-      items: item.products.map((p: any) => ({
+      items: item.products.map((p: OrderProduct) => ({
         name: p.name,
         quantity: p.quantity,
         unitPrice: p.unitPrice,
@@ -38,7 +39,7 @@ export const fetchOrders = async () => {
     }));
 
     return fetchedOrders;
-  } catch (err: any) {
+  } catch (err) {
     toast.error(sweetAlert.error);
     console.error(err);
     return [];

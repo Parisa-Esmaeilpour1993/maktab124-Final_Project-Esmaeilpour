@@ -1,8 +1,8 @@
 export const resetForm = {
   productName: "",
   productCategory: "",
-  productPrice: "",
-  productQuantity: "",
+  productPrice: 0,
+  productQuantity: 0,
   productDescription: "",
   productSpecifications: "",
   productExpired: "",
@@ -10,9 +10,10 @@ export const resetForm = {
   createdAt: "",
   productType: "",
   productCompany: "",
-  productNumber: "",
+  productNumber: 0,
   productCapsule: "",
   productCountry: "",
-  productAge: "",
+  productAge: 0,
   productProcess: "",
+  id: "",
 };

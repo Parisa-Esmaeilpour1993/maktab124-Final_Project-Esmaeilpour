@@ -9,10 +9,40 @@ import {
   faLocalization,
   productsLocalization,
 } from "@/app/constants/localization/fa/localization";
-import { ProductsProps } from "@/app/types/products";
+import { ProductsProps, SingleProductPageProps } from "@/app/types/products";
 import axios from "axios";
-import moment from "jalali-moment";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+export async function generateMetadata({
+  params,
+}: SingleProductPageProps): Promise<Metadata> {
+  try {
+    const res = await axios.get(`${BASE_url}/api/records/drugs/${params.id}`, {
+      headers: { api_key: API_KEY },
+    });
+
+    const product: ProductsProps = res.data;
+
+    return {
+      title: `${product.productName} | داروفارم`,
+      description:
+        product.productDescription?.slice(0, 160) ||
+        "مشاهده مشخصات محصول در داروفارم.",
+      keywords: [product.productName, product.productCompany],
+      openGraph: {
+        title: product.productName,
+        description: product.productDescription?.slice(0, 160),
+        images: product.image ? [`${BASE_url}${product.image}`] : [],
+      },
+    };
+  } catch (error) {
+    return {
+      title: "محصول یافت نشد | فروشگاه",
+      description: "این محصول ممکن است حذف شده یا در دسترس نباشد.",
+    };
+  }
+}
 
 export default async function SingleProductPage({
   params,
@@ -33,7 +63,7 @@ export default async function SingleProductPage({
     const offProducts = offResponse.data?.records || [];
 
     const matchedOffProduct = offProducts.find(
-      (off: any) => off.productName === product.productName
+      (off: ProductsProps) => off.productName === product.productName
     );
 
     const discountPercent = matchedOffProduct?.discountPercent || 0;

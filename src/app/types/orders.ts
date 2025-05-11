@@ -4,9 +4,7 @@ export interface OrderProduct {
   quantity: number;
   unitPrice: number;
   discountPercent: number;
-  finalPrice: number;
-  total: number;
-  category: string;
+  price: number;
 }
 export interface OrderRecord {
   id: string;
@@ -21,11 +19,11 @@ export interface OrderRecord {
   deliveryDate: string;
   discountCode: string;
   validDiscount: number;
-  deliveryMethods: {
+  deliveryMethod: {
     name: string;
     cost: number;
   };
-  products: OrderProduct[];
+  items: OrderProduct[];
   totalPrice: number;
   finalShippingCost: number;
   finalAmount: number;

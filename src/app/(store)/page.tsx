@@ -9,13 +9,16 @@ import WhyDaroopharm from "../components/store/home/whyDaroopharm/WhyDaroopharm"
 
 export const metadata = {
   title: "داروفارم",
-  description: "",
+  description:
+    "داروخانه آنلاین تخصصی برای خرید مکمل‌های دارویی، ورزشی، آرایشی و بهداشتی با ارسال سریع و تضمین اصالت کالا",
   keywords: [
     "داروفارم",
     "مکمل های دارویی",
     "مکمل های ورزشی",
     "مکمل های غذایی",
     "آرایشی یهداشتی",
+    "داروخانه آنلاین",
+    "خرید دارو",
   ],
 };
 export default function Home() {

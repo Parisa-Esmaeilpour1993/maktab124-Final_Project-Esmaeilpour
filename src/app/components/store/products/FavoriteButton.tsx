@@ -11,6 +11,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { toast } from "react-toastify";
+import { FavoriteRecord } from "@/app/types/favorites";
 
 export default function FavoriteButton({ productId }: { productId: string }) {
   const [isFav, setIsFav] = useState(false);
@@ -38,7 +39,7 @@ export default function FavoriteButton({ productId }: { productId: string }) {
         });
         const favorites = res.data.records || [];
         const match = favorites.find(
-          (item: any) =>
+          (item: FavoriteRecord) =>
             item.productId === productId && item.userIdi === userIdi
         );
         if (match) {

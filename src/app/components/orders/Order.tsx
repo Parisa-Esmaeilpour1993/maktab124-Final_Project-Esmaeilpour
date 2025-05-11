@@ -97,9 +97,7 @@ function Order() {
                   {formatShamsiDate(order.createdAt)}
                 </td>
                 <td className="p-2 border">
-                  {!order.isDelivered
-                    ? "در حال ارسال..."
-                    : formatShamsiDate(order.deliveryDate)}
+                  {!order.isDelivered ? "در حال ارسال..." : order.deliveryDate}
                 </td>
                 <td className="p-2 border">{order.address}</td>
                 <td className="p-2 border">

@@ -114,7 +114,7 @@ const AdminsTable = () => {
       setEditAdminId(null);
       fetchAdmins();
       fetchUsers();
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
       setError(sweetAlert.errorInSendingData);
     }

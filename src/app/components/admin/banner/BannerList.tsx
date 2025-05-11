@@ -218,7 +218,7 @@ export default function BannerList({ banners, onRefresh }: BannerListProps) {
                 </button>
               </div>
 
-              <div className="flex items-center gap-24 mt-6">
+              <div className="flex items-center justify-between gap-24 mt-6">
                 <div className="flex gap-2 items-center">
                   <label className="font-semibold">
                     {bannerLocalization.mainImage}

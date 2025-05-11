@@ -9,7 +9,7 @@ import {
 import { addBanner } from "@/app/services/addBanners";
 import { Input } from "@/app/shared/Input";
 import { Textarea } from "@/app/shared/TextArea";
-import { AddBannerModalProps } from "@/app/types/Banner";
+import { AddBannerModalProps, BannerProps } from "@/app/types/Banner";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
@@ -60,7 +60,7 @@ export default function AddBannerModal({
       const existingBanners = await res.json();
 
       const isOrderTaken = existingBanners.records.some(
-        (banner: any) => banner.order === Number(formData.order)
+        (banner: BannerProps) => banner.order === Number(formData.order)
       );
 
       if (isOrderTaken) {

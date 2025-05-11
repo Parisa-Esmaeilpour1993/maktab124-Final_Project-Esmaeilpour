@@ -36,10 +36,6 @@ export const fetchProducts = createAsyncThunk<
     }
 
     const url = `${BASE_url}/api/records/drugs?${urlParams.toString()}`;
-    console.log(
-      "URL:",
-      `${BASE_url}/api/records/drugs?${urlParams.toString()}`
-    );
     const response = await axios.get(url, {
       headers: {
         "Content-Type": "application/json",

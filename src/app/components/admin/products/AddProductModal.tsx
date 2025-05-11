@@ -7,29 +7,11 @@ import {
 } from "@/app/constants/localization/fa/localization";
 import { Input } from "@/app/shared/Input";
 import { Textarea } from "@/app/shared/TextArea";
-import { Category } from "@/app/types/category";
 import React from "react";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
-
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-  formData: any;
-  onChange: (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => void;
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  setFormData: React.Dispatch<React.SetStateAction<any>>;
-  fileName: string | null;
-  loading: boolean;
-  category: Category[];
-  editId: string | null;
-}
+import { Props } from "@/app/types/products";
 
 const AddProductModal: React.FC<Props> = ({
   isOpen,

@@ -16,7 +16,7 @@ function DeliveryMethods({
         {checkOutLocalization.deliveryMethod}
       </h2>
       <div className="space-y-4">
-        {deliveryMethods.map((method: any) => (
+        {deliveryMethods.map((method: DeliveryMethod) => (
           <div key={method.id} className="flex items-center gap-2">
             <input
               type="radio"

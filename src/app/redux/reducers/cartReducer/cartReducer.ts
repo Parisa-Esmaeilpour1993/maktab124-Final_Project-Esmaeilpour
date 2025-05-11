@@ -2,6 +2,7 @@ import { getAuthToken } from "@/app/base/getAuthToken";
 import { API_KEY, BASE_url } from "@/app/constants/api/BASE_URL";
 import { cartLocalization } from "@/app/constants/localization/fa/localization";
 import { CartItem } from "@/app/types/cart";
+import { Discount } from "@/app/types/products";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -77,7 +78,7 @@ export const addToCart = createAsyncThunk(
         );
         const discounts = discountRes.data.records || [];
         const matchingDiscount = discounts.find(
-          (item: any) => item.productName === product.productName
+          (item: Discount) => item.productName === product.productName
         );
         if (matchingDiscount) {
           discountPercent = matchingDiscount.discountPercent || 0;

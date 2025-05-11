@@ -7,6 +7,7 @@ import {
   signUpLocalization,
   validateLocalization,
 } from "@/app/constants/localization/fa/localization";
+import { NewsletterItem } from "@/app/types/newsLetterForm";
 import axios from "axios";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
@@ -37,10 +38,10 @@ export default function NewsletterForm() {
         }
       );
 
-      const existingEmails = existingRes?.data.records || [];
+      const existingEmails = existingRes?.data.records as NewsletterItem[];
 
       const isDuplicate = existingEmails.some(
-        (item: any) => item.email?.toLowerCase() === email.toLowerCase()
+        (item) => item.email?.toLowerCase() === email.toLowerCase()
       );
 
       if (isDuplicate) {
@@ -62,7 +63,7 @@ export default function NewsletterForm() {
         toast.success(FooterLocalization.successEmail);
         setEmail("");
       }
-    } catch (err: any) {
+    } catch (err) {
       toast.error(FooterLocalization.errorInEmail);
     }
   };

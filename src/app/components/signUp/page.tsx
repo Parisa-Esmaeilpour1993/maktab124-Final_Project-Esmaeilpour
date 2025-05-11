@@ -70,9 +70,9 @@ const SignUp = () => {
       );
       console.log(res.data);
       router.push("/login");
-    } catch (err: any) {
+    } catch (err) {
       console.error("Signup error:", err);
-      toast.error(signUpLocalization.tryAgain || err.response?.data?.message);
+      toast.error(signUpLocalization.tryAgain);
     } finally {
       setIsSubmitting(false);
     }

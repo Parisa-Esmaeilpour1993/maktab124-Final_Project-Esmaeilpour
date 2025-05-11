@@ -9,8 +9,8 @@ export interface ProductsProps {
   id: string;
   productName: string;
   productCategory: string;
-  productPrice: number | "";
-  productQuantity: number | "";
+  productPrice: number;
+  productQuantity: number;
   productDescription: string;
   productSpecifications: string;
   productExpired: string;
@@ -19,10 +19,10 @@ export interface ProductsProps {
   createdAt: string;
   productType: string;
   productCompany: string;
-  productNumber: string;
+  productNumber: number;
   productCapsule: string;
   productCountry: string;
-  productAge: string;
+  productAge: number;
   productProcess: string;
 }
 
@@ -94,4 +94,22 @@ export interface favoriteProductsProps {
   productId: string;
   isFavorite: boolean;
   favoriteRecords: { id: string; productId: string }[];
+}
+
+export interface Props {
+  isOpen: boolean;
+  onClose: () => void;
+  formData: ProductsProps;
+  onChange: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => void;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setFormData: React.Dispatch<React.SetStateAction<ProductsProps>>;
+  fileName: string | null;
+  loading: boolean;
+  category: Category[];
+  editId: string | null;
 }
